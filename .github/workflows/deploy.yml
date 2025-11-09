@@ -27,19 +27,20 @@ jobs:
           PUBLIC_URL: ""
         run: npm run build
 
-      # CACHE-BUSTER + FIX 403 + ALLOW JS
-      - name: Add .htaccess with full MetaNet fix
+      # SUPER .htaccess — fixes 403 + cache + refresh
+      - name: Add ultimate .htaccess
         run: |
           cat > build/.htaccess << 'EOF'
           Options -MultiViews
           RewriteEngine On
+
+          # React Router — all routes to index.html
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^ index.html [QSA,L]
 
-          # FORCE ALLOW JS/CSS + DISABLE CACHE
-          <FilesMatch "\.(js|css|json|map|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|ico|webmanifest)$">
-            Header unset Cache-Control
+          # FORCE NO CACHE + ALLOW ALL FILES
+          <FilesMatch "\.(html|js|css|json|map|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|ico|webmanifest)$">
             Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
             Header set Pragma "no-cache"
             Header set Expires "0"
@@ -47,17 +48,18 @@ jobs:
             Allow from all
           </FilesMatch>
 
-          # CACHE-BUSTER FOR MAIN JS/CSS
-          RewriteCond %{REQUEST_FILENAME} !-f
-          RewriteRule ^static/(js|css)/main\.[a-z0-9]+\.(js|css)$ static/$1/main.$1 [L]
+          # CACHE KILLER — adds timestamp to main.js and main.css
+          RewriteRule ^static/js/main\.[a-z0-9]+\.js$ static/js/main.js?v=${{ github.run_number }} [L]
+          RewriteRule ^static/css/main\.[a-z0-9]+\.css$ static/css/main.css?v=${{ github.run_number }} [L]
           EOF
 
-      # DEPLOY MARKER WITH TIMESTAMP
+      # DEPLOY MARKER WITH RUN NUMBER
       - name: Add deploy marker
         run: |
-          echo "ERROR #299 FIXED!" > build/deploy-check.txt
+          echo "CACHE KILLER ACTIVE!" > build/deploy-check.txt
+          echo "RUN: ${{ github.run_number }}" >> build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
-          echo "CACHE CLEARED!" >> build/deploy-check.txt
+          echo "NO MORE ERR_CONNECTION_RESET!" >> build/deploy-check.txt
 
       # DEPLOY TO ROOT
       - name: Deploy to ROOT
@@ -67,11 +69,11 @@ jobs:
           user: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: build
-          
+          remoteDir: /
           options: --delete --verbose
 
       - name: DONE
         run: |
           echo "YOUR SITE IS NOW 100% LIVE!"
-          echo "NO MORE ERROR #299"
           echo "Check: https://fumescrubbers.com/deploy-check.txt"
+          echo "Then: https://my.metanet.ch → Cache leeren"
