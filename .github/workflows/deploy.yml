@@ -21,13 +21,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build React app (ROOT PATH — NO SUBFOLDER)
+      - name: Build React app
         env:
           CI: false
-          PUBLIC_URL: ""                 # ← THIS FORCES ROOT PATH
+          PUBLIC_URL: ""
         run: npm run build
 
-      - name: Add .htaccess (fixes refresh 404)
+      - name: Add .htaccess (fixes refresh + allows JS)
         run: |
           cat > build/.htaccess << 'EOF'
           Options -MultiViews
@@ -35,24 +35,34 @@ jobs:
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^ index.html [QSA,L]
+
+          # FIX 403 ON JS/CSS FILES (MetaNet special)
+          <FilesMatch "\.(js|css|json|map|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|ico|webmanifest)$">
+            Header set Cache-Control "no-cache, no-store, must-revalidate"
+            Header set Pragma "no-cache"
+            Header set Expires "0"
+            Satisfy Any
+            Allow from all
+          </FilesMatch>
           EOF
 
       - name: Add deploy marker
         run: |
-          echo "100% FIXED — ROOT PATH!" > build/deploy-check.txt
+          echo "100% FIXED — 403 GONE!" > build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
 
-      - name: Deploy to correct MetaNet folder
+      - name: Deploy to ROOT (MetaNet Document Root = /fumescrubbers.com/)
         uses: sebastianpopp/ftp-action@releases/v2
         with:
           host: ${{ secrets.FTP_SERVER }}
           user: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: build
-          
+          remoteDir: /
           options: --delete --verbose
 
       - name: DONE
         run: |
-          echo "YOUR SITE IS NOW 100% LIVE AT https://fumescrubbers.com"
-          echo "NO MORE /fumescrubbers.com/fumescrubbers.com"
+          echo "YOUR SITE IS NOW 100% LIVE!"
+          echo "NO MORE 403, NO MORE Unexpected token '<'"
+          echo "Check: https://fumescrubbers.com/deploy-check.txt"
