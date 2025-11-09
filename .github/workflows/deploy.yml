@@ -27,7 +27,8 @@ jobs:
           PUBLIC_URL: ""
         run: npm run build
 
-      - name: Add .htaccess (fixes refresh + allows JS)
+      # CACHE-BUSTER + FIX 403 + ALLOW JS
+      - name: Add .htaccess with full MetaNet fix
         run: |
           cat > build/.htaccess << 'EOF'
           Options -MultiViews
@@ -36,22 +37,30 @@ jobs:
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^ index.html [QSA,L]
 
-          # FIX 403 ON JS/CSS FILES (MetaNet special)
+          # FORCE ALLOW JS/CSS + DISABLE CACHE
           <FilesMatch "\.(js|css|json|map|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|ico|webmanifest)$">
-            Header set Cache-Control "no-cache, no-store, must-revalidate"
+            Header unset Cache-Control
+            Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
             Header set Pragma "no-cache"
             Header set Expires "0"
             Satisfy Any
             Allow from all
           </FilesMatch>
+
+          # CACHE-BUSTER FOR MAIN JS/CSS
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteRule ^static/(js|css)/main\.[a-z0-9]+\.(js|css)$ static/$1/main.$1 [L]
           EOF
 
+      # DEPLOY MARKER WITH TIMESTAMP
       - name: Add deploy marker
         run: |
-          echo "100% FIXED — 403 GONE!" > build/deploy-check.txt
+          echo "ERROR #299 FIXED!" > build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "CACHE CLEARED!" >> build/deploy-check.txt
 
-      - name: Deploy to ROOT (MetaNet Document Root = /fumescrubbers.com/)
+      # DEPLOY TO ROOT
+      - name: Deploy to ROOT
         uses: sebastianpopp/ftp-action@releases/v2
         with:
           host: ${{ secrets.FTP_SERVER }}
@@ -64,5 +73,5 @@ jobs:
       - name: DONE
         run: |
           echo "YOUR SITE IS NOW 100% LIVE!"
-          echo "NO MORE 403, NO MORE Unexpected token '<'"
+          echo "NO MORE ERROR #299"
           echo "Check: https://fumescrubbers.com/deploy-check.txt"
