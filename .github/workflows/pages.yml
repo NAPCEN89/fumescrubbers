@@ -13,36 +13,24 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-env:
-  CUSTOM_DOMAIN: ""   # optional, e.g. "www.yourdomain.com"
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
       - name: Install
         run: npm ci
-
+        # working-directory: fumescrubbers  # <-- uncomment & set if needed
       - name: Build
         run: npm run build
-
-      # React/Vite SPA fallback so refresh/deep-links work
-      - name: Add 404 fallback
+        # working-directory: fumescrubbers  # <-- match above if used
+      - name: SPA fallback (optional)
         run: cp build/index.html build/404.html
-
-      # Optional: set custom domain (creates CNAME file in the published site)
-      - name: Set custom domain
-        if: ${{ env.CUSTOM_DOMAIN != '' }}
-        run: echo "${{ env.CUSTOM_DOMAIN }}" > build/CNAME
-
-      - name: Upload artifact (the built site)
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: build
