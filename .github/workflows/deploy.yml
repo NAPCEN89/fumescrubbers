@@ -38,8 +38,9 @@ jobs:
 
       - name: Add deploy marker
         run: |
-          echo "LIVE ON PUBLIC FOLDER!" > build/deploy-check.txt
+          echo "LIVE ON /public/ FOLDER!" > build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "COMMIT: ${GITHUB_SHA::8}" >> build/deploy-check.txt
 
       - name: Deploy to Metanet public folder
         uses: sebastianpopp/ftp-action@releases/v2
@@ -48,8 +49,11 @@ jobs:
           user: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: build
-          remoteDir: /public/          # ← THIS MAKES IT LIVE
+          remoteDir: /public/          # ← CORRECT SPACING, POINTS TO PUBLIC FOLDER
           options: --delete --verbose
 
       - name: DONE
-        run: echo "Check: https://fumescrubbers.com/deploy-check.txt"
+        run: |
+          echo "DEPLOY SUCCESSFUL!"
+          echo "Check: https://fumescrubbers.com/deploy-check.txt"
+          echo "Your site is now LIVE!"
