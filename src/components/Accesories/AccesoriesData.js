@@ -374,66 +374,6 @@ export const AccesoriesData = [
 
     },
 
-    {
-        "category": "Dry Scrubber Accessories",
-        "products": [
-            {
-                "id": 1,
-                "title": "Control Panel",
-                "image": "/Control_Panal.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 2,
-                "title": "Centrifugal Blower",
-                "image": "/Centrifugal-blower-manufactureri-in-chennai.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 3,
-                "title": "Pre Filter",
-                "image": "/Pre_filter.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 4,
-                "title": "Hepa Filter",
-                "image": "/HEPA_Filter.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 5,
-                "title": "Activated Carbon Filter",
-                "image": "/activated_carbon_filter.jpeg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 6,
-                "title": "Electric Motor",
-                "image": "/Motor.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 7,
-                "title": "Hoses",
-                "image": "/Hoses.png",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 8,
-                "title": "MS Duct / SS / GI",
-                "image": "/GI_MS_Ducting.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-            {
-                "id": 9,
-                "title": "Hooda MS / SS / GI",
-                "image": "/Hood.jpg",
-                "category": "Dry Scrubber Accessories"
-            },
-           
-        ]
-
-    }
+   
 
 ];
