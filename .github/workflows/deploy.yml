@@ -6,6 +6,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  APP_DIR: "."   # <-- change to "fumescrubbers" if your package.json is in a subfolder
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -14,29 +17,50 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Show tree (helps debug layout)
+        run: |
+          pwd
+          ls -la
+          echo "APP_DIR=${{ env.APP_DIR }}"
+          ls -la "${{ env.APP_DIR }}"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
 
       - name: Install deps
+        working-directory: ${{ env.APP_DIR }}
         run: npm ci
-        # working-directory: fumescrubbers   # <- uncomment if your app is in a subfolder
 
       - name: Build
+        working-directory: ${{ env.APP_DIR }}
         run: npm run build
-        # working-directory: fumescrubbers   # <- match the line above if uncommented
+
+      - name: Verify build output
+        run: |
+          echo "Contents of build/:"
+          ls -la "${{ env.APP_DIR }}/build" || (echo "build/ not found" && exit 1)
+
+      # Set up SSH agent with your private key
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Add host key to known_hosts to avoid interactive prompt
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
       # Deploy only the CONTENTS of build/ (trailing slash matters)
       - name: Deploy via rsync over SSH
-        uses: burnett01/rsync-deployments@6.0.0
-        with:
-          switches: -avzr --delete
-          path: build/                          # or: fumescrubbers/build/ if using subfolder
-          remote_path: ${{ secrets.SSH_TARGET_DIR }}   # e.g. /home/user/public_html/
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          remote_port: ${{ secrets.SSH_PORT }}        # optional; many servers default to 22
+        run: |
+          rsync -avzr --delete -e "ssh -p ${{ secrets.SSH_PORT || 22 }}" \
+            "${{ env.APP_DIR }}/build/" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_TARGET_DIR }}/"
 '@ | Set-Content -Encoding utf8 .github\workflows\deploy.yml
