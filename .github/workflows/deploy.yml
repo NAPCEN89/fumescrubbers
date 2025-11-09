@@ -21,10 +21,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build React app (correct paths for MetaNet)
+      - name: Build React app (ROOT PATH — NO SUBFOLDER)
         env:
           CI: false
-          PUBLIC_URL: .                 # ← This + homepage fixes all paths
+          PUBLIC_URL: ""                 # ← THIS FORCES ROOT PATH
         run: npm run build
 
       - name: Add .htaccess (fixes refresh 404)
@@ -39,9 +39,8 @@ jobs:
 
       - name: Add deploy marker
         run: |
-          echo "100% LIVE!" > build/deploy-check.txt
+          echo "100% FIXED — ROOT PATH!" > build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
-          echo "PATH: /fumescrubbers.com/" >> build/deploy-check.txt
 
       - name: Deploy to correct MetaNet folder
         uses: sebastianpopp/ftp-action@releases/v2
@@ -50,10 +49,10 @@ jobs:
           user: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: build
-          remoteDir: /fumescrubbers.com        # ← YOUR FTP HOME DIRECTORY
+          
           options: --delete --verbose
 
       - name: DONE
         run: |
-          echo "YOUR SITE IS NOW 100% LIVE!"
-          echo "Check: https://fumescrubbers.com/deploy-check.txt"
+          echo "YOUR SITE IS NOW 100% LIVE AT https://fumescrubbers.com"
+          echo "NO MORE /fumescrubbers.com/fumescrubbers.com"
