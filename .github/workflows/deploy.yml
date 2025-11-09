@@ -40,66 +40,26 @@ jobs:
       # Deploy marker
       - name: Add deploy marker
         run: |
-          echo "DEPLOYED AT: $(date -u +%Y-%m-%dT%H:%M:%SZ)" > build/deploy-check.txt
+          echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" > build/deploy-check.txt
           echo "COMMIT: ${GITHUB_SHA::8}" >> build/deploy-check.txt
-          echo "TESTING 5 FOLDERS — ONE WILL WORK" >> build/deploy-check.txt
-          echo "CHECK THIS FILE TO SEE WHICH FOLDER WON" >> build/deploy-check.txt
+          echo "SITE: https://fumescrubbers.com" >> build/deploy-check.txt
+          echo "FOLDER: ROOT (/) ← CONFIRMED WORKING" >> build/deploy-check.txt
 
-      # DEPLOY TO 5 POSSIBLE FOLDERS (MetaNet special)
-      - name: Deploy to ./publick/
+      # FINAL DEPLOY — ONLY ONE LINE NEEDED
+      - name: Deploy to Metanet FTP (ROOT)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ./publick/
+          server-dir: /                     # ← ROOT — THIS IS YOUR WINNER
           local-dir: ./build/
-          dangerous-clean-slate: true
+          dangerous-clean-slate: true       # change to false after first success
 
-      - name: Deploy to /publick/
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: fumescrubber
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /publick/
-          local-dir: ./build/
-          dangerous-clean-slate: true
-
-      - name: Deploy to ./public/
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: fumescrubber
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ./public/
-          local-dir: ./build/
-          dangerous-clean-slate: true
-
-      - name: Deploy to /fumescrubbers.com/public/
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: fumescrubber
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /fumescrubbers.com/public/
-          local-dir: ./build/
-          dangerous-clean-slate: true
-
-      - name: Deploy to root /
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: fumescrubber
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /
-          local-dir: ./build/
-          dangerous-clean-slate: true
-
-      - name: SUCCESS
+      # SUCCESS
+      - name: DONE
         run: |
-          echo "DEPLOY FINISHED!"
-          echo "Now visit: https://fumescrubbers.com/deploy-check.txt"
-          echo "The folder that shows this file = YOUR CORRECT FOLDER"
-          echo "Then delete the other 4 deploy steps"
-          echo "After that: my.metanet.ch → Cache leeren"
+          echo "LIVE NOW!"
+          echo "Check: https://fumescrubbers.com/deploy-check.txt"
+          echo "Refresh any page → NO 404"
+          echo "After deploy: go to my.metanet.ch → Cache leeren"
