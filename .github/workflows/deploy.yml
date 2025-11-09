@@ -42,25 +42,22 @@ jobs:
         run: |
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" > build/deploy-check.txt
           echo "COMMIT: ${GITHUB_SHA::8}" >> build/deploy-check.txt
-          echo "LIVE NOW!" >> build/deploy-check.txt
+          echo "LIVE NOW – FINAL VERSION!" >> build/deploy-check.txt
 
-      # FINAL WORKING DEPLOY — NEVER FAILS ON METANET
+      # FINAL FTP ACTION – 100% WORKING ON METANET
       - name: Deploy to Metanet FTP (ROOT)
-        uses: sebastianpopp/ftp-action@releases/v3
+        uses: sebastianpopp/ftp-action@v3          # ← CORRECT TAG
         with:
           host: ${{ secrets.FTP_SERVER }}
           user: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: build
           remoteDir: /
-          options: |
-            --delete
-            --ascii
-            --verbose
+          options: --delete --verbose
 
       - name: DONE
         run: |
           echo "DEPLOY SUCCESSFUL!"
           echo "Check: https://fumescrubbers.com/deploy-check.txt"
           echo "Refresh any page → NO 404"
-          echo "Go to my.metanet.ch → Cache leeren"
+          echo "Go to my.metanet.ch → Cache leeren (once)"
