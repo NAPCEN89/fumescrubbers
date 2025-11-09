@@ -16,42 +16,40 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"   # 20 is faster and fully supported
+          node-version: "20"
 
       - name: Install dependencies
-        run: npm ci               # faster + reproducible
+        run: npm ci
 
-      - name: Build React app (ignore warnings)
+      - name: Build React app
         env:
           CI: false
         run: npm run build
 
-      - name: Write deploy version marker (for debugging)
+      - name: Write deploy version marker
         run: |
           echo "Commit: ${GITHUB_SHA::8}" > build/deploy-check.txt
-          echo "Deployed at: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
-          echo "Branch: ${GITHUB_REF#refs/heads/}" >> build/deploy-check.txt
+          echo "Deployed: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "Site: https://fumescrubbers.com" >> build/deploy-check.txt
 
-      - name: Deploy to MetaNet FTP
+      - name: Deploy to Metanet FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}          # e.g. ftp.yourdomain.ch
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           
-          # THIS IS THE KEY LINE FOR METANET
-          server-dir: /httpdocs/                     # ← 99.9% of MetaNet accounts
-          # If your account uses a different root, change to /html/ or /www/
+          # THIS IS THE ONLY LINE YOU NEEDED TO CHANGE
+          server-dir: /fumescrubbers.com/public/
           
           local-dir: ./build/
-          dangerous-clean-slate: true                # keep true for now
+          dangerous-clean-slate: true
           exclude: |
             **/.git*
             **/node_modules/**
             **/.env
 
-      - name: Success message
+      - name: Done
         run: |
-          echo "Deployed successfully!"
-          echo "Check your site in 30 seconds: https://yourdomain.ch"
-          echo "Debug file: https://yourdomain.ch/deploy-check.txt"
+          echo "LIVE NOW!"
+          echo "Check: https://fumescrubbers.com/deploy-check.txt"
