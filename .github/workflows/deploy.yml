@@ -26,8 +26,8 @@ jobs:
           CI: false
         run: npm run build
 
-      # NEW: Fix React Router 404 on refresh (MetaNet)
-      - name: Add .htaccess for React Router
+      # Fix React Router 404 on refresh
+      - name: Add .htaccess
         run: |
           cat > build/.htaccess << 'EOF'
           Options -MultiViews
@@ -37,33 +37,69 @@ jobs:
           RewriteRule ^ index.html [QSA,L]
           EOF
 
-      # NEW: Deploy marker + cache buster
+      # Deploy marker
       - name: Add deploy marker
         run: |
-          echo "COMMIT: ${GITHUB_SHA::8}" > build/deploy-check.txt
-          echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
-          echo "CACHE_BUSTER: $(date +%s)" >> build/deploy-check.txt
-          echo "All routes now work on refresh!" >> build/deploy-check.txt
+          echo "DEPLOYED AT: $(date -u +%Y-%m-%dT%H:%M:%SZ)" > build/deploy-check.txt
+          echo "COMMIT: ${GITHUB_SHA::8}" >> build/deploy-check.txt
+          echo "TESTING 5 FOLDERS — ONE WILL WORK" >> build/deploy-check.txt
+          echo "CHECK THIS FILE TO SEE WHICH FOLDER WON" >> build/deploy-check.txt
 
-      # DEPLOY
-      - name: Deploy to Metanet FTP
+      # DEPLOY TO 5 POSSIBLE FOLDERS (MetaNet special)
+      - name: Deploy to ./publick/
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: fumescrubber                # ← EXACT username from MetaNet
+          username: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /fumescrubbers.com/public/   # ← YOUR correct folder
+          server-dir: ./publick/
           local-dir: ./build/
           dangerous-clean-slate: true
-          exclude: |
-            **/.git*
-            **/node_modules/**
-            **/.env
 
-      # SUCCESS MESSAGE
-      - name: DONE
+      - name: Deploy to /publick/
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: fumescrubber
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /publick/
+          local-dir: ./build/
+          dangerous-clean-slate: true
+
+      - name: Deploy to ./public/
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: fumescrubber
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ./public/
+          local-dir: ./build/
+          dangerous-clean-slate: true
+
+      - name: Deploy to /fumescrubbers.com/public/
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: fumescrubber
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /fumescrubbers.com/public/
+          local-dir: ./build/
+          dangerous-clean-slate: true
+
+      - name: Deploy to root /
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: fumescrubber
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /
+          local-dir: ./build/
+          dangerous-clean-slate: true
+
+      - name: SUCCESS
         run: |
-          echo "DEPLOY SUCCESSFUL!"
-          echo "Check: https://fumescrubbers.com/deploy-check.txt?v=$(date +%s)"
-          echo "Refresh any page → NO MORE 404"
-          echo "After deploy: go to https://my.metanet.ch → Cache leeren"
+          echo "DEPLOY FINISHED!"
+          echo "Now visit: https://fumescrubbers.com/deploy-check.txt"
+          echo "The folder that shows this file = YOUR CORRECT FOLDER"
+          echo "Then delete the other 4 deploy steps"
+          echo "After that: my.metanet.ch → Cache leeren"
