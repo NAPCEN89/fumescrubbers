@@ -37,6 +37,9 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_PATH }}/ # <-- trailing slash added HERE /
-          local-dir: ./build/ # MUST end with /
-          dangerous-clean-slate: false
+          server-dir: ${{ secrets.FTP_PATH }}/ 
+          local-dir: ./build/ 
+          # ⚠️ TEMPORARY FIX: This deletes everything in the server-dir before deploy,
+          # forcing a cache clear on the hosting side. REVERT to 'false' immediately 
+          # after your first successful deployment.
+          dangerous-clean-slate: true
