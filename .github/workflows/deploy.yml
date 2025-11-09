@@ -3,7 +3,7 @@ name: 🚀 Build & Deploy React App to Metanet FTP
 on:
   push:
     branches:
-      - main  # triggers whenever you push to main branch
+      - main
 
 jobs:
   build-and-deploy:
@@ -16,15 +16,20 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18' # or 20 if you use it locally
+        node-version: '18' # or 20 if you prefer
 
     - name: Install dependencies
       run: npm install
 
     - name: Build React app (ignore ESLint warnings)
       env:
-        CI: false  # 👈 prevents treating warnings as errors
+        CI: false        # don't fail build on warnings
       run: npm run build
+
+    - name: Write deploy version marker
+      run: |
+        echo "commit=${GITHUB_SHA}" > build/deploy-check.txt
+        echo "deployedAt=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
 
     - name: Deploy build folder to Metanet FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -32,6 +37,6 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ${{ secrets.FTP_PATH }}/   # 👈 MUST end with /
-        local-dir: ./build/                    # 👈 MUST end with /
+        server-dir: ${{ secrets.FTP_PATH }}/   # MUST end with /
+        local-dir: ./build/                    # MUST end with /
         dangerous-clean-slate: false
