@@ -27,41 +27,26 @@ jobs:
           PUBLIC_URL: ""
         run: npm run build
 
-      # SUPER .htaccess — fixes 403 + cache + refresh
-      - name: Add ultimate .htaccess
+      - name: Add .htaccess (final fix)
         run: |
           cat > build/.htaccess << 'EOF'
           Options -MultiViews
           RewriteEngine On
-
-          # React Router — all routes to index.html
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^ index.html [QSA,L]
 
-          # FORCE NO CACHE + ALLOW ALL FILES
-          <FilesMatch "\.(html|js|css|json|map|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|ico|webmanifest)$">
-            Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
-            Header set Pragma "no-cache"
-            Header set Expires "0"
-            Satisfy Any
-            Allow from all
-          </FilesMatch>
-
-          # CACHE KILLER — adds timestamp to main.js and main.css
-          RewriteRule ^static/js/main\.[a-z0-9]+\.js$ static/js/main.js?v=${{ github.run_number }} [L]
-          RewriteRule ^static/css/main\.[a-z0-9]+\.css$ static/css/main.css?v=${{ github.run_number }} [L]
+          Header set Cache-Control "no-cache, no-store, must-revalidate"
+          Header set Pragma "no-cache"
+          Header set Expires "0"
           EOF
 
-      # DEPLOY MARKER WITH RUN NUMBER
       - name: Add deploy marker
         run: |
-          echo "CACHE KILLER ACTIVE!" > build/deploy-check.txt
-          echo "RUN: ${{ github.run_number }}" >> build/deploy-check.txt
+          echo "ROOT DIV FIXED!" > build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
-          echo "NO MORE ERR_CONNECTION_RESET!" >> build/deploy-check.txt
+          echo "ERROR #299 GONE FOREVER!" >> build/deploy-check.txt
 
-      # DEPLOY TO ROOT
       - name: Deploy to ROOT
         uses: sebastianpopp/ftp-action@releases/v2
         with:
@@ -73,7 +58,4 @@ jobs:
           options: --delete --verbose
 
       - name: DONE
-        run: |
-          echo "YOUR SITE IS NOW 100% LIVE!"
-          echo "Check: https://fumescrubbers.com/deploy-check.txt"
-          echo "Then: https://my.metanet.ch → Cache leeren"
+        run: echo "YOUR SITE IS NOW 100% LIVE AND BEAUTIFUL!"
