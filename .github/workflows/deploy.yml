@@ -10,33 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18' # or 20 if you prefer
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18" # or 20 if you prefer
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build React app (ignore ESLint warnings)
-      env:
-        CI: false        # don't fail build on warnings
-      run: npm run build
+      - name: Build React app (ignore ESLint warnings)
+        env:
+          CI: false # don't fail build on warnings
+        run: npm run build
 
-    - name: Write deploy version marker
-      run: |
-        echo "commit=${GITHUB_SHA}" > build/deploy-check.txt
-        echo "deployedAt=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+      - name: Write deploy version marker
+        run: |
+          echo "commit=${GITHUB_SHA}" > build/deploy-check.txt
+          echo "deployedAt=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
 
-    - name: Deploy build folder to Metanet FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: ${{ secrets.FTP_PATH }}/   # <-- trailing slash added HERE
-        local-dir: ./build/                    # MUST end with /
-        dangerous-clean-slate: false
+      - name: Deploy build folder to Metanet FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_PATH }}/ # <-- trailing slash added HERE /
+          local-dir: ./build/ # MUST end with /
+          dangerous-clean-slate: false
