@@ -431,12 +431,7 @@ export const AccesoriesData = [
                 "image": "/Hood.jpg",
                 "category": "Dry Scrubber Accessories"
             },
-            {
-                "id": 10,
-                "title": "Screw Conveyors",
-                "image": "/Screw_Conveyors.jpg",
-                "category": "Dry Scrubber Accessories"
-            }
+           
         ]
 
     }
