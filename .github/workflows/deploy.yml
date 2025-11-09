@@ -1,13 +1,8 @@
-mkdir -Force .github\workflows | Out-Null
-@'
-name: CI/CD - Build & Deploy to Metanet
+﻿name: CI/CD - Build & Deploy (auto-detect app dir)
 
 on:
   push:
     branches: [ "main" ]
-
-env:
-  APP_DIR: "."   # <-- change to "fumescrubbers" if your package.json is in a subfolder
 
 jobs:
   build-and-deploy:
@@ -17,50 +12,107 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Show tree (helps debug layout)
+      - name: Preflight: verify secrets and repo layout
+        id: preflight
+        shell: bash
         run: |
-          pwd
-          ls -la
-          echo "APP_DIR=${{ env.APP_DIR }}"
-          ls -la "${{ env.APP_DIR }}"
+          set -e
+
+          # --- Check secrets (without printing their values) ---
+          missing=0
+          for s in SSH_HOST SSH_USER SSH_PRIVATE_KEY SSH_TARGET_DIR; do
+            if [ -z "${{ secrets[s] }}" ]; then
+              echo "::error::Missing secret: $s"
+              missing=1
+            fi
+          done
+          # Optional port
+          if [ -z "${{ secrets.SSH_PORT }}" ]; then
+            echo "SSH_PORT not set; defaulting to 22"
+            echo "port=22" >> $GITHUB_OUTPUT
+          else
+            echo "port=${{ secrets.SSH_PORT }}" >> $GITHUB_OUTPUT
+          fi
+          [ $missing -eq 1 ] && exit 1
+
+          # --- Detect app directory automatically ---
+          detect_dir() {
+            if [ -f "package.json" ]; then
+              echo "."
+              return
+            fi
+            # common subfolder names — add more if needed
+            for d in app web site fumescrubbers client frontend; do
+              if [ -f "$d/package.json" ]; then
+                echo "$d"
+                return
+              fi
+            done
+            echo ""
+          }
+
+          APP_DIR="$(detect_dir)"
+          if [ -z "$APP_DIR" ]; then
+            echo "::error::Could not find package.json in repo root or common subfolders."
+            echo "::notice::Repo tree:"; ls -la; echo "::notice::"
+            exit 1
+          fi
+          echo "Detected APP_DIR: $APP_DIR"
+          echo "appdir=$APP_DIR" >> $GITHUB_OUTPUT
+          echo "::group::Tree of $APP_DIR"; ls -la "$APP_DIR"; echo "::endgroup::"
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
+          cache-dependency-path: ${{ steps.preflight.outputs.appdir }}/package-lock.json
 
       - name: Install deps
-        working-directory: ${{ env.APP_DIR }}
+        working-directory: ${{ steps.preflight.outputs.appdir }}
         run: npm ci
 
       - name: Build
-        working-directory: ${{ env.APP_DIR }}
+        working-directory: ${{ steps.preflight.outputs.appdir }}
         run: npm run build
 
       - name: Verify build output
+        shell: bash
         run: |
-          echo "Contents of build/:"
-          ls -la "${{ env.APP_DIR }}/build" || (echo "build/ not found" && exit 1)
+          set -e
+          APP_DIR="${{ steps.preflight.outputs.appdir }}"
+          if [ ! -d "$APP_DIR/build" ]; then
+            echo "::error::Build succeeded but no '$APP_DIR/build' folder was created."
+            echo "::notice::Did you mean 'dist'? If so, change the workflow to upload that."
+            exit 1
+          fi
+          echo "::group::Contents of $APP_DIR/build"
+          ls -la "$APP_DIR/build"
+          echo "::endgroup::"
 
-      # Set up SSH agent with your private key
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Add host key to known_hosts to avoid interactive prompt
       - name: Add host to known_hosts
+        shell: bash
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -p "${{ steps.preflight.outputs.port }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      # Deploy only the CONTENTS of build/ (trailing slash matters)
-      - name: Deploy via rsync over SSH
+      - name: Deploy via rsync over SSH (build/ contents only)
+        shell: bash
         run: |
-          rsync -avzr --delete -e "ssh -p ${{ secrets.SSH_PORT || 22 }}" \
-            "${{ env.APP_DIR }}/build/" \
+          rsync -avzr --delete -e "ssh -p ${{ steps.preflight.outputs.port }}" \
+            "${{ steps.preflight.outputs.appdir }}/build/" \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_TARGET_DIR }}/"
-'@ | Set-Content -Encoding utf8 .github\workflows\deploy.yml
+
+      # Fallback: if rsync not installed on runner or server, uncomment this SCP step and comment rsync above
+      # - name: Deploy via scp (fallback)
+      #   shell: bash
+      #   run: |
+      #     tar -C "${{ steps.preflight.outputs.appdir }}/build" -czf /tmp/site.tgz .
+      #     scp -P ${{ steps.preflight.outputs.port }} /tmp/site.tgz "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_TARGET_DIR }}/"
+      #     ssh -p ${{ steps.preflight.outputs.port }} "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" 'cd "${SSH_TARGET_DIR}" && tar xzf site.tgz && rm -f site.tgz'
