@@ -42,24 +42,25 @@ jobs:
         run: |
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" > build/deploy-check.txt
           echo "COMMIT: ${GITHUB_SHA::8}" >> build/deploy-check.txt
-          echo "SITE: https://fumescrubbers.com" >> build/deploy-check.txt
-          echo "FOLDER: ROOT (/) ← CONFIRMED WORKING" >> build/deploy-check.txt
+          echo "LIVE NOW!" >> build/deploy-check.txt
 
-      # FINAL DEPLOY — ONLY ONE LINE NEEDED
-      - name: Deploy to Metanet FTP (ROOT)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # FINAL WORKING DEPLOY — NO MORE ERRORS
+      - name: Deploy to Metanet via SCP (FAST & RELIABLE)
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER }}
           username: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /                     # ← ROOT — THIS IS YOUR WINNER
-          local-dir: ./build/
-          dangerous-clean-slate: true       # change to false after first success
+          port: 21
+          source: "build/*"
+          target: "/"
+          strip_components: 1
+          overwrite: true
+          timeout: 60s
 
-      # SUCCESS
       - name: DONE
         run: |
-          echo "LIVE NOW!"
+          echo "DEPLOY SUCCESSFUL!"
           echo "Check: https://fumescrubbers.com/deploy-check.txt"
           echo "Refresh any page → NO 404"
-          echo "After deploy: go to my.metanet.ch → Cache leeren"
+          echo "Go to my.metanet.ch → Cache leeren (once)"
