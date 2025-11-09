@@ -23,7 +23,7 @@ jobs:
 
     - name: Build React app (ignore ESLint warnings)
       env:
-        CI: false  # 👈 Prevents ESLint warnings from failing the build
+        CI: false  # 👈 Prevent ESLint warnings from stopping the build
       run: npm run build
 
     - name: Deploy build folder to Metanet FTP
@@ -33,5 +33,5 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: ${{ secrets.FTP_PATH }}
-        local-dir: ./build
+        local-dir: ./build/   # 👈 MUST end with a slash
         dangerous-clean-slate: false
