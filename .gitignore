@@ -1,15 +1,27 @@
-@'
+﻿# Dependencies
 node_modules/
+
+# Build output
 build/
 dist/
+
+# Do NOT commit flattened build files at repo root
+/static/
+/asset-manifest.json
+/index.html
+/favicon.ico
+/logo192.png
+/logo512.png
+/manifest.json
+/robots.txt
+
+# Misc
 .env
 .env.local
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+yarn-*.log*
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 coverage/
-'@ | Set-Content -Encoding utf8 .gitignore
