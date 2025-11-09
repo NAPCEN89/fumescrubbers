@@ -26,22 +26,33 @@ jobs:
           CI: false
         run: npm run build
 
-      - name: Write deploy version marker
+      # NEW: Fix React Router 404 on refresh (MetaNet)
+      - name: Add .htaccess for React Router
         run: |
-          echo "Commit: ${GITHUB_SHA::8}" > build/deploy-check.txt
-          echo "Deployed: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
-          echo "Site: https://fumescrubbers.com" >> build/deploy-check.txt
+          cat > build/.htaccess << 'EOF'
+          Options -MultiViews
+          RewriteEngine On
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule ^ index.html [QSA,L]
+          EOF
 
+      # NEW: Deploy marker + cache buster
+      - name: Add deploy marker
+        run: |
+          echo "COMMIT: ${GITHUB_SHA::8}" > build/deploy-check.txt
+          echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "CACHE_BUSTER: $(date +%s)" >> build/deploy-check.txt
+          echo "All routes now work on refresh!" >> build/deploy-check.txt
+
+      # DEPLOY
       - name: Deploy to Metanet FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
+          username: fumescrubber                # ← EXACT username from MetaNet
           password: ${{ secrets.FTP_PASSWORD }}
-          
-          # THIS IS THE ONLY LINE YOU NEEDED TO CHANGE
-          server-dir: /fumescrubbers.com/public/
-          
+          server-dir: /fumescrubbers.com/public/   # ← YOUR correct folder
           local-dir: ./build/
           dangerous-clean-slate: true
           exclude: |
@@ -49,7 +60,10 @@ jobs:
             **/node_modules/**
             **/.env
 
-      - name: Done
+      # SUCCESS MESSAGE
+      - name: DONE
         run: |
-          echo "LIVE NOW!"
-          echo "Check: https://fumescrubbers.com/deploy-check.txt"
+          echo "DEPLOY SUCCESSFUL!"
+          echo "Check: https://fumescrubbers.com/deploy-check.txt?v=$(date +%s)"
+          echo "Refresh any page → NO MORE 404"
+          echo "After deploy: go to https://my.metanet.ch → Cache leeren"
