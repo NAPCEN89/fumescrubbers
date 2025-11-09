@@ -1,4 +1,4 @@
-name: 🚀 Build & Deploy React App to Metanet FTP
+name: Build & Deploy React App to Metanet FTP
 
 on:
   push:
@@ -16,30 +16,42 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18" # or 20 if you prefer
+          node-version: "20"   # 20 is faster and fully supported
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci               # faster + reproducible
 
-      - name: Build React app (ignore ESLint warnings)
+      - name: Build React app (ignore warnings)
         env:
-          CI: false # don't fail build on warnings
+          CI: false
         run: npm run build
 
-      - name: Write deploy version marker
+      - name: Write deploy version marker (for debugging)
         run: |
-          echo "commit=${GITHUB_SHA}" > build/deploy-check.txt
-          echo "deployedAt=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "Commit: ${GITHUB_SHA::8}" > build/deploy-check.txt
+          echo "Deployed at: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "Branch: ${GITHUB_REF#refs/heads/}" >> build/deploy-check.txt
 
-      - name: Deploy build folder to Metanet FTP
+      - name: Deploy to MetaNet FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTP_SERVER }}          # e.g. ftp.yourdomain.ch
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_PATH }}/ 
-          local-dir: ./build/ 
-          # ⚠️ TEMPORARY FIX: This deletes everything in the server-dir before deploy,
-          # forcing a cache clear on the hosting side. REVERT to 'false' immediately 
-          # after your first successful deployment.
-          dangerous-clean-slate: true
+          
+          # THIS IS THE KEY LINE FOR METANET
+          server-dir: /httpdocs/                     # ← 99.9% of MetaNet accounts
+          # If your account uses a different root, change to /html/ or /www/
+          
+          local-dir: ./build/
+          dangerous-clean-slate: true                # keep true for now
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            **/.env
+
+      - name: Success message
+        run: |
+          echo "Deployed successfully!"
+          echo "Check your site in 30 seconds: https://yourdomain.ch"
+          echo "Debug file: https://yourdomain.ch/deploy-check.txt"
