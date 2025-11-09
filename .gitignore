@@ -1,6 +1,6 @@
 ﻿node_modules/
-
-
+build/
+dist/
 
 # do not commit flattened build output at repo root
 /static/
