@@ -1,0 +1,592 @@
+import React, { useState } from 'react';
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Link as MuiLink,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  useMediaQuery,
+  useTheme,
+  Card,
+  CardContent,
+  Paper,
+  List,
+  ListItem,
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FolderIcon from '@mui/icons-material/Folder';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import FumeExtractor from '../components/ReusableProducts/FumeExtractor';
+import CounterSection from '../components/sections/CounterSection';
+import laboratoryFumeExtractorImage from '../assets/images/products/Fume extractor/Laboratory-fume-extractor.jpg';
+import ResourcesAndQuote from '../components/sections/ResourcesAndQuote';
+
+// Import PDFs
+import companyCatalogPdf from '../assets/document/details/napcen.pdf';
+import productBrochurePdf from '../assets/document/details/baghouse.pdf'; // Update to specific PDF when available
+
+const theme = createTheme({
+  typography: {
+    fontFamily: ['"Poppins"', 'sans-serif'].join(','),
+    h3: { fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem', lg: '2rem' } },
+    h4: { fontSize: { xs: '1rem', sm: '1.2rem', md: '1.4rem', lg: '1.5rem' } },
+    h5: { fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem', lg: '1.25rem' } },
+    body1: { fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' } },
+    body2: { fontSize: { xs: '0.7rem', sm: '0.75rem', md: '0.8rem', lg: '0.875rem' } },
+    subtitle1: { fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' } },
+  },
+  components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          color: 'white',
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: 'white',
+          textDecoration: 'none',
+          '&:hover': {
+            color: '#00BFFF',
+          },
+        },
+      },
+    },
+  },
+});
+
+// Helper component for the list of items
+const ProductDetailsList = ({ items }) => (
+  <List
+    dense
+    sx={{
+      pl: { xs: 1, sm: 2, md: 3 },
+      listStyle: 'disc',
+      '& .MuiListItem-root': { display: 'list-item', mb: { xs: 0.5, sm: 1 } },
+    }}
+  >
+    {items.map((item, index) => (
+      <ListItem key={index} disableGutters>
+        <Typography
+          variant="body2"
+          sx={{
+            fontSize: { xs: '0.7rem', sm: '0.75rem', md: '0.8rem', lg: '0.875rem' },
+          }}
+        >
+          {item}
+        </Typography>
+      </ListItem>
+    ))}
+  </List>
+);
+
+const LaboratoryFumeExtractor = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const muiTheme = useTheme();
+  const isXsScreen = useMediaQuery(muiTheme.breakpoints.down('xs'));
+  const isSmScreen = useMediaQuery(muiTheme.breakpoints.down('sm'));
+  const isMdScreen = useMediaQuery(muiTheme.breakpoints.down('md'));
+
+  const sections = [
+    {
+      title: 'Applications',
+      details: [
+        'Research laboratories for safe fume extraction.',
+        'Pharmaceutical manufacturing for vapor control.',
+        'Chemical testing facilities for air purification.',
+        'Biotechnology labs for sterile environments.',
+        'Educational and academic research centers.',
+        'Medical and clinical labs for safety compliance.',
+        'Forensic laboratories for hazardous gas removal.',
+      ],
+    },
+    {
+      title: 'Features & Benefits',
+      details: [
+        'HEPA filtration with 99.97% efficiency at 0.3 microns.',
+        'Activated carbon and chemical scrubbers for gas neutralization.',
+        'Adjustable extraction arms for precise fume capture.',
+        'Low-noise operation for comfortable lab environments.',
+        'Compact design for space-constrained laboratories.',
+        'Compliance with OSHA and EPA safety standards.',
+        'Real-time filter monitoring for easy maintenance.',
+      ],
+    },
+    {
+      title: 'Materials of Construction',
+      details: [
+        'Corrosion-resistant stainless steel housing.',
+        'Chemical-resistant aluminum components.',
+        'High-efficiency HEPA filters for particulate capture.',
+        'Activated carbon or chemical scrubber filters for gas removal.',
+        'Flexible, chemical-resistant extraction arms.',
+      ],
+    },
+    {
+      title: 'Accessories',
+      details: [
+        'Adjustable, chemical-resistant extraction arms.',
+        'Pre-filters to extend main filter lifespan.',
+        'Portable base with wheels for mobility.',
+        'Customized chemical scrubber modules for specific gases.',
+        'Remote monitoring and control systems for automation.',
+      ],
+    },
+  ];
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Helmet>
+        <title>Laboratory Fume Extractor Manufacturers in Chennai</title>
+        <meta
+          name="description"
+          content="NAPCEN's Laboratory Fume Extractors, featuring HEPA and activated carbon filtration, effectively remove hazardous fumes and gases, ensuring safety and compliance in research and chemical labs."
+        />
+      </Helmet>
+
+      {/* Page Title Section */}
+      <Box
+        sx={{
+          background: `linear-gradient(to left, #334746ff, #151d1dff)`,
+          py: { xs: 4, sm: 6, md: 8, lg: 10 },
+          color: 'white',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: { xs: 'auto', sm: '30vh', md: '35vh', lg: '40vh' },
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            zIndex: 1,
+          },
+          '> *': {
+            zIndex: 2,
+            position: 'relative',
+          },
+        }}
+      >
+        <Container sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{ fontWeight: 'bold', color: '#00BFFF' }}
+          >
+            Laboratory Fume Extractor
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              mt: { xs: 1, sm: 2 },
+              fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' },
+            }}
+          >
+            <RouterLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Home
+            </RouterLink>{' '}
+            /{' '}
+            <RouterLink
+              to="/fume-extractors/laboratory"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              Laboratory Fume Extractor
+            </RouterLink>
+          </Typography>
+        </Container>
+      </Box>
+
+      {/* Main Content */}
+      <Container
+        sx={{
+          py: { xs: 2, sm: 3, md: 4, lg: 6 },
+          backgroundColor: 'transparent',
+          px: { xs: 1, sm: 2, md: 3 },
+        }}
+      >
+        <Grid
+          container
+          spacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+          sx={{ justifyContent: 'center' }}
+        >
+          {/* Image and Description in a Single Row */}
+          <Grid container item xs={12} spacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center">
+            {/* Image Container */}
+            <Grid item xs={12} md={6} sx={{ maxWidth: '400px' }}>
+              <Paper
+                elevation={8}
+                sx={{
+                  height: { xs: 150, sm: 200, md: 250, lg: 300 },
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  backgroundColor: '#1C1C1E',
+                  border: '1px solid rgba(0, 191, 255, 0.15)',
+                  mx: { xs: 'auto', md: 0 },
+                }}
+              >
+                <Box
+                  component="img"
+                  src={laboratoryFumeExtractorImage}
+                  alt="Laboratory Fume Extractor"
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: 1,
+                    display: 'block',
+                  }}
+                  loading="lazy"
+                />
+              </Paper>
+            </Grid>
+            {/* Description Card */}
+            <Grid item xs={12} md={6} sx={{ maxWidth: '600px' }}>
+              <Card
+                sx={{
+                  p: { xs: 1, sm: 2, md: 3 },
+                  borderRadius: 2,
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(0, 191, 255, 0.15)',
+                  height: { xs: 'auto', sm: 200, md: 250, lg: 300 },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  boxSizing: 'border-box',
+                  width: '100%',
+                  maxWidth: { xs: '100%', sm: 500, md: 600, lg: 700 },
+                  mx: { xs: 'auto', md: 0 },
+                }}
+              >
+                <CardContent sx={{ p: 0, overflowY: 'auto' }}>
+                  <Typography
+                    variant="h4"
+                    component="h2"
+                    gutterBottom
+                    sx={{
+                      fontWeight: 'bold',
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
+                      color: 'rgba(20, 77, 157, 1)',
+                      fontSize: { xs: '1rem', sm: '1.2rem', md: '1.4rem', lg: '1.5rem' },
+                    }}
+                  >
+                    Laboratory Fume Extractor
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    paragraph
+                    sx={{
+                      wordBreak: 'break-word',
+                      fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' },
+                    }}
+                  >
+                    NAPCEN's Laboratory Fume Extractor is a high-performance air filtration system designed to remove hazardous fumes, vapors, and gases in laboratory settings. Equipped with HEPA and activated carbon filtration, it ensures a safe and compliant work environment.
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    component="h3"
+                    sx={{
+                      mt: { xs: 1, sm: 2 },
+                      mb: { xs: 1, sm: 2 },
+                      borderLeft: '4px solid',
+                      borderColor: '#00BFFF',
+                      pl: 1,
+                      fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem', lg: '1.25rem' },
+                    }}
+                  >
+                    Key Features
+                  </Typography>
+                  <ProductDetailsList
+                    items={[
+                      'HEPA filtration with 99.97% efficiency at 0.3 microns.',
+                      'Activated carbon for effective gas neutralization.',
+                      'Adjustable arms for precise fume capture.',
+                      'Low-noise operation for lab comfort.',
+                    ]}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          {/* Working Principles and Accordion */}
+          <Grid item xs={12} md={6}>
+            <Card
+              sx={{
+                p: { xs: 1, sm: 2, md: 3 },
+                borderRadius: 2,
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(0, 191, 255, 0.15)',
+                height: '100%',
+                minHeight: { xs: 'auto', sm: 200, md: 250, lg: 300 },
+              }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h5"
+                  component="h3"
+                  sx={{
+                    mt: 0,
+                    mb: { xs: 1, sm: 2 },
+                    borderLeft: '4px solid',
+                    borderColor: '#00BFFF',
+                    pl: 1,
+                    fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem', lg: '1.25rem' },
+                  }}
+                >
+                  How It Works
+                </Typography>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' },
+                  }}
+                >
+                  The Laboratory Fume Extractor draws contaminated air through adjustable extraction arms, filtering it with HEPA and activated carbon or chemical scrubbers to neutralize harmful substances, releasing clean air back into the lab.
+                </Typography>
+                <Box sx={{ mt: { xs: 2, sm: 3, md: 4 } }}>
+                  <Accordion
+                    defaultExpanded
+                    sx={{ '&:before': { display: 'none' }, mb: { xs: 1, sm: 2 } }}
+                  >
+                    <AccordionSummary
+                      expandIcon={
+                        <ExpandMoreIcon
+                          sx={{
+                            color: '#00BFFF',
+                            fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
+                          }}
+                        />
+                      }
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: 1,
+                        minHeight: { xs: 40, sm: 48 },
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        sx={{
+                          color: '#00BFFF',
+                          fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' },
+                        }}
+                      >
+                        Common Industries
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        p: { xs: 1, sm: 2 },
+                      }}
+                    >
+                      <ProductDetailsList
+                        items={[
+                          'Research laboratories',
+                          'Pharmaceutical manufacturing',
+                          'Chemical testing facilities',
+                          'Biotechnology labs',
+                          'Educational and academic research centers',
+                        ]}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                  <Accordion sx={{ '&:before': { display: 'none' } }}>
+                    <AccordionSummary
+                      expandIcon={
+                        <ExpandMoreIcon
+                          sx={{
+                            color: '#00BFFF',
+                            fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
+                          }}
+                        />
+                      }
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: 1,
+                        minHeight: { xs: 40, sm: 48 },
+                      }}
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight="bold"
+                        sx={{
+                          color: '#00BFFF',
+                          fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem', lg: '1rem' },
+                        }}
+                      >
+                        Explore Other Fume Extractors
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails
+                      sx={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        p: { xs: 1, sm: 2 },
+                      }}
+                    >
+                      <List
+                        dense
+                        sx={{
+                          pl: { xs: 1, sm: 2, md: 3 },
+                          listStyle: 'disc',
+                          '& .MuiListItem-root': { display: 'list-item' },
+                        }}
+                      >
+                        {[
+                          { name: 'Gold Fume Extractor', path: '/fume-extractors/gold' },
+                          { name: 'Welding Fume Extractor', path: '/fume-extractors/welding' },
+                          { name: 'Soldering Fume Extractor', path: '/fume-extractors/soldering' },
+                        ].map((item, index) => (
+                          <ListItem key={index} disableGutters>
+                            <MuiLink
+                              component={RouterLink}
+                              to={item.path}
+                              sx={{
+                                color: 'white',
+                                textDecoration: 'none',
+                                '&:hover': { color: '#00BFFF' },
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  fontSize: {
+                                    xs: '0.7rem',
+                                    sm: '0.75rem',
+                                    md: '0.8rem',
+                                    lg: '0.875rem',
+                                  },
+                                }}
+                              >
+                                {item.name}
+                              </Typography>
+                            </MuiLink>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </AccordionDetails>
+                  </Accordion>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          {/* Main Info Card with Left/Right Sections */}
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" alignItems="center">
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Card
+                  sx={{
+                    p: { xs: 1, sm: 2, md: 3 },
+                    borderRadius: 2,
+                    backgroundColor: 'rgba(0, 191, 255, 0.1)',
+                    border: '2px solid #00BFFF',
+                    mt: { xs: 1, sm: 2, md: 3 },
+                    boxShadow: '0 6px 20px rgba(0, 191, 255, 0.3)',
+                    minHeight: { xs: 'auto', sm: 200, md: 250, lg: 300 },
+                    width: '100%',
+                  }}
+                >
+                  <CardContent>
+                    <Grid container spacing={{ xs: 1, sm: 2 }}>
+                      {/* Left Column: Titles */}
+                      <Grid
+                        item
+                        xs={12}
+                        sm={5}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            borderRight: {
+                              xs: 'none',
+                              sm: '2px solid #00BFFF',
+                            },
+                            pb: { xs: 1, sm: 0 },
+                            pr: { xs: 0, sm: 2 },
+                          }}
+                        >
+                          {sections.map((section, index) => (
+                            <Box
+                              key={index}
+                              onClick={() => setActiveTab(index)}
+                              sx={{
+                                cursor: 'pointer',
+                                py: { xs: 0.5, sm: 1 },
+                                px: { xs: 1, sm: 2 },
+                                mb: { xs: 0.5, sm: 1 },
+                                borderRadius: 1,
+                                backgroundColor: activeTab === index ? '#00BFFF' : 'transparent',
+                                color: activeTab === index ? '#151d1d' : 'white',
+                                fontWeight: 'bold',
+                                transition: 'background-color 0.3s ease, color 0.3s ease',
+                                '&:hover': {
+                                  backgroundColor: '#00BFFF',
+                                  color: '#151d1d',
+                                },
+                              }}
+                            >
+                              <Typography
+                                variant="body1"
+                                sx={{
+                                  fontSize: {
+                                    xs: '0.75rem',
+                                    sm: '0.85rem',
+                                    md: '0.9rem',
+                                    lg: '1rem',
+                                  },
+                                }}
+                              >
+                                {section.title}
+                              </Typography>
+                            </Box>
+                          ))}
+                        </Box>
+                      </Grid>
+                      {/* Right Column: Details */}
+                      <Grid item xs={12} sm={7}>
+                        <Box sx={{ pl: { xs: 0, sm: 2 }, pt: { xs: 1, sm: 0 } }}>
+                          <ProductDetailsList items={sections[activeTab].details} />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Container>
+
+     
+      <ResourcesAndQuote/>
+      <CounterSection />
+      <FumeExtractor activeLink="/lab-fume" />
+    </ThemeProvider>
+  );
+};
+
+export default LaboratoryFumeExtractor;

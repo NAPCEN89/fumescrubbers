@@ -1,0 +1,42 @@
+mkdir -Force .github\workflows | Out-Null
+@'
+name: CI/CD - Build & Deploy to Metanet
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+        # working-directory: fumescrubbers   # <- uncomment if your app is in a subfolder
+
+      - name: Build
+        run: npm run build
+        # working-directory: fumescrubbers   # <- match the line above if uncommented
+
+      # Deploy only the CONTENTS of build/ (trailing slash matters)
+      - name: Deploy via rsync over SSH
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avzr --delete
+          path: build/                          # or: fumescrubbers/build/ if using subfolder
+          remote_path: ${{ secrets.SSH_TARGET_DIR }}   # e.g. /home/user/public_html/
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          remote_port: ${{ secrets.SSH_PORT }}        # optional; many servers default to 22
+'@ | Set-Content -Encoding utf8 .github\workflows\deploy.yml
