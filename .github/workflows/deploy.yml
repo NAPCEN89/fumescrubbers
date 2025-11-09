@@ -67,7 +67,7 @@ jobs:
           user: fumescrubber
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: build
-          remoteDir: /
+          
           options: --delete --verbose
 
       - name: DONE
