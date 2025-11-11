@@ -135,7 +135,7 @@ export default function Blogs() {
 
   // Mock additional data
   const getBlogDate = (blog) => blog.date || 'October 10, 2025';
-  const getBlogAuthor = (blog) => blog.author || 'AirTech Team';
+  const getBlogAuthor = (blog) => blog.author || 'Napcen Team';
   const getBlogReadTime = (blog) => blog.readTime || '4 min read';
   const getBlogCategory = (blog) => blog.category || 'General';
 

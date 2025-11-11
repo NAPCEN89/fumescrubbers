@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": " ",
-  
-
   "dependencies": {
-    
     "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -31,7 +28,7 @@
     "react-intersection-observer": "^9.16.0",
     "react-material-ui-carousel": "^3.4.2",
     "react-particles": "^2.12.2",
-    "react-router-dom": "^7.9.2",
+    "react-router-dom": "^7.9.5",
     "react-scripts": "5.0.1",
     "react-slick": "^0.31.0",
     "react-transition-group": "^4.4.5",

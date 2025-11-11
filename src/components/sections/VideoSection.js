@@ -7,7 +7,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 // Import the video and poster files
-import napcenFullvideo from '../../assets/images/napcenFullvideo.mp4';
+import napcenFullvideo from '../../assets/video/napcenStory.mp4';
 import videoPoster from '../../assets/images/bgnap.jpeg';
 
 const theme = createTheme({

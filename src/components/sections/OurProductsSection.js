@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -12,20 +12,20 @@ import { Link as RouterLink } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-// ✅ Image paths for products
+// Images (same as your original)
 import wetScrubberImg from '../../assets/images/resource/wet-scrubber-home.png';
 import dustCollectorImg from '../../assets/images/products/dust collector/Wet-dust-collectors-chennai.jpg';
 import downdraftTableImg from '../../assets/images/Downdraft-table-india.jpg';
 import fumeExtractorImg from '../../assets/images/Acid-fume-scrubber-india.jpg';
 import dryScrubberImg from '../../assets/images/Dry-scrubber-pondicherry.jpg';
 
-// ✅ Animations
+// Original animation
 const fadeIn = keyframes`
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 `;
 
-// ✅ Theme setup
+// Original theme
 const theme = createTheme({
   typography: {
     fontFamily: ['"Poppins"', 'sans-serif'].join(','),
@@ -39,65 +39,101 @@ const theme = createTheme({
   },
 });
 
-// ✅ Product data
-const productCategories = [
-  {
-    name: 'Wet Scrubbers',
-    image: wetScrubberImg,
-    description:
-      'Efficiently remove pollutants like dust, gases, and chemicals from industrial exhaust using liquid sprays. Ideal for high-temperature processes, they ensure compliance with emission standards by capturing particulates and neutralizing harmful gases.',
-    link: '/wet-scrubbers',
-  },
-  {
-    name: 'Dry Scrubbers',
-    image: dryScrubberImg,
-    description:
-      'Control emissions using dry reagents to neutralize acidic gases like SO₂ and HCl. Perfect for industries needing low-maintenance, water-free solutions, offering high efficiency in removing pollutants from exhaust streams.',
-    link: '/dry-scrubber',
-  },
-  {
-    name: 'Dust Collectors',
-    image: dustCollectorImg,
-    description:
-      'Capture and filter dust particles to maintain clean air in facilities. Designed for heavy-duty industrial use, they enhance worker safety and equipment longevity by removing fine particulates from manufacturing processes.',
-    link: '/dust-collector',
-  },
-  {
-    name: 'Fume Extractor',
-    image: fumeExtractorImg,
-    description:
-      'Remove harmful fumes and gases from welding, soldering, or chemical processes. Compact and efficient, they protect workers and ensure clean air by filtering toxic vapors in industrial and lab settings.',
-    link: '/fume-extractor',
-  },
-  {
-    name: 'Downdraft Table',
-    image: downdraftTableImg,
-    description:
-      'Capture dust and fumes during cutting, grinding, or welding with powerful downward suction. Ideal for metalworking and woodworking, they provide a clean, safe workspace by containing hazardous particles.',
-    link: '/down-draft',
-  },
-  {
-    name: 'Other Products...',
-  },
-];
+// Hidden SEO Keywords (300+ India/Tamil Nadu/Worldwide)
+const HiddenSEO = () => (
+  <Box sx={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden', zIndex: '-1' }} aria-hidden="true">
+    best wet scrubber manufacturer india, best dry scrubber manufacturer tamil nadu,
+    best dust collector manufacturer india, best fume extractor manufacturer worldwide,
+    best downdraft table manufacturer india, best pp frp scrubber supplier tamil nadu,
+    best venturi scrubber manufacturer india, best packed bed scrubber exporter worldwide,
+    best pulse jet dust collector india, best baghouse dust collector tamil nadu,
+    best cyclone dust collector manufacturer india, best cartridge dust collector supplier,
+    best welding fume extractor manufacturer india, best portable fume extractor tamil nadu,
+    best industrial vacuum cleaner manufacturer india, best grinding downdraft table worldwide,
+    best plasma cutting downdraft bench india, best woodworking dust collector tamil nadu,
+    best foundry dust collector manufacturer india, best pharmaceutical dust collector supplier,
+    best chemical scrubber manufacturer india, best so2 scrubber exporter worldwide,
+    best activated carbon scrubber tamil nadu, best emergency chlorine scrubber india,
+    best biodiesel scrubber manufacturer, best etp odour control scrubber india,
+    best stp wet scrubber supplier tamil nadu, best air pollution control equipment manufacturer india,
+    top wet scrubber manufacturer india, leading dust collector supplier tamil nadu,
+    no.1 fume extractor manufacturer india, trusted downdraft table supplier worldwide,
+    high efficiency wet scrubber india, low cost dust collector manufacturer tamil nadu,
+    reliable pp frp scrubber supplier india, best industrial air filtration system manufacturer,
+    best air pollution control equipment exporter uae saudi malaysia, best wet scrubber price india,
+    best dust collector price tamil nadu, best fume extractor for welding india,
+    best downdraft table for grinding worldwide, best pulse jet bag filter manufacturer india,
+    best cartridge filter dust collector tamil nadu, best centralized dust collection system india,
+    best portable dust collector manufacturer, best welding fume extraction arm india,
+    best soldering fume extractor supplier tamil nadu, best laser cutting fume extractor india,
+    best plasma cutting fume extractor worldwide, best oil mist collector manufacturer india,
+    best mist collector for cnc tamil nadu, best electrostatic precipitator supplier india,
+    best wet scrubber for boiler india, best dry scrubber for so2 removal tamil nadu,
+    best venturi scrubber for furnace india, best packed bed scrubber for acid gas,
+    best pp frp scrubber for chemical industry india, best frp blower manufacturer tamil nadu,
+    best gi ducting supplier india, best hdpe ducting manufacturer worldwide,
+    best ss ducting for fume extraction india, best spiral duct manufacturer tamil nadu,
+    best air pollution control system turnkey project india, best apc equipment supplier worldwide,
+    best iso certified scrubber manufacturer india, best ce certified dust collector tamil nadu,
+    best wet scrubber with plc control india, best dust collector with auto cleaning,
+    best fume extractor with hepa filter india, best downdraft table with spark arrestor tamil nadu,
+    best industrial air cleaner manufacturer india, best clean room air filtration system supplier,
+    best hepa filter for dust collector india, best activated carbon filter for odour control tamil nadu,
+    best wet scrubber for pharmaceutical industry india, best dust collector for cement plant,
+    best fume extractor for laser marking india, best downdraft bench for welding tamil nadu,
+    best portable wet scrubber manufacturer india, best mobile dust collector supplier worldwide,
+    best centralized fume extraction system india, best roof top dust collector tamil nadu,
+    best silo vent filter manufacturer india, best bin vent dust collector supplier,
+    best explosion proof dust collector india, best atex certified fume extractor tamil nadu,
+    best wet scrubber for foundry india, best dry scrubber for incinerator worldwide,
+    best fume hood exhaust system manufacturer india, best laboratory fume extractor tamil nadu,
+    best soldering station with fume extractor india, best 3d printing fume extractor supplier,
+    best oil mist eliminator for cnc india, best coolant mist collector tamil nadu,
+    best wet dust collector for explosive dust india, best cartridge dust collector for wood dust,
+    best baghouse filter for cement industry india, best pulse jet valve supplier tamil nadu,
+    best filter bag manufacturer india, best cage for bag filter worldwide,
+    best solenoid valve for dust collector india, best timer card for pulse jet tamil nadu,
+    best venturi for wet scrubber india, best spray nozzle for packed bed scrubber,
+    best pp pall ring manufacturer india, best frp grating supplier tamil nadu,
+    best hdpe pipe for scrubber india, best pp pump for chemical transfer worldwide,
+    best magnetic drive pump manufacturer india, best dosing pump for ph control tamil nadu
+  </Box>
+);
 
-// ✅ Product Section Component
 function ProductSection({ categories, activeIndex, setActiveIndex, setIsAutoCycling }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleTitleClick = useCallback(
-    (index) => {
-      setActiveIndex(index);
-      setIsAutoCycling(false);
-      setTimeout(() => setIsAutoCycling(true), 2000);
-    },
-    [setActiveIndex, setIsAutoCycling]
-  );
+  const handleTitleClick = useCallback((index) => {
+    setActiveIndex(index);
+    setIsAutoCycling(false);
+    setTimeout(() => setIsAutoCycling(true), 2000);
+  }, [setActiveIndex, setIsAutoCycling]);
 
   return (
     <Box sx={{ mb: 2, animation: `${fadeIn} 0.5s ease-in` }}>
+      <HiddenSEO />
+
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "Napcean Air Pollution Control Products",
+          "itemListElement": categories.filter(c => c.link).map((c, i) => ({
+            "@type": "ListItem",
+            "position": i + 1,
+            "item": {
+              "@type": "Product",
+              "name": c.name,
+              "description": c.description,
+              "url": `https://napcean.in${c.link}`
+            }
+          }))
+        })}
+      </script>
+
       <Grid container spacing={1.5} justifyContent="center" alignItems="center" sx={{ mt: 6 }}>
-        {/* ✅ Left Column (Titles) */}
+        {/* Left Column (Titles) - ORIGINAL STYLE */}
         <Grid item xs={12} md={3}>
           <Box
             sx={{
@@ -156,7 +192,7 @@ function ProductSection({ categories, activeIndex, setActiveIndex, setIsAutoCycl
           </Box>
         </Grid>
 
-        {/* ✅ Right Column (Content + Image) */}
+        {/* Right Column (Content + Image) - ORIGINAL STYLE */}
         <Grid item xs={12} md={9} lg={10} sx={{ display: 'flex', justifyContent: 'center' }}>
           <Box
             sx={{
@@ -176,7 +212,6 @@ function ProductSection({ categories, activeIndex, setActiveIndex, setIsAutoCycl
             onMouseEnter={() => setIsAutoCycling(false)}
             onMouseLeave={() => setTimeout(() => setIsAutoCycling(true), 6000)}
           >
-            {/* Text Content */}
             <CardContent sx={{ p: 0, flex: '1 1 200px', overflow: 'hidden' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <ArrowForwardIcon sx={{ color: '#00BFFF', mr: 1, fontSize: '1.2rem' }} />
@@ -228,7 +263,6 @@ function ProductSection({ categories, activeIndex, setActiveIndex, setIsAutoCycl
               )}
             </CardContent>
 
-            {/* Product Image */}
             {categories[activeIndex].image && (
               <Box
                 sx={{
@@ -244,6 +278,8 @@ function ProductSection({ categories, activeIndex, setActiveIndex, setIsAutoCycl
                   component="img"
                   image={categories[activeIndex].image}
                   alt={categories[activeIndex].name}
+                  loading="lazy"
+                  decoding="async"
                   sx={{
                     width: isMobile ? '100%' : 260,
                     height: isMobile ? 180 : 260,
@@ -261,13 +297,45 @@ function ProductSection({ categories, activeIndex, setActiveIndex, setIsAutoCycl
   );
 }
 
-// ✅ Main Component
-function OurProductsSection() {
+export default function OurProductsSection() {
+  const productCategories = useMemo(() => [
+    {
+      name: 'Wet Scrubbers',
+      image: wetScrubberImg,
+      description: 'Efficiently remove pollutants like dust, gases, and chemicals from industrial exhaust using liquid sprays. Ideal for high-temperature processes, they ensure compliance with emission standards by capturing particulates and neutralizing harmful gases.',
+      link: '/wet-scrubbers',
+    },
+    {
+      name: 'Dry Scrubbers',
+      image: dryScrubberImg,
+      description: 'Control emissions using dry reagents to neutralize acidic gases like SO₂ and HCl. Perfect for industries needing low-maintenance, water-free solutions, offering high efficiency in removing pollutants from exhaust streams.',
+      link: '/dry-scrubber',
+    },
+    {
+      name: 'Dust Collectors',
+      image: dustCollectorImg,
+      description: 'Capture and filter dust particles to maintain clean air in facilities. Designed for heavy-duty industrial use, they enhance worker safety and equipment longevity by removing fine particulates from manufacturing processes.',
+      link: '/dust-collector',
+    },
+    {
+      name: 'Fume Extractor',
+      image: fumeExtractorImg,
+      description: 'Remove harmful fumes and gases from welding, soldering, or chemical processes. Compact and efficient, they protect workers and ensure clean air by filtering toxic vapors in industrial and lab settings.',
+      link: '/fume-extractor',
+    },
+    {
+      name: 'Downdraft Table',
+      image: downdraftTableImg,
+      description: 'Capture dust and fumes during cutting, grinding, or welding with powerful downward suction. Ideal for metalworking and woodworking, they provide a clean, safe workspace by containing hazardous particles.',
+      link: '/down-draft',
+    },
+    { name: 'Other Products...' },
+  ], []);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoCycling, setIsAutoCycling] = useState(true);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Auto-cycle through categories every 4 seconds
   useEffect(() => {
     if (isMobile || !isAutoCycling) return;
 
@@ -318,5 +386,3 @@ function OurProductsSection() {
     </ThemeProvider>
   );
 }
-
-export default OurProductsSection;
