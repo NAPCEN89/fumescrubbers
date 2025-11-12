@@ -1,0 +1,53 @@
+[33mbd0f8dd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Add 345MB video via Git LFS
+[33m0dbe20e[m Add 345MB video via Git LFS
+[33m7ecfb23[m SEO update
+[33m67aeeb6[m final deploy "
+[33ma03557d[m final deploy "
+[33m3acbc83[m final deploy "
+[33mdf05da1[m final deploy "
+[33mb8ff491[m final deploy "
+[33m8c86583[m final deploy "
+[33m5818b33[m final deploy "
+[33mfe72c3f[m final deploy "
+[33m94a2e6f[m final deploy "
+[33mc5c59a7[m final deploy "
+[33m6ceb380[m final deploy "
+[33me19bfa4[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33m45f198c[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33m4501b08[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33maf373bd[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33m0bc2214[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33mb24cb6c[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33mb99e542[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33m9431d07[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33ma8bbbac[m Fix: use correct Metanet FTP path /domains/fumescrubbers.com/public
+[33mc63e956[m Fix: use correct Metanet FTP path /domains/fumescrubbers.com/public
+[33me9d7db2[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33m1007466[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33md6598d3[m Fix: use correct Metanet FTP path /domains/fumescrubbers.com/public
+[33m49a9d2d[m Update deploy.yml
+[33mefc51ad[m Fix: use correct Metanet FTP path /domains/fumescrubbers.com/public
+[33mdc84c16[m Fix: use correct Metanet FTP path /domains/fumescrubbers.com/public
+[33mca1e5d9[m CI/CD: build & FTP deploy (CI=false, correct slashes, version marker)
+[33mb1a9a01[m checking autodeploy
+[33mfadb70b[m Fix: add trailing slash to server-dir for FTP deploy
+[33md12f253[m Fix: add trailing slash to build folder path for FTP deploy
+[33m59a3df0[m Fix: disable ESLint CI strict mode for build
+[33m92f48c5[m Cleanup: move media to src/assets; keep JSON/README; remove root build artefacts
+[33mbf73d59[m Cleanup: move media to src/assets, keep JSON & README; remove Pages & root build artifacts
+[33m9031b09[m Save local work before cleanup
+[33md03a8ff[m Save local work before pulling latest
+[33mfe98527[m Delete .github/workflows/pages.yml
+[33m99fc250[m Refactor deploy workflow for React app build process
+[33mdedb91a[m Add GitHub Actions workflow for FTP deployment
+[33m9e7f938[m Add CNAME file for custom domain www.fumescrubbers.com
+[33m08bf933[m Trigger Pages deploy
+[33m9772771[m Fix build: CI=false for CRA, add debug, deploy to Pages
+[33mcade87c[m Add GitHub Pages workflow (no secrets required)
+[33m072cff4[m Remove SSH deploy workflow (no SSH on plan)
+[33m2642d41[m CI/CD: Build & deploy to GitHub Pages
+[33macbdcb3[m Fix YAML and harden deploy workflow
+[33m399e014[m CI/CD: auto-detect app dir + preflight checks + robust deploy
+[33m22a4816[m Fix CI/CD: robust SSH rsync deploy
+[33md568617[m changes made to check
+[33m241fffb[m Initial clean project source commit

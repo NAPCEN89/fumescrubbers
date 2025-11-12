@@ -27,6 +27,16 @@ jobs:
           PUBLIC_URL: ""
         run: npm run build
 
+      # NEW: Download entire Google Drive folder (your videos)
+      - name: Download videos from Google Drive
+        run: |
+          pip install --quiet gdown
+          mkdir -p build/videos
+          echo "Downloading your video folder from Google Drive..."
+          gdown --folder "https://drive.google.com/drive/folders/1PFV-L15FGUeuiWePFiEUbutU2SOS3F2U" -O build/videos --remaining-ok
+          echo "Download complete! Files:"
+          ls -la build/videos
+
       - name: Add .htaccess (final fix)
         run: |
           cat > build/.htaccess << 'EOF'
@@ -45,6 +55,7 @@ jobs:
         run: |
           echo "ROOT DIV FIXED!" > build/deploy-check.txt
           echo "DEPLOYED: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> build/deploy-check.txt
+          echo "VIDEO INCLUDED FROM GOOGLE DRIVE!" >> build/deploy-check.txt
           echo "ERROR #299 GONE FOREVER!" >> build/deploy-check.txt
 
       - name: Deploy to ROOT
@@ -58,4 +69,6 @@ jobs:
           options: --delete --verbose
 
       - name: DONE
-        run: echo "YOUR SITE IS NOW 100% LIVE AND BEAUTIFUL!"
+        run: |
+          echo "YOUR SITE IS NOW 100% LIVE WITH 352 MB VIDEO!"
+          echo "Video location: https://yoursite.com/videos/Napcen Web Vedio (1).mp4"
