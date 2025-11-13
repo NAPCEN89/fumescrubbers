@@ -1,32 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
-  AppBar,
-  Toolbar,
-  Box,
-  Button,
-  IconButton,
-  Link,
-  useTheme,
-  useMediaQuery,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Collapse,
-  Menu,
-  MenuItem,
+  AppBar, Toolbar, Box, Button, IconButton, Link,
+  useTheme, useMediaQuery, Drawer, List, ListItem,
+  ListItemButton, ListItemText, Collapse, Menu, MenuItem
 } from '@mui/material';
 import { Menu as MenuIcon, Close as CloseIcon, ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material';
-import { styled } from '@mui/system';
 import { FaUserAlt } from 'react-icons/fa';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { styled } from '@mui/system';
 import logo from '../../assets/images/Napcen-logo.png';
 import { industriesData } from '../../data/IndustryData';
 
-// Custom styled components
+// Styled Components
 const CustomAppBar = styled(AppBar)({
-  background: 'linear-gradient(to right, #424242, #030303ff)',
+  background: 'linear-gradient(to right, #424242, #030303)',
   boxShadow: 'none',
   position: 'absolute',
   top: 0,
@@ -38,18 +25,13 @@ const NavMenuContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  background: 'linear-gradient(to right, #424242, #030303ff)',
+  background: 'linear-gradient(to right, #424242, #030303)',
   borderRadius: '50px',
   gap: '20px',
   padding: '0 20px',
   height: '50px',
-  [theme.breakpoints.down('lg')]: {
-    gap: '12px',
-    padding: '0 10px',
-  },
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
-  },
+  [theme.breakpoints.down('lg')]: { gap: '12px', padding: '0 10px' },
+  [theme.breakpoints.down('md')]: { display: 'none' },
 }));
 
 const NavButton = styled(Button)(({ theme }) => ({
@@ -58,20 +40,8 @@ const NavButton = styled(Button)(({ theme }) => ({
   fontWeight: 400,
   fontSize: '16px',
   padding: '8px 16px',
-  minWidth: 'auto',
-  textAlign: 'center',
-  '&:hover': {
-    color: '#ff5722',
-    backgroundColor: 'transparent',
-  },
-  [theme.breakpoints.down('lg')]: {
-    fontSize: '14px',
-    padding: '6px 12px',
-  },
-  [theme.breakpoints.down('md')]: {
-    fontSize: '12px',
-    padding: '4px 8px',
-  },
+  '&:hover': { color: '#ff5722', backgroundColor: 'transparent' },
+  [theme.breakpoints.down('lg')]: { fontSize: '14px', padding: '6px 12px' },
 }));
 
 const ContactButton = styled(Button)(({ theme }) => ({
@@ -80,106 +50,59 @@ const ContactButton = styled(Button)(({ theme }) => ({
   color: '#fff',
   border: '1px solid rgba(255, 255, 255, 0.2)',
   borderRadius: '50px',
-  padding: '6px 8px',
+  padding: '8px 16px',
   textTransform: 'none',
   fontWeight: 600,
   fontSize: '14px',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.2)',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
-  [theme.breakpoints.down('lg')]: {
-    padding: '6px 12px',
-    fontSize: '12px',
-  },
-  [theme.breakpoints.down('md')]: {
-    padding: '6px 12px',
-    fontSize: '12px',
-  },
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '10px',
-    padding: '4px 8px',
-  },
+  [theme.breakpoints.down('sm')]: { fontSize: '12px', padding: '6px 12px' },
 }));
 
 const MobileDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
-    width: '250px',
-    background: 'linear-gradient(to right, #424242, #030303ff)',
+    width: '280px',
+    background: 'linear-gradient(to right, #424242, #030303)',
     color: '#fff',
     padding: '20px 0',
-    [theme.breakpoints.down(400)]: {
-      width: '200px',
-    },
+    [theme.breakpoints.down('sm')]: { width: '240px' },
   },
 }));
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isTinyScreen = useMediaQuery('(max-width: 400px)');
+  const isTiny = useMediaQuery('(max-width: 400px)');
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [industriesDropdownOpen, setIndustriesDropdownOpen] = useState(false);
-  const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
-  const [industriesAnchorEl, setIndustriesAnchorEl] = useState(null);
-  const [productsAnchorEl, setProductsAnchorEl] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [industriesOpen, setIndustriesOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
+  const [industriesAnchor, setIndustriesAnchor] = useState(null);
+  const [productsAnchor, setProductsAnchor] = useState(null);
 
   const navigate = useNavigate();
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-    setIndustriesDropdownOpen(false);
-    setProductsDropdownOpen(false);
-  };
-
-  const handleDesktopIndustriesClick = (event) => {
-    setIndustriesAnchorEl(event.currentTarget);
-    setProductsAnchorEl(null);
-  };
-
-  const handleDesktopIndustriesClose = () => {
-    setIndustriesAnchorEl(null);
-  };
-
-  const handleDesktopProductsClick = (event) => {
-    setProductsAnchorEl(event.currentTarget);
-    setIndustriesAnchorEl(null);
-  };
-
-  const handleDesktopProductsClose = () => {
-    setProductsAnchorEl(null);
-  };
-
-  const handleMobileIndustriesClick = () => {
-    setIndustriesDropdownOpen(!industriesDropdownOpen);
-    setProductsDropdownOpen(false);
-  };
-
-  const handleMobileProductsClick = () => {
-    setProductsDropdownOpen(!productsDropdownOpen);
-    setIndustriesDropdownOpen(false);
+  const toggleMobile = () => setMobileOpen(prev => !prev);
+  const closeMobile = () => {
+    setMobileOpen(false);
+    setIndustriesOpen(false);
+    setProductsOpen(false);
   };
 
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  }, [mobileMenuOpen]);
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
   const menuItems = [
     { label: 'Home', link: '/' },
     {
       label: 'Products',
       dropdown: true,
-      subItems: [
-        {name : 'All Products', path:'/products'},
+      items: [
+        { name: 'All Products', path: '/products' },
         { name: 'Wet Scrubber', path: '/wet-scrubbers' },
         { name: 'Dry Scrubber', path: '/dry-scrubber' },
         { name: 'Downdraft Table', path: '/down-draft' },
@@ -188,91 +111,71 @@ const Header = () => {
       ],
     },
     { label: 'Services', link: '/service' },
-    { label: 'Industries', dropdown: true, subItems: industriesData },
+    { label: 'Industries', dropdown: true, items: industriesData },
     { label: 'Accessories', link: '/accessories' },
     { label: 'Blog', link: '/blogs' },
   ];
 
+  const Logo = () => (
+    <Box
+      component="img"
+      src={logo}
+      alt="Napcen Logo"
+      loading="lazy"
+      sx={{
+        height: { xs: 38, sm: 44, md: 52, lg: 56 },
+        width: 'auto',
+        objectFit: 'contain',
+        filter: 'brightness(1.8) saturate(1.3)',
+      }}
+    />
+  );
+
   return (
-    <CustomAppBar elevation={0}>
-      <Toolbar
-        disableGutters
-        sx={{
-          minHeight: { xs: '60px', md: '80px' },
-          px: { xs: 2, sm: 3, md: 4, lg: 6 },
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          overflowX: 'hidden',
-        }}
-      >
-        <Link component={RouterLink} to="/" sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box
-            component="img"
-            src={logo}
-            alt="Napcen Logo"
-            sx={{
-              width: { xs: 100, sm: 106, md: 102.8, lg: 102.8 },
-              height: { xs: 29.28, sm: 37.92, md: 57.12, lg: 57.12 }, // Increased by 20% from { xs: 24.4, sm: 31.6, md: 47.6, lg: 47.6 }
-              transform: 'translateY(-8px)',
-              display: 'block',
-              filter: 'brightness(200%) saturate(150%) hue-rotate(0deg)',
-            }}
-          />
+    <CustomAppBar>
+      <Toolbar sx={{ minHeight: { xs: 64, md: 80 }, px: { xs: 2, md: 4, lg: 6 }, justifyContent: 'space-between' }}>
+        <Link component={RouterLink} to="/">
+          <Logo />
         </Link>
 
-        {!isMobile ? (
+        {!isMobile && (
           <NavMenuContainer>
             {menuItems.map((item) => (
               item.dropdown ? (
                 <React.Fragment key={item.label}>
                   <NavButton
-                    id={`${item.label.toLowerCase()}-button`}
-                    aria-controls={item.label === 'Industries' ? (industriesAnchorEl ? 'industries-menu' : undefined) : (productsAnchorEl ? 'products-menu' : undefined)}
-                    aria-haspopup="true"
-                    aria-expanded={item.label === 'Industries' ? (industriesAnchorEl ? 'true' : undefined) : (productsAnchorEl ? 'true' : undefined)}
-                    onClick={item.label === 'Industries' ? handleDesktopIndustriesClick : handleDesktopProductsClick}
                     endIcon={<ExpandMoreIcon />}
+                    onClick={(e) => item.label === 'Industries'
+                      ? (setIndustriesAnchor(e.currentTarget), setProductsAnchor(null))
+                      : (setProductsAnchor(e.currentTarget), setIndustriesAnchor(null))
+                    }
                   >
                     {item.label}
                   </NavButton>
+
                   <Menu
-                    id={`${item.label.toLowerCase()}-menu`}
-                    anchorEl={item.label === 'Industries' ? industriesAnchorEl : productsAnchorEl}
-                    open={item.label === 'Industries' ? Boolean(industriesAnchorEl) : Boolean(productsAnchorEl)}
-                    onClose={item.label === 'Industries' ? handleDesktopIndustriesClose : handleDesktopProductsClose}
-                    MenuListProps={{
-                      'aria-labelledby': `${item.label.toLowerCase()}-button`,
-                    }}
-                    PaperProps={{
-                      sx: {
-                        background: item.label === 'Industries' ? 'rgba(21, 29, 29, 0.9)' : 'rgba(21, 29, 29, 0.95)',
-                        border: item.label === 'Industries' ? '1px solid rgba(0, 191, 255, 0.2)' : '1px solid rgba(255, 87, 34, 0.3)',
-                        boxShadow: '0 8px 16px rgba(0,0,0,0.5)',
-                        padding: '5px 0',
-                        width: '200px',
-                        transform: 'translateY(10px)',
-                        marginTop: '8px',
-                      },
-                    }}
+                    anchorEl={item.label === 'Industries' ? industriesAnchor : productsAnchor}
+                    open={Boolean(item.label === 'Industries' ? industriesAnchor : productsAnchor)}
+                    onClose={() => setIndustriesAnchor(null) || setProductsAnchor(null)}
+                    PaperProps={{ sx: {
+                      bgcolor: 'rgba(21, 29, 29, 0.95)',
+                      border: '1px solid rgba(255, 87, 34, 0.3)',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                      mt: 1.5,
+                      width: 220,
+                    }}}
                   >
-                    {item.subItems.map((subItem) => (
+                    {item.items.map((sub) => (
                       <MenuItem
-                        key={subItem.path}
+                        key={sub.path}
                         onClick={() => {
-                          item.label === 'Industries' ? handleDesktopIndustriesClose() : handleDesktopProductsClose();
-                          navigate(subItem.path);
+                          navigate(sub.path);
+                          setIndustriesAnchor(null);
+                          setProductsAnchor(null);
                         }}
-                        sx={{
-                          color: '#fff',
-                          fontSize: '14px',
-                          '&:hover': {
-                            backgroundColor: 'rgba(255, 87, 34, 0.1)',
-                            color: '#ff5722',
-                          },
-                        }}
+                        sx={{ color: '#fff', fontSize: 14, '&:hover': { bgcolor: 'rgba(255, 87, 34, 0.15)', color: '#ff5722' } }}
                       >
-                        {subItem.name}
+                        {sub.name}
                       </MenuItem>
                     ))}
                   </Menu>
@@ -284,86 +187,42 @@ const Header = () => {
               )
             ))}
           </NavMenuContainer>
-        ) : (
-          <IconButton onClick={toggleMobileMenu} sx={{ color: '#fff' }} aria-label="open menu">
-            <MenuIcon sx={{ fontSize: isTinyScreen ? '20px' : '24px' }} />
-          </IconButton>
         )}
 
         {!isMobile && (
-          <Box>
-            <ContactButton variant="contained" onClick={() => navigate('/contact')}>
-              <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <FaUserAlt style={{ color: '#fff', fontSize: '12px' }} />
-                Contact Us
-              </Box>
-            </ContactButton>
-          </Box>
+          <ContactButton onClick={() => navigate('/contact')}>
+            <FaUserAlt style={{ fontSize: 12 }} /> Contact Us
+          </ContactButton>
         )}
 
-        <MobileDrawer anchor="right" open={mobileMenuOpen} onClose={closeMobileMenu} aria-label="mobile navigation menu">
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              closeMobileMenu();
-            }}
-            sx={{
-              color: '#fff',
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              zIndex: 1300,
-            }}
-            aria-label="close menu"
-          >
-            <CloseIcon sx={{ fontSize: isTinyScreen ? '20px' : '24px' }} />
+        {isMobile && (
+          <IconButton onClick={toggleMobile} sx={{ color: '#fff' }}>
+            <MenuIcon sx={{ fontSize: isTiny ? 28 : 32 }} />
           </IconButton>
-          <List sx={{ pt: 6 }}>
+        )}
+
+        <MobileDrawer anchor="right" open={mobileOpen} onClose={closeMobile}>
+          <IconButton onClick={closeMobile} sx={{ position: 'absolute', top: 8, right: 8, color: '#fff' }}>
+            <CloseIcon />
+          </IconButton>
+
+          <List sx={{ pt: 8 }}>
             {menuItems.map((item) => (
               item.dropdown ? (
                 <React.Fragment key={item.label}>
                   <ListItem disablePadding>
-                    <ListItemButton
-                      onClick={item.label === 'Industries' ? handleMobileIndustriesClick : handleMobileProductsClick}
-                      sx={{ justifyContent: 'center' }}
-                    >
+                    <ListItemButton onClick={item.label === 'Industries' ? () => setIndustriesOpen(!industriesOpen) : () => setProductsOpen(!productsOpen)}>
                       <ListItemText primary={item.label} sx={{ textAlign: 'center' }} />
-                      {item.label === 'Industries' ? (
-                        industriesDropdownOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />
-                      ) : (
-                        productsDropdownOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />
-                      )}
+                      {(item.label === 'Industries' ? industriesOpen : productsOpen) ? <ExpandMoreIcon /> : <ChevronRightIcon />}
                     </ListItemButton>
                   </ListItem>
-                  <Collapse in={item.label === 'Industries' ? industriesDropdownOpen : productsDropdownOpen} timeout="auto" unmountOnExit>
-                    <List
-                      component="div"
-                      disablePadding
-                      sx={{
-                        background: item.label === 'Industries' ? 'rgba(21, 29, 29, 0.9)' : 'rgba(21, 29, 29, 0.95)',
-                        border: item.label === 'Industries' ? '1px solid rgba(0, 191, 255, 0.2)' : '1px solid rgba(255, 87, 34, 0.3)',
-                        boxShadow: '0 4px 8px rgba(0,0,0,0.5)',
-                        margin: '5px 10px',
-                        borderRadius: '4px',
-                        padding: '5px 0',
-                      }}
-                    >
-                      {item.subItems.map((subItem) => (
-                        <ListItem key={subItem.path} disablePadding>
-                          <ListItemButton
-                            component={RouterLink}
-                            to={subItem.path}
-                            onClick={closeMobileMenu}
-                            sx={{
-                              justifyContent: 'center',
-                              color: '#fff',
-                              '&:hover': {
-                                backgroundColor: 'rgba(255, 87, 34, 0.1)',
-                                color: '#ff5722',
-                              },
-                            }}
-                          >
-                            <ListItemText primary={subItem.name} sx={{ textAlign: 'center', fontSize: '14px' }} />
+
+                  <Collapse in={item.label === 'Industries' ? industriesOpen : productsOpen}>
+                    <List disablePadding sx={{ bgcolor: 'rgba(21, 29, 29, 0.9)', mx: 2, my: 1, borderRadius: 1, border: '1px solid rgba(255, 87, 34, 0.3)' }}>
+                      {item.items.map((sub) => (
+                        <ListItem key={sub.path} disablePadding>
+                          <ListItemButton component={RouterLink} to={sub.path} onClick={closeMobile} sx={{ justifyContent: 'center' }}>
+                            <ListItemText primary={sub.name} sx={{ textAlign: 'center', fontSize: 14 }} />
                           </ListItemButton>
                         </ListItem>
                       ))}
@@ -372,18 +231,16 @@ const Header = () => {
                 </React.Fragment>
               ) : (
                 <ListItem key={item.label} disablePadding>
-                  <ListItemButton component={RouterLink} to={item.link} onClick={closeMobileMenu} sx={{ justifyContent: 'center' }}>
+                  <ListItemButton component={RouterLink} to={item.link} onClick={closeMobile} sx={{ justifyContent: 'center' }}>
                     <ListItemText primary={item.label} sx={{ textAlign: 'center' }} />
                   </ListItemButton>
                 </ListItem>
               )
             ))}
-            <ListItem sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-              <ContactButton variant="contained" onClick={() => { navigate("/contact"); closeMobileMenu(); }}>
-                <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <FaUserAlt style={{ color: '#fff', fontSize: '12px' }} />
-                  Contact Us
-                </Box>
+
+            <ListItem sx={{ justifyContent: 'center', mt: 3 }}>
+              <ContactButton onClick={() => { navigate('/contact'); closeMobile(); }}>
+                <FaUserAlt style={{ fontSize: 12 }} /> Contact Us
               </ContactButton>
             </ListItem>
           </List>

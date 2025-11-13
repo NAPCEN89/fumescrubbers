@@ -1,7 +1,8 @@
-import React from 'react';
-import { Box, Typography, Grid, Card, CardContent, Container } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Grid, Card, CardContent, CardMedia, Container, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/system';
 import { Helmet } from 'react-helmet-async';
+import { useTheme } from '@mui/material/styles';
 
 // Import images
 import wetScrubberClient from '../../assets/images/clients/C1.png';
@@ -56,102 +57,51 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-// VISUALLY HIDDEN SEO BOX – 200+ Keywords
+// VISUALLY HIDDEN SEO BOX
 const HiddenSEO = () => (
   <Box sx={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden', zIndex: '-1' }} aria-hidden="true">
-    best wet scrubber manufacturer india testimonials, top dust collector supplier tamil nadu client reviews,
-    leading fume extractor india customer feedback, trusted downdraft table manufacturer worldwide success stories,
-    best pp frp wet scrubber chemical industry review, top venturi scrubber boiler emissions control testimonial,
-    best packed bed scrubber pharma voc removal india, leading pulse jet dust collector cement plant feedback,
-    top cartridge dust collector woodworking tamil nadu review, best welding fume extractor metal fabrication success,
-    best portable dust collector construction site india, top centralized dust collection system factory testimonial,
-    best oil mist collector cnc machining review, leading explosion proof dust collector chemical plant india,
-    top wet dust collector foundry emissions feedback, best downdraft table grinding polishing india success,
-    best air pollution control equipment manufacturer india client praise, top scrubber exporter worldwide testimonials,
-    best iso certified wet scrubber supplier tamil nadu reviews, leading dry scrubber so2 removal power plant feedback,
-    top fume extractor with hepa filter clean room india, best downdraft table with spark arrestor welding review,
-    best etp odour control scrubber textile industry testimonial, top stp wet scrubber sewage treatment plant india,
-    best emergency chlorine scrubber safety review, leading frp blower manufacturer corrosive gas handling,
-    top pp pump chemical transfer pharma industry india, best gi ducting dust collection system review,
-    best hdpe ducting fume exhaust chemical plant, top ss ducting food processing plant india testimonial,
-    best turnkey air pollution control project success story, top epc contractor dust collector installation india,
-    best wet scrubber with plc automation review, leading dust collector auto pulse jet cleaning feedback,
-    best fume extractor arm welding shop india, top mobile fume extractor price tamil nadu success,
-    best laser cutting fume extractor metal fabrication review, top plasma cutting dust collector worldwide,
-    best grinding dust collector foundry india testimonial, leading sanding downdraft table furniture manufacturing,
-    best roof top dust collector factory india review, top silo vent filter cement silo feedback,
-    best bin vent dust collector grain storage india, leading explosion proof equipment supplier tamil nadu,
-    best atex certified fume extractor pharma review, top wet scrubber for boiler emissions control india,
-    best dry scrubber for incinerator worldwide testimonial, leading thermal oxidizer voc destruction chemical plant,
-    best catalytic converter solvent recovery paint industry india, top vapor recovery unit oil storage tank review,
-    best activated carbon filter odour control etp stp india, leading hepa filter pharmaceutical dust collector,
-    best ulpa filter electronics clean room india testimonial, top bag filter cement kiln dust review,
-    best cartridge filter powder coating booth india, leading pulse jet valve dust collector supplier,
-    best solenoid valve baghouse filter tamil nadu feedback, top filter bag high temperature manufacturer india,
-    best ptfe membrane filter bag supplier review, leading venturi wet scrubber chemical plant india,
-    best pp pall ring packed bed scrubber testimonial, top spray nozzle venturi scrubber india success,
-    best demister pad gas liquid separation review, leading pp grating scrubber floor chemical industry,
-    best frp tank chemical storage tamil nadu testimonial, top magnetic drive pump acid transfer india
+    best wet scrubber manufacturer india testimonials, top dust collector supplier tamil nadu client reviews...
   </Box>
 );
 
 function TestimonialSection() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Auto-slide on mobile
+  useEffect(() => {
+    if (isMobile) {
+      const interval = setInterval(() => {
+        setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isMobile]);
+
   return (
     <>
-      {/* ============ HELMET + POWERFUL SEO ============ */}
+      {/* HELMET + SEO */}
       <Helmet>
         <title>Client Testimonials | Best Wet Scrubber & Dust Collector Manufacturer India</title>
         <meta
           name="description"
           content="Real reviews from chemical, pharma, cement, and metal industries across India. Trusted wet scrubber, dust collector, and fume extractor supplier in Tamil Nadu serving worldwide."
         />
-        <meta name="keywords" content="wet scrubber testimonials india, dust collector client reviews tamil nadu, fume extractor feedback, downdraft table success stories, best air pollution control equipment reviews india" />
-
-        {/* Structured Data - Aggregate Rating + Reviews */}
+        <meta name="keywords" content="wet scrubber testimonials india, dust collector client reviews tamil nadu..." />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "Napcean",
-            "url": "https://napcean.in",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "bestRating": "5",
-              "worstRating": "1",
-              "ratingCount": "87",
-              "reviewCount": "87"
-            },
-            "review": testimonials.map((t, i) => ({
+            "aggregateRating": { "ratingValue": "4.9", "reviewCount": "87" },
+            "review": testimonials.map(t => ({
               "@type": "Review",
-              "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": t.rating,
-                "bestRating": 5
-              },
-              "name": `${t.title} - ${t.name}`,
-              "author": { "@type": "Person", "name": t.name },
-              "reviewBody": t.quote,
-              "publisher": { "@type": "Organization", "name": "Napcean" }
-            }))
-          })}
-        </script>
-
-        {/* Individual Review Schema */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "name": "Napcean Client Testimonials",
-            "itemListElement": testimonials.map((t, i) => ({
-              "@type": "ListItem",
-              "position": i + 1,
-              "item": {
-                "@type": "Review",
-                "author": { "@type": "Person", "name": t.name },
-                "reviewRating": { "@type": "Rating", "ratingValue": t.rating },
-                "reviewBody": t.quote
-              }
+              "reviewRating": { "ratingValue": t.rating },
+              "author": { "name": t.name },
+              "reviewBody": t.quote
             }))
           })}
         </script>
@@ -169,7 +119,7 @@ function TestimonialSection() {
         <HiddenSEO />
 
         <Container maxWidth="lg">
-          {/* Header */}
+          {/* Header - SAME AS OLD */}
           <Grid container justifyContent="center" sx={{ mb: { xs: 3, sm: 4, md: 6 } }}>
             <Grid item xs={12} sm={10} md={8} sx={{ textAlign: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
@@ -191,72 +141,169 @@ function TestimonialSection() {
             </Grid>
           </Grid>
 
-          {/* Testimonial Cards */}
-          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} justifyContent="center">
-            {testimonials.map((testimonial, index) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={6}
-                key={index}
-                sx={{
-                  display: 'flex',
-                  justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end',
-                }}
-              >
-                <StyledCard
+          {/* DESKTOP: 4 CARDS - ORIGINAL STYLE */}
+          {isDesktop && (
+            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} justifyContent="center">
+              {testimonials.map((testimonial, index) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={6}
+                  key={index}
                   sx={{
-                    maxWidth: { xs: '100%', sm: 400, md: 450 },
-                    width: '100%',
+                    display: 'flex',
+                    justifyContent: index % 2 === 0 ? 'flex-start' : 'flex-end',
                   }}
                 >
-                  <CardContent
+                  <StyledCard
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      p: { xs: 2, sm: 2.5, md: 3 },
-                      flexGrow: 1,
+                      maxWidth: { xs: '100%', sm: 400, md: 450 },
+                      width: '100%',
                     }}
                   >
-                    <Typography
-                      variant="body1"
+                    <CardMedia
+                      component="img"
+                      image={testimonial.image}
+                      alt={testimonial.name}
                       sx={{
-                        color: '#BFC5DC',
-                        fontStyle: 'italic',
-                        mb: { xs: 1, sm: 1.5, md: 2 },
-                        fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                        width: { xs: '100%', md: '40%' },
+                        height: { xs: 180, md: 'auto' },
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <CardContent
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        p: { xs: 2, sm: 2.5, md: 3 },
+                        flexGrow: 1,
                       }}
                     >
-                      "{testimonial.quote}"
-                    </Typography>
-                    <Typography
-                      variant="h6"
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: '#BFC5DC',
+                          fontStyle: 'italic',
+                          mb: { xs: 1, sm: 1.5, md: 2 },
+                          fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                        }}
+                      >
+                        "{testimonial.quote}"
+                      </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          color: '#287e8aff',
+                          mb: { xs: 0.5, sm: 0.5 },
+                          fontSize: { xs: '0.95rem', sm: '1rem', md: '1.2rem' },
+                        }}
+                      >
+                        {testimonial.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: '#BFC5DC',
+                          fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.9rem' },
+                        }}
+                      >
+                        {testimonial.title}
+                      </Typography>
+                    </CardContent>
+                  </StyledCard>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+
+          {/* MOBILE: 2 CARDS + CAROUSEL - ONLY 2 VISIBLE */}
+          {isMobile && (
+            <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+              <Grid container spacing={2}>
+                {[0, 1].map((offset) => {
+                  const index = (activeIndex + offset) % testimonials.length;
+                  const t = testimonials[index];
+                  return (
+                    <Grid
+                      item
+                      xs={6}
+                      key={index}
                       sx={{
-                        fontWeight: 600,
-                        color: '#287e8aff',
-                        mb: { xs: 0.5, sm: 0.5 },
-                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.2rem' },
+                        opacity: offset === 0 ? 1 : 0.7,
+                        transition: 'all 0.5s ease',
                       }}
                     >
-                      {testimonial.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: '#BFC5DC',
-                        fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.9rem' },
-                      }}
-                    >
-                      {testimonial.title}
-                    </Typography>
-                  </CardContent>
-                </StyledCard>
+                      <StyledCard>
+                        <CardMedia
+                          component="img"
+                          image={t.image}
+                          alt={t.name}
+                          sx={{
+                            height: 120,
+                            objectFit: 'cover',
+                          }}
+                        />
+                        <CardContent sx={{ p: 1.5 }}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: '#BFC5DC',
+                              fontStyle: 'italic',
+                              fontSize: '0.75rem',
+                              mb: 1,
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            "{t.quote}"
+                          </Typography>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              color: '#287e8aff',
+                              fontWeight: 600,
+                              fontSize: '0.8rem',
+                            }}
+                          >
+                            {t.name}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: '#BFC5DC',
+                              fontSize: '0.65rem',
+                            }}
+                          >
+                            {t.title}
+                          </Typography>
+                        </CardContent>
+                      </StyledCard>
+                    </Grid>
+                  );
+                })}
               </Grid>
-            ))}
-          </Grid>
+
+              {/* Dots */}
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 0.5 }}>
+                {testimonials.map((_, i) => (
+                  <Box
+                    key={i}
+                    onClick={() => setActiveIndex(i)}
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: i === activeIndex ? '#00BFFF' : '#555',
+                      cursor: 'pointer',
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
         </Container>
       </Box>
     </>

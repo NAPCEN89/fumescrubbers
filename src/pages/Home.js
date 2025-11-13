@@ -34,7 +34,7 @@ function Home() {
           <OurProductsSection />
         <OurServicesSection />
         <VideoSection/>
-        <TestimonialsAndClientsSection />
+        
         
         {/* 2. Place the RecentBlogs component here, after Testimonials */}
         <RecentBlogs />

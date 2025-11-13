@@ -1,267 +1,173 @@
-
 import React, { useState } from 'react';
 import { useTheme, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/system';
-import { Box, Typography, TextField, Button, Grid, Container, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Container,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  InputAdornment,
+} from '@mui/material';
 import emailjs from 'emailjs-com';
-import PhoneIcon from '@mui/icons-material/Phone';
+import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { FaUserAlt } from 'react-icons/fa';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import InstagramIcon from '@mui/icons-material/Instagram';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 // Styled Components
 const StyledSection = styled('section')(({ theme }) => ({
   background: 'linear-gradient(to bottom, #1a2a2aff, #0d1515ff)',
-  padding: theme.spacing(4, 2),
+  padding: theme.spacing(8, 2),
   color: '#f5f6f5',
-  fontFamily: theme.typography.fontFamily,
   minHeight: '100vh',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'center',
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(3, 2),
-    minHeight: 'auto',
+    padding: theme.spacing(6, 2),
   },
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2, 1.5),
+    padding: theme.spacing(4, 1.5),
   },
 }));
 
-const StyledContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2, 2),
-  background: 'rgba(255, 255, 255, 0.05)',
-  borderRadius: theme.spacing(1.2),
-  border: '1px solid rgba(255, 255, 255, 0.15)',
-  backdropFilter: 'blur(8px)',
-  boxShadow: '0 6px 16px rgba(0, 0, 0, 0.15)',
-  maxWidth: '380px',
+const FormContainer = styled(Box)(({ theme }) => ({
   width: '100%',
+  maxWidth: '520px',
   margin: '0 auto',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+  padding: theme.spacing(4),
+  background: 'rgba(255, 255, 255, 0.06)',
+  borderRadius: theme.spacing(2.5),
+  border: '1px solid rgba(255, 255, 255, 0.18)',
+  backdropFilter: 'blur(14px)',
+  boxShadow: '0 12px 40px rgba(0, 0, 0, 0.3)',
+  transition: 'all 0.4s ease',
+  '&:hover': {
+    boxShadow: '0 16px 50px rgba(0, 0, 0, 0.35)',
+    transform: 'translateY(-4px)',
+  },
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(1.5, 1.5),
-    borderRadius: theme.spacing(1),
-    maxWidth: '340px',
+    padding: theme.spacing(3.5),
+    maxWidth: '460px',
   },
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(1.2, 1.2),
-    borderRadius: theme.spacing(0.8),
+    padding: theme.spacing(3),
     maxWidth: '100%',
+    margin: theme.spacing(0, 2),
+    borderRadius: theme.spacing(2),
   },
-}));
-
-const SocialIconsBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  gap: theme.spacing(1.2),
-  marginTop: theme.spacing(2),
-  justifyContent: 'center',
-  [theme.breakpoints.down('md')]: {
-    marginTop: theme.spacing(1.5),
-    gap: theme.spacing(0.8),
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(0.6),
-    marginTop: theme.spacing(1),
-  },
-}));
-
-const SocialIconLink = styled('a')(({ theme }) => ({
-  color: '#f5f6f5',
-  transition: 'color 0.3s ease, transform 0.3s ease',
-  fontSize: theme.spacing(2.2),
-  padding: theme.spacing(0.3),
-  [theme.breakpoints.down('md')]: {
-    fontSize: theme.spacing(2),
-  },
-  [theme.breakpoints.down('sm')]: {
-    fontSize: theme.spacing(1.8),
-    padding: theme.spacing(0.2),
-  },
-  '&:hover': {
-    color: '#ff5722',
-    transform: 'scale(1.1)',
-  },
-}));
-
-const ContactInfoWrapper = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  justifyContent: 'space-between',
-  textAlign: 'center',
-  alignItems: 'center',
-}));
-
-const ContactInfoBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1.2),
-  marginBottom: theme.spacing(1.5),
-  transition: 'transform 0.3s ease',
-  '&:hover': {
-    transform: 'translateX(5px)',
-  },
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(1),
-    gap: theme.spacing(0.8),
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(0.6),
-    marginBottom: theme.spacing(0.8),
-  },
-}));
-
-const StyledIconWrapper = styled(Box)(({ theme }) => ({
-  color: '#ff5722',
-  background: 'rgba(255, 87, 34, 0.1)',
-  borderRadius: '50%',
-  width: { xs: theme.spacing(3), sm: theme.spacing(3.5), md: theme.spacing(4) },
-  height: { xs: theme.spacing(3), sm: theme.spacing(3.5), md: theme.spacing(4) },
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-}));
-
-const FormWrapper = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  justifyContent: 'space-between',
-  textAlign: 'center',
-  alignItems: 'center',
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
-  marginBottom: theme.spacing(1.5),
+  marginBottom: theme.spacing(2.5),
   '& .MuiOutlinedInput-root': {
-    borderRadius: theme.spacing(1.2),
-    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: theme.spacing(2),
+    background: 'rgba(255, 255, 255, 0.08)',
+    transition: 'all 0.3s ease',
     '& fieldset': {
       borderColor: 'rgba(255, 255, 255, 0.3)',
     },
     '&:hover fieldset': {
-      borderColor: '#ff5722',
+      borderColor: '#4CAF50',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#ff5722',
-      boxShadow: '0 0 8px rgba(255, 87, 34, 0.3)',
+      borderColor: '#4CAF50',
+      boxShadow: '0 0 14px rgba(76, 175, 80, 0.35)',
     },
   },
   '& .MuiInputBase-input': {
     color: '#f5f6f5',
-    fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' },
-    padding: theme.spacing(1.2, 1.8),
+    fontSize: '1rem',
+    padding: theme.spacing(1.8, 2.2),
     [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(1, 1.5),
-      fontSize: '0.85rem',
+      padding: theme.spacing(1.6, 2),
+      fontSize: '0.95rem',
     },
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(0.8, 1.2),
-      fontSize: '0.8rem',
+      padding: theme.spacing(1.4, 1.8),
+      fontSize: '0.9rem',
     },
   },
   '& .MuiInputLabel-root': {
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' },
+    color: 'rgba(255, 255, 255, 0.75)',
+    fontSize: '0.95rem',
     [theme.breakpoints.down('sm')]: {
-      fontSize: '0.75rem',
+      fontSize: '0.85rem',
     },
   },
   '& .MuiInputLabel-root.Mui-focused': {
-    color: '#ff5722',
-  },
-  '& .MuiInputBase-input::placeholder': {
-    color: 'rgba(255, 255, 255, 0.7)',
-    opacity: 1,
+    color: '#4CAF50',
   },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
-  marginBottom: theme.spacing(1.5),
+  marginBottom: theme.spacing(2.5),
   '& .MuiOutlinedInput-root': {
-    borderRadius: theme.spacing(1.2),
-    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: theme.spacing(2),
+    background: 'rgba(255, 255, 255, 0.08)',
     '& fieldset': {
       borderColor: 'rgba(255, 255, 255, 0.3)',
     },
     '&:hover fieldset': {
-      borderColor: '#ff5722',
+      borderColor: '#4CAF50',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#ff5722',
-      boxShadow: '0 0 8px rgba(255, 87, 34, 0.3)',
+      borderColor: '#4CAF50',
+      boxShadow: '0 0 14px rgba(76, 175, 80, 0.35)',
     },
   },
   '& .MuiSelect-select': {
     color: '#f5f6f5',
-    fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' },
-    padding: theme.spacing(1.2, 1.8),
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(1, 1.5),
-      fontSize: '0.85rem',
-    },
+    fontSize: '1rem',
+    padding: theme.spacing(1.8, 2.2),
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(0.8, 1.2),
-      fontSize: '0.8rem',
+      padding: theme.spacing(1.4, 1.8),
+      fontSize: '0.9rem',
     },
-  },
-  '& .MuiInputLabel-root': {
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '0.75rem',
-    },
-  },
-  '& .MuiInputLabel-root.Mui-focused': {
-    color: '#ff5722',
   },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   width: '100%',
-  padding: theme.spacing(1.2),
-  borderRadius: theme.spacing(1.2),
+  padding: theme.spacing(2),
+  borderRadius: theme.spacing(2),
   textTransform: 'none',
-  fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' },
+  fontSize: '1.1rem',
   fontWeight: 600,
-  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  color: '#f5f6f5',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  backdropFilter: 'blur(5px)',
-  boxShadow: '0 4px 10px rgba(255, 255, 255, 0.1)',
+  background: 'linear-gradient(45deg, #4CAF50, #66BB6A)',
+  color: '#fff',
+  boxShadow: '0 8px 25px rgba(76, 175, 80, 0.45)',
   transition: 'all 0.3s ease',
   '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    boxShadow: '0 6px 14px rgba(255, 255, 255, 0.15)',
-    transform: 'translateY(-1px)',
+    background: 'linear-gradient(45deg, #43A047, #66BB6A)',
+    boxShadow: '0 12px 32px rgba(76, 175, 80, 0.55)',
+    transform: 'translateY(-3px)',
   },
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(1),
-    fontSize: '0.85rem',
+    padding: theme.spacing(1.8),
+    fontSize: '1rem',
   },
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(0.8),
-    fontSize: '0.8rem',
+    padding: theme.spacing(1.6),
+    fontSize: '0.95rem',
   },
 }));
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
     product: '',
-    firstName: '',
+    name: '',
     email: '',
+    mobile: '',
     message: '',
   });
   const [status, setStatus] = useState('');
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const products = [
     'Wet Scrubbers',
@@ -274,16 +180,13 @@ const ContactUs = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.email) {
-      setStatus('Email is required.');
+    if (!formData.email || !formData.mobile) {
+      setStatus('Email and Mobile are required.');
       return;
     }
 
@@ -292,308 +195,187 @@ const ContactUs = () => {
         process.env.REACT_APP_EMAILJS_SERVICE_ID,
         process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
         {
-          from_name: formData.firstName,
+          from_name: formData.name,
           email: formData.email,
+          mobile: formData.mobile,
           product: formData.product || 'Not specified',
           message: formData.message,
+          to_email: 'sales@napcen.com', // YOUR ORIGINAL EMAIL
         },
         process.env.REACT_APP_EMAILJS_PUBLIC_KEY
       )
       .then(
         () => {
-          setStatus('Form Submitted Successfully!');
-          setFormData({ product: '', firstName: '', email: '', message: '' });
+          setStatus('Message Sent Successfully!');
+          setFormData({ product: '', name: '', email: '', mobile: '', message: '' });
+          setTimeout(() => setStatus(''), 4000);
         },
-        (error) => {
-          setStatus('Failed to send message. Please try again.');
-          console.error('EmailJS error:', error);
+        () => {
+          setStatus('Failed to send. Please try again.');
         }
       );
   };
 
-  const getTitleVariant = () => {
-    return isSmallScreen ? 'h5' : 'h3';
-  };
-
-  const getSubtitleVariant = () => {
-    return isSmallScreen ? 'h6' : 'h5';
-  };
-
   return (
     <StyledSection id="contact">
-      <Container maxWidth="lg" sx={{ px: { xs: 1, sm: 2 } }}>
-        <Box sx={{ marginTop: '10px' }}>
-          <Typography
-            variant={getTitleVariant()}
-            sx={{
-              textAlign: 'center',
-              fontWeight: 700,
-              mb: { xs: 2, sm: 3, md: 4 },
-              color: '#3b82f6',
-              textTransform: 'uppercase',
-              letterSpacing: { xs: '0.6px', sm: '0.8px', md: '1px' },
-              fontSize: {
-                xs: '1.4rem',
-                sm: '1.6rem',
-                md: '2rem',
-                lg: '2.3rem',
-              },
-            }}
-          >
-            Contact Us
-          </Typography>
+      <Container maxWidth="md" sx={{ px: { xs: 1, sm: 2 } }}>
+        <Typography
+          variant={isMobile ? 'h5' : 'h3'}
+          sx={{
+            textAlign: 'center',
+            fontWeight: 700,
+            mb: { xs: 4, md: 6 },
+            color: '#3b82f6',
+            textTransform: 'uppercase',
+            letterSpacing: '1.5px',
+            fontSize: { xs: '1.9rem', sm: '2.4rem', md: '3rem' },
+          }}
+        >
+          Contact Us
+        </Typography>
 
-          <Grid container spacing={2} justifyContent="center" alignItems="stretch">
-            {/* Left Section - Contact Info */}
-            <Grid item xs={12} sm={6} lg={5}>
-              <StyledContainer>
-                <ContactInfoWrapper>
-                  <Box>
-                    <Typography
-                      variant={getSubtitleVariant()}
-                      sx={{
-                        fontWeight: 600,
-                        mb: { xs: 1, sm: 1.5 },
-                        color: '#f5f6f5',
-                        textAlign: 'center',
-                        width: '100%',
-                      }}
-                    >
-                      Get In Touch
-                    </Typography>
+        {/* SINGLE CENTERED FORM CARD */}
+        <FormContainer>
+          <Box textAlign="center">
+            <Typography
+              variant={isMobile ? 'h6' : 'h5'}
+              sx={{
+                fontWeight: 600,
+                mb: 1.5,
+                color: '#f5f6f5',
+                fontSize: { xs: '1.3rem', sm: '1.5rem' },
+              }}
+            >
+              Get a Quote
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'rgba(255,255,255,0.85)',
+                mb: 4,
+                fontSize: { xs: '0.9rem', sm: '0.95rem' },
+                lineHeight: 1.5,
+              }}
+            >
+              Fill the form — we’ll reply within 2 hours to <strong>sales@napcen.com</strong>
+            </Typography>
 
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'rgba(255, 255, 255, 0.85)',
-                        mb: { xs: 1.5, sm: 2 },
-                        fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
-                        textAlign: 'center',
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      Have questions or need assistance? Our team is ready to help.
-                    </Typography>
+            <form onSubmit={handleSubmit}>
+              {/* PRODUCT */}
+              <FormControl fullWidth>
+                <InputLabel sx={{ color: 'rgba(255,255,255,0.75)', '&.Mui-focused': { color: '#4CAF50' } }}>
+                  Product
+                </InputLabel>
+                <StyledSelect
+                  name="product"
+                  value={formData.product}
+                  onChange={handleChange}
+                  displayEmpty
+                >
+                  <MenuItem value="" disabled>Select Product</MenuItem>
+                  {products.map((p) => (
+                    <MenuItem key={p} value={p}>{p}</MenuItem>
+                  ))}
+                </StyledSelect>
+              </FormControl>
 
-                    <Box sx={{ width: '100%', maxWidth: '300px', mx: 'auto' }}>
-                      <ContactInfoBox sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                        <StyledIconWrapper>
-                          <PhoneIcon fontSize="small" />
-                        </StyledIconWrapper>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#f5f6f5',
-                              fontSize: { xs: '0.8rem', sm: '0.85rem' },
-                            }}
-                          >
-                            Phone
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                            }}
-                          >
-                            +91-7904469219
-                          </Typography>
-                        </Box>
-                      </ContactInfoBox>
+              {/* NAME */}
+              <StyledTextField
+                fullWidth
+                name="name"
+                label="Full Name"
+                value={formData.name}
+                onChange={handleChange}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: '#4CAF50' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                      <ContactInfoBox sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                        <StyledIconWrapper>
-                          <EmailIcon fontSize="small" />
-                        </StyledIconWrapper>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#f5f6f5',
-                              fontSize: { xs: '0.8rem', sm: '0.85rem' },
-                            }}
-                          >
-                            Email
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                            }}
-                          >
-                            sales@napcen.com
-                          </Typography>
-                        </Box>
-                      </ContactInfoBox>
+              {/* EMAIL */}
+              <StyledTextField
+                fullWidth
+                name="email"
+                type="email"
+                label="Email *"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon sx={{ color: '#4CAF50' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                      <ContactInfoBox sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                        <StyledIconWrapper>
-                          <LocationOnIcon fontSize="small" />
-                        </StyledIconWrapper>
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#f5f6f5',
-                              fontSize: { xs: '0.8rem', sm: '0.85rem' },
-                            }}
-                          >
-                            Address
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                              lineHeight: 1.2,
-                            }}
-                          >
-                            No1.North Street,SMV puram Villianur,Pudhucherry-605110,India
-                          </Typography>
-                        </Box>
-                      </ContactInfoBox>
-                    </Box>
-                  </Box>
+              {/* MOBILE */}
+              <StyledTextField
+                fullWidth
+                name="mobile"
+                label="Mobile No *"
+                value={formData.mobile}
+                onChange={handleChange}
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneIcon sx={{ color: '#4CAF50' }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                  <SocialIconsBox>
-                    <SocialIconLink href="#" aria-label="Twitter">
-                      <TwitterIcon />
-                    </SocialIconLink>
-                    <SocialIconLink href="#" aria-label="LinkedIn">
-                      <LinkedInIcon />
-                    </SocialIconLink>
-                    <SocialIconLink href="#" aria-label="Facebook">
-                      <FacebookIcon />
-                    </SocialIconLink>
-                    <SocialIconLink href="#" aria-label="Instagram">
-                      <InstagramIcon />
-                    </SocialIconLink>
-                  </SocialIconsBox>
-                </ContactInfoWrapper>
-              </StyledContainer>
-            </Grid>
+              {/* DESCRIPTION */}
+              <StyledTextField
+                fullWidth
+                name="message"
+                label="Description"
+                value={formData.message}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                placeholder="Tell us your requirement..."
+              />
 
-            {/* Right Section - Form */}
-            <Grid item xs={12} sm={6} lg={5}>
-              <StyledContainer>
-                <FormWrapper>
-                  <Box>
-                    <Typography
-                      variant={getSubtitleVariant()}
-                      sx={{
-                        fontWeight: 600,
-                        mb: { xs: 1, sm: 1.5 },
-                        color: '#f5f6f5',
-                        textAlign: 'center',
-                        width: '100%',
-                      }}
-                    >
-                      Have Questions?
-                    </Typography>
+              {/* SUBMIT BUTTON */}
+              <StyledButton type="submit" variant="contained">
+                <EmailIcon sx={{ mr: 1, fontSize: '1.3rem' }} />
+                Send Email
+              </StyledButton>
 
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: 'rgba(255, 255, 255, 0.85)',
-                        mb: { xs: 1.5, sm: 2 },
-                        fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
-                        textAlign: 'center',
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      Fill out the form and our team will get back to you within 24 hours.
-                    </Typography>
-
-                    <Box sx={{ width: '100%' }}>
-                      <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                        <FormControl fullWidth sx={{ mb: 1.5 }}>
-                          <InputLabel
-                            sx={{
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
-                              '&.Mui-focused': { color: '#ff5722' },
-                            }}
-                          >
-                            Product
-                          </InputLabel>
-                          <StyledSelect
-                            name="product"
-                            value={formData.product}
-                            onChange={handleChange}
-                            variant="outlined"
-                            displayEmpty
-                          >
-                            <MenuItem value="" disabled>
-                              Select a Product
-                            </MenuItem>
-                            {products.map((product) => (
-                              <MenuItem key={product} value={product}>
-                                {product}
-                              </MenuItem>
-                            ))}
-                          </StyledSelect>
-                        </FormControl>
-                        <StyledTextField
-                          fullWidth
-                          name="firstName"
-                          label="First Name"
-                          value={formData.firstName}
-                          onChange={handleChange}
-                          variant="outlined"
-                        />
-                        <StyledTextField
-                          fullWidth
-                          name="email"
-                          type="email"
-                          label="Email *"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          variant="outlined"
-                        />
-                      
-                        <StyledButton type="submit" variant="contained">
-                          <Box
-                            component="span"
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: { xs: 0.4, sm: 0.6 },
-                              justifyContent: 'center',
-                            }}
-                          >
-                            <FaUserAlt style={{ color: '#fff', fontSize: isSmallScreen ? '11px' : '13px' }} />
-                            Send Message
-                          </Box>
-                        </StyledButton>
-                        {status && (
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              mt: 1,
-                              textAlign: 'center',
-                              color: status.includes('Success') ? '#4CAF50' : '#f44336',
-                              fontWeight: 500,
-                              fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                            }}
-                          >
-                            {status}
-                          </Typography>
-                        )}
-                      </form>
-                    </Box>
-                  </Box>
-                </FormWrapper>
-              </StyledContainer>
-            </Grid>
-          </Grid>
-        </Box>
+              {/* STATUS */}
+              {status && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mt: 2,
+                    textAlign: 'center',
+                    color: status.includes('Success') ? '#4CAF50' : '#f44336',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    animation: 'fadeIn 0.5s ease',
+                  }}
+                >
+                  {status}
+                </Typography>
+              )}
+            </form>
+          </Box>
+        </FormContainer>
       </Container>
+
+      {/* Fade-in Animation */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </StyledSection>
   );
 };
