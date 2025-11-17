@@ -4,7 +4,6 @@ import {
   Typography,
   Container,
   Card,
-  CardContent,
   CardMedia,
   Button,
   Dialog,
@@ -33,7 +32,7 @@ const images = {
 
 const theme = createTheme({
   typography: { fontFamily: ['"Poppins"', 'sans-serif'].join(',') },
-  components: { MuiTypography: { styleOverrides: { root: { color: 'white' } } } },
+  components: { MuiTypography: { style: { color: 'white' } } },
 });
 
 const HiddenSEO = () => (
@@ -55,48 +54,59 @@ const industrialApplications = [
   { name: 'Wood Working Industries', image: images.woodworkingImg, description: 'Fine dust extraction for safety.', slug: 'woodworking' },
 ];
 
-const IndustryCard = memo(({ app, isActive }) => (
+// === CLEAN MOBILE CARD ===
+const IndustryCard = memo(({ app, isActive, loading = "lazy" }) => (
   <Card
-    elevation={6}
+    elevation={4}
     sx={{
       width: '100%',
-      height: 400,
+      height: { xs: 300, sm: 340 },
       borderRadius: 3,
-      background: 'rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(12px)',
-      border: isActive ? '2px solid #00BFFF' : '1px solid rgba(255,255,255,0.2)',
-      transition: 'all 0.4s ease',
+      background: 'rgba(255,255,255,0.08)',
+      backdropFilter: 'blur(10px)',
+      border: isActive ? '2px solid #00BFFF' : '1px solid rgba(255,255,255,0.15)',
+      transition: 'all 0.3s ease',
       '&:hover': {
-        transform: 'translateY(-12px)',
-        boxShadow: '0 20px 40px rgba(0,191,255,0.3)',
+        transform: 'translateY(-8px)',
+        boxShadow: '0 16px 32px rgba(0,191,255,0.25)',
       },
     }}
   >
-    <CardMedia component="img" height={140} image={app.image} alt={app.name} loading="lazy" sx={{ objectFit: 'cover' }} />
-    <CardContent sx={{ p: 2.5, textAlign: 'center', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-      <Typography variant="h6" sx={{ fontWeight: 700, color: isActive ? '#00BFFF' : 'white' }}>
+    <CardMedia
+      component="img"
+      height={120}
+      image={app.image}
+      alt={app.name}
+      loading={loading}
+      sx={{ objectFit: 'cover', borderBottom: '1px solid rgba(0,191,255,0.1)' }}
+    />
+    <Box sx={{ p: 2.5, textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
+      <Typography variant="h6" sx={{ fontWeight: 700, color: isActive ? '#00BFFF' : 'white', fontSize: { xs: '1rem', sm: '1.1rem' } }}>
         {app.name}
       </Typography>
-      <Typography variant="body2" sx={{ color: '#ccc', my: 2, fontSize: '0.9rem' }}>
+      <Typography variant="body2" sx={{ color: '#ccc', my: 1.5, fontSize: '0.85rem', lineHeight: 1.5 }}>
         {app.description}
       </Typography>
       <Button
         component={RouterLink}
         to={`/industries/${app.slug}`}
+        size="small"
         sx={{
-          mt: 2,
-          px: 3,
-          py: 1,
-          background: 'rgba(0,191,255,0.2)',
+          mt: 1.5,
+          px: 2.5,
+          py: 0.8,
+          background: 'rgba(0,191,255,0.15)',
           borderRadius: 50,
           fontWeight: 600,
+          fontSize: '0.8rem',
           color: 'white',
-          '&:hover': { background: '#00BFFF' },
+          textTransform: 'none',
+          '&:hover': { background: '#00BFFF', transform: 'scale(1.05)' },
         }}
       >
         Learn More
       </Button>
-    </CardContent>
+    </Box>
   </Card>
 ));
 
@@ -107,6 +117,9 @@ function IndustrialApplicationsSection({ activeLink }) {
 
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
+
+  // First 4 cards load eagerly on mobile
+  const visibleApps = industrialApplications.slice(0, isMedium ? 4 : 2);
 
   return (
     <ThemeProvider theme={theme}>
@@ -148,7 +161,7 @@ function IndustrialApplicationsSection({ activeLink }) {
             sx={{
               fontWeight: 800,
               mb: 3,
-              fontSize: { xs: '2rem', md: '3rem' },
+              fontSize: { xs: '1.9rem', md: '2.8rem' },
               color: '#00BFFF',
             }}
           >
@@ -159,17 +172,17 @@ function IndustrialApplicationsSection({ activeLink }) {
             align="center"
             sx={{
               color: '#ddd',
-              mb: 6,
+              mb: 5,
               maxWidth: 800,
               mx: 'auto',
-              fontSize: '1.05rem',
+              fontSize: { xs: '0.95rem', sm: '1rem' },
             }}
           >
             Trusted air pollution control solutions across industries
           </Typography>
         </Container>
 
-        {/* DESKTOP: YOUR ORIGINAL MARQUEE – 100% UNCHANGED */}
+        {/* DESKTOP: ORIGINAL MARQUEE – UNCHANGED */}
         {isDesktop && (
           <Box sx={{ position: 'relative', zIndex: 1, px: 4, pb: 6 }}>
             <Box
@@ -196,36 +209,44 @@ function IndustrialApplicationsSection({ activeLink }) {
           </Box>
         )}
 
-        {/* MOBILE: SAME CARDS, RESPONSIVE GRID */}
+        {/* MOBILE: CLEAN, RESPONSIVE GRID */}
         {!isDesktop && (
-          <Box sx={{ px: 3, pb: 6 }}>
-            <Grid container spacing={3} justifyContent="center">
-              {industrialApplications.slice(0, isMedium ? 4 : 2).map((app) => (
+          <Box sx={{ px: { xs: 2, sm: 3 }, pb: 5 }}>
+            <Grid container spacing={2.5} justifyContent="center">
+              {visibleApps.map((app, idx) => (
                 <Grid item xs={12} sm={6} key={app.slug}>
-                  <Box sx={{ maxWidth: 350, mx: 'auto' }}>
-                    <IndustryCard app={app} isActive={activeLink === `/industries/${app.slug}`} />
+                  <Box sx={{ maxWidth: 360, mx: 'auto' }}>
+                    <IndustryCard
+                      app={app}
+                      isActive={activeLink === `/industries/${app.slug}`}
+                      loading={idx < 2 ? "eager" : "lazy"} // First two load instantly
+                    />
                   </Box>
                 </Grid>
               ))}
             </Grid>
 
-            <Box sx={{ textAlign: 'center', mt: 5 }}>
+            {/* SMALLER, NEAT BUTTON */}
+            <Box sx={{ textAlign: 'center', mt: 4 }}>
               <Button
                 onClick={handleOpen}
+                size="medium"
                 sx={{
-                  px: 6,
-                  py: 1.8,
-                  background: 'rgba(0,191,255,0.2)',
+                  px: { xs: 4, sm: 5 },
+                  py: { xs: 1.2, sm: 1.5 },
+                  background: 'rgba(0,191,255,0.18)',
                   color: '#00BFFF',
-                  border: '2px solid #00BFFF',
+                  border: '1.5px solid #00BFFF',
                   borderRadius: 50,
                   fontWeight: 700,
-                  fontSize: '1.1rem',
+                  fontSize: { xs: '0.9rem', sm: '1rem' },
                   textTransform: 'none',
+                  boxShadow: '0 4px 12px rgba(0,191,255,0.15)',
                   '&:hover': {
                     background: '#00BFFF',
                     color: 'white',
-                    transform: 'translateY(-4px)',
+                    transform: 'translateY(-3px)',
+                    boxShadow: '0 8px 20px rgba(0,191,255,0.3)',
                   },
                 }}
               >
@@ -235,18 +256,18 @@ function IndustrialApplicationsSection({ activeLink }) {
           </Box>
         )}
 
-        {/* POPUP – SAME CARD STYLE */}
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
-          <DialogTitle sx={{ bgcolor: '#0f1b3a', color: '#00BFFF', textAlign: 'center', fontWeight: 800 }}>
+        {/* DIALOG: RESPONSIVE GRID */}
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ bgcolor: '#0f1b3a', color: '#00BFFF', textAlign: 'center', fontWeight: 800, py: 2.5 }}>
             All Industrial Applications
-            <IconButton onClick={handleClose} sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
+            <IconButton onClick={handleClose} sx={{ position: 'absolute', right: 12, top: 12, color: 'white' }}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          <DialogContent sx={{ bgcolor: '#16213e', p: 4 }}>
-            <Grid container spacing={4}>
+          <DialogContent sx={{ bgcolor: '#16213e', p: { xs: 2, md: 4 } }}>
+            <Grid container spacing={3}>
               {industrialApplications.map((app) => (
-                <Grid item xs={6} sm={4} md={3} key={app.slug}>
+                <Grid item xs={6} sm={6} md={4} lg={3} key={app.slug}>
                   <IndustryCard app={app} isActive={activeLink === `/industries/${app.slug}`} />
                 </Grid>
               ))}

@@ -8,18 +8,24 @@ import {
 } from '@mui/material';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import { useTheme } from '@mui/material/styles';
 
-// Import icons (for counters only)
+// Icons
 import yearsIcon from '../../assets/icons/counter1.svg';
 import satisfactionIcon from '../../assets/icons/counter2.svg';
 import systemsIcon from '../../assets/icons/counter3.svg';
 import projectsIcon from '../../assets/icons/counter4.svg';
 
-// ====== COUNTER COMPONENT ======
-const NumberCounter = ({ start, end, duration, title, symbol, imageSrc }) => {
+// ====== COUNTER COMPONENT (NO defaultProps) ======
+const NumberCounter = ({
+  start = 0,
+  end,
+  duration = 2.5,
+  title,
+  symbol = '',
+  imageSrc,
+}) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
   const [hasAnimated, setHasAnimated] = useState(false);
 
@@ -50,29 +56,18 @@ const NumberCounter = ({ start, end, duration, title, symbol, imageSrc }) => {
           loading="lazy"
         />
       </Box>
-      <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'green' }}>
+      <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#00BFFF' }}>
         {hasAnimated && <CountUp start={start} end={end} duration={duration} separator="," />}
         {symbol}
       </Typography>
-      <Typography variant="h6" sx={{ color: 'white' }}>
+      <Typography variant="h6" sx={{ color: 'white', mt: 1 }}>
         {title}
       </Typography>
     </Box>
   );
 };
 
-NumberCounter.propTypes = {
-  start: PropTypes.number.isRequired,
-  end: PropTypes.number.isRequired,
-  duration: PropTypes.number,
-  title: PropTypes.string.isRequired,
-  symbol: PropTypes.string,
-  imageSrc: PropTypes.string.isRequired,
-};
-
-NumberCounter.defaultProps = { duration: 2.5, symbol: '' };
-
-// ====== TESTIMONIALS DATA (TEXT ONLY) ======
+// ====== TESTIMONIALS DATA ======
 const testimonials = [
   {
     quote: "NAPCEN's wet scrubbers have transformed our chemical plant's air quality in Tamil Nadu. Their efficient PP FRP design ensures we meet TNPCB norms while maintaining a safe workspace.",
@@ -117,7 +112,7 @@ const AnimatedCounters = () => {
       }, 5000);
       return () => clearInterval(interval);
     }
-  }, [isMobile]);
+  }, [isMobile, testimonials.length]);
 
   const counters = [
     { end: 13, title: 'Years in Air Pollution Solutions', symbol: '+', imageSrc: yearsIcon },
@@ -136,11 +131,11 @@ const AnimatedCounters = () => {
       <Box sx={{ bgcolor: 'transparent', position: 'relative' }}>
         <HiddenSEO />
 
-        {/* ====== TESTIMONIALS SECTION (FIRST) - TEXT ONLY ====== */}
+        {/* ====== TESTIMONIALS SECTION ====== */}
         <Container sx={{ py: { xs: 4, md: 6 } }}>
           <Grid container justifyContent="center" sx={{ mb: { xs: 3, md: 5 } }}>
             <Grid item xs={12} sm={10} md={8} sx={{ textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ color: '#298298ff', fontWeight: 600, fontSize: { xs: '1rem', sm: '1.2rem' } }}>
+              <Typography variant="h6" sx={{ color: '#00BFFF', fontWeight: 600, fontSize: { xs: '1rem', sm: '1.2rem' } }}>
                 Client Praise
               </Typography>
               <Typography
@@ -148,7 +143,7 @@ const AnimatedCounters = () => {
                 sx={{
                   fontWeight: 700,
                   fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
-                  color: '#ccd7dbff',
+                  color: '#fff',
                 }}
               >
                 What Our Customers Are Saying
@@ -156,64 +151,31 @@ const AnimatedCounters = () => {
             </Grid>
           </Grid>
 
-          {/* DESKTOP: 4 TESTIMONIALS (TEXT ONLY) */}
+          {/* DESKTOP: 4 TESTIMONIALS */}
           {isDesktop && (
             <Grid container spacing={4} justifyContent="center">
               {testimonials.map((t, i) => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  md={6}
-                  key={i}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: i % 2 === 0 ? 'flex-start' : 'flex-end',
-                  }}
-                >
+                <Grid item xs={12} sm={6} md={6} key={i}>
                   <Box
                     sx={{
-                      maxWidth: { xs: '100%', sm: 400, md: 450 },
-                      width: '100%',
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                      boxShadow: '0 0 20px rgba(0, 191, 255, 0.5)',
-                      backgroundColor: 'transparent',
-                      p: { xs: 2, sm: 2.5, md: 3 },
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
+                      maxWidth: 450,
+                      p: 3,
+                      borderRadius: '16px',
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(0, 191, 255, 0.2)',
+                      boxShadow: '0 8px 32px rgba(0, 191, 255, 0.15)',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': { transform: 'translateY(-8px)' },
                     }}
                   >
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: '#BFC5DC',
-                        fontStyle: 'italic',
-                        mb: { xs: 1, md: 2 },
-                        fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
-                        lineHeight: 1.5,
-                      }}
-                    >
+                    <Typography variant="body1" sx={{ color: '#E0E0E0', fontStyle: 'italic', mb: 2, fontSize: '1rem', lineHeight: 1.6 }}>
                       "{t.quote}"
                     </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 600,
-                        color: '#287e8aff',
-                        fontSize: { xs: '0.95rem', md: '1.2rem' },
-                      }}
-                    >
+                    <Typography variant="h6" sx={{ color: '#00BFFF', fontWeight: 600, fontSize: '1.1rem' }}>
                       {t.name}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: '#BFC5DC',
-                        fontSize: { xs: '0.75rem', md: '0.9rem' },
-                      }}
-                    >
+                    <Typography variant="body2" sx={{ color: '#B0B0B0', fontSize: '0.9rem' }}>
                       {t.title}
                     </Typography>
                   </Box>
@@ -222,61 +184,32 @@ const AnimatedCounters = () => {
             </Grid>
           )}
 
-          {/* MOBILE: 2 TESTIMONIALS + CAROUSEL (TEXT ONLY) */}
+          {/* MOBILE: CAROUSEL */}
           {isMobile && (
-            <Box sx={{ overflow: 'hidden' }}>
+            <Box sx={{ overflow: 'hidden', px: 2 }}>
               <Grid container spacing={2}>
                 {[0, 1].map((offset) => {
                   const index = (activeIndex + offset) % testimonials.length;
                   const t = testimonials[index];
                   return (
-                    <Grid
-                      item
-                      xs={6}
-                      key={index}
-                      sx={{
-                        opacity: offset === 0 ? 1 : 0.7,
-                        transition: 'all 0.5s ease',
-                      }}
-                    >
+                    <Grid item xs={6} key={index} sx={{ opacity: offset === 0 ? 1 : 0.7, transition: 'opacity 0.5s' }}>
                       <Box
                         sx={{
+                          p: 2,
                           borderRadius: '12px',
-                          overflow: 'hidden',
-                          boxShadow: '0 0 20px rgba(0, 191, 255, 0.5)',
-                          backgroundColor: 'transparent',
-                          p: 1.5,
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          backdropFilter: 'blur(10px)',
+                          border: '1px solid rgba(0, 191, 255, 0.15)',
+                          height: '100%',
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: '#BFC5DC',
-                            fontStyle: 'italic',
-                            fontSize: '0.7rem',
-                            mb: 0.5,
-                            lineHeight: 1.3,
-                          }}
-                        >
+                        <Typography variant="body2" sx={{ color: '#E0E0E0', fontStyle: 'italic', fontSize: '0.75rem', mb: 1, lineHeight: 1.4 }}>
                           "{t.quote}"
                         </Typography>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            color: '#287e8aff',
-                            fontWeight: 600,
-                            fontSize: '0.75rem',
-                          }}
-                        >
+                        <Typography variant="subtitle2" sx={{ color: '#00BFFF', fontWeight: 600, fontSize: '0.8rem' }}>
                           {t.name}
                         </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: '#BFC5DC',
-                            fontSize: '0.6rem',
-                          }}
-                        >
+                        <Typography variant="caption" sx={{ color: '#B0B0B0', fontSize: '0.65rem' }}>
                           {t.title}
                         </Typography>
                       </Box>
@@ -285,7 +218,6 @@ const AnimatedCounters = () => {
                 })}
               </Grid>
 
-              {/* DOTS */}
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 0.5 }}>
                 {testimonials.map((_, i) => (
                   <Box
@@ -297,6 +229,7 @@ const AnimatedCounters = () => {
                       borderRadius: '50%',
                       backgroundColor: i === activeIndex ? '#00BFFF' : '#555',
                       cursor: 'pointer',
+                      transition: 'background-color 0.3s',
                     }}
                   />
                 ))}
@@ -305,12 +238,12 @@ const AnimatedCounters = () => {
           )}
         </Container>
 
-        {/* ====== COUNTER SECTION (LAST) ====== */}
+        {/* ====== COUNTER SECTION ====== */}
         <Container sx={{ py: { xs: 6, md: 8 }, borderTop: '1px solid rgba(0, 191, 255, 0.2)', mt: 4 }}>
           <Grid container spacing={4} justifyContent="center">
             {counters.map((c, i) => (
               <Grid item xs={6} sm={6} md={3} key={i}>
-                <NumberCounter start={0} {...c} />
+                <NumberCounter {...c} />
               </Grid>
             ))}
           </Grid>

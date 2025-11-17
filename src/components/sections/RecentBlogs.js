@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Blogdata } from "../Blogs/BlogData";
 import {
@@ -8,7 +8,6 @@ import {
   Typography,
   Link as MuiLink,
   CardMedia,
-  useMediaQuery,
   Chip,
   Avatar,
 } from "@mui/material";
@@ -52,8 +51,8 @@ const theme = createTheme({
           fontWeight: 500,
           textDecoration: "none",
           transition: "all 0.3s ease",
-          zIndex: 10, // Ensure buttons are above other elements
-          pointerEvents: "auto", // Ensure clicks are captured
+          zIndex: 10,
+          pointerEvents: "auto",
           "&:hover": {
             background: "rgba(0, 191, 255, 0.1)",
             boxShadow: "0 2px 8px rgba(0, 191, 255, 0.15)",
@@ -82,7 +81,7 @@ const SectionBox = styled(Box)(({ theme }) => ({
     height: "100%",
     background: "radial-gradient(circle at top center, rgba(0, 191, 255, 0.08), transparent 70%)",
     opacity: 0.5,
-    pointerEvents: "none", // Prevent pseudo-element from blocking clicks
+    pointerEvents: "none",
   },
 }));
 
@@ -103,23 +102,8 @@ const BlogCard = styled(Box)(({ theme }) => ({
   maxWidth: "350px",
 }));
 
-export default function RecentBlogSection() {
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  useEffect(() => {
-    console.log("Blogdata:", Blogdata);
-    if (!Blogdata || Blogdata.length === 0) {
-      console.warn("Blogdata is empty or undefined");
-    } else {
-      Blogdata.forEach((blog, index) => {
-        console.log(`Blog ${index + 1}: ID=${blog.id}, Title=${blog.title}, Slug=${blog.slug}, Image=${blog.img}`);
-        if (!blog.slug) {
-          console.warn(`Missing slug for blog: ${blog.title || `Blog ${index + 1}`}`);
-        }
-      });
-    }
-  }, []);
-
+// Memoized component for performance
+const RecentBlogSection = React.memo(function RecentBlogSection() {
   // Sort by date (if available) or take first two blogs
   const recentBlogs = Blogdata
     .sort((a, b) => (b.date ? new Date(b.date) - new Date(a.date) : Blogdata.indexOf(a) - Blogdata.indexOf(b)))
@@ -206,7 +190,7 @@ export default function RecentBlogSection() {
                         onClick={(e) => {
                           console.log(`Read button clicked for blog: ${blog.title || "unknown"}, navigating to: ${blog.slug ? `/blogs/${blog.slug}` : "/blogs"}`);
                           if (!blog.slug) {
-                            e.preventDefault(); // Prevent navigation if slug is missing
+                            e.preventDefault();
                             console.warn(`Cannot navigate: Missing slug for blog: ${blog.title || "unknown"}`);
                           }
                         }}
@@ -241,4 +225,6 @@ export default function RecentBlogSection() {
       </SectionBox>
     </ThemeProvider>
   );
-};
+});
+
+export default RecentBlogSection;
