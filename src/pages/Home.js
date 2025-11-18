@@ -6,7 +6,7 @@ import HeroSection from '../components/sections/HeroSection';
 import AboutUsSection from '../components/sections/AboutUsSection';
 import OurProductsSection from '../components/sections/OurProductsSection';
 import OurServicesSection from '../components/sections/OurServicesSection';
-import TestimonialsAndClientsSection from '../components/sections/TestimonialsAndClientsSection';
+
 import FAQSection from '../components/sections/FAQSection';
 // import ProductDetail from '../components/sections/ProductDetail'; // Not used in render, commenting out for cleanliness
 import PartnerSection from '../components/sections/PartnerSection';

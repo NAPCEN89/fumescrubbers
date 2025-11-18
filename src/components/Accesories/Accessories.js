@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Box,
@@ -9,155 +8,49 @@ import {
   Button,
   TextField,
   styled,
-  useMediaQuery,
+
   useTheme,
   Link as MuiLink,
   Grid,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import GoogleIcon from '@mui/icons-material/Google';
-import PinterestIcon from '@mui/icons-material/Pinterest';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import { FaDribbble } from 'react-icons/fa';
-import { AccesoriesData } from './AccesoriesData';
+import { AccesoriesData } from './AccesoriesData'; // Assuming this data structure is correct
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
 
-// Styled Components
-const AccessoriesWrapper = styled(Box)(({ theme }) => ({
-  paddingTop: theme.spacing(8),
-  paddingBottom: theme.spacing(6),
-  paddingLeft: theme.spacing(2),
-  paddingRight: theme.spacing(2),
-  background: '#0d1515',
-  minHeight: '100vh',
-  width: '100%',
-  color: '#f5f6f5',
-  [theme.breakpoints.down('sm')]: {
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(4),
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-  },
-}));
+// --- Configuration Constants ---
+const ACCENT_COLOR = '#00BFFF'; // Sky Blue
+const PRIMARY_BG = '#0d1515';
+const TEXT_LIGHT = '#f5f6f5';
+const TEXT_SECONDARY = '#B0BEC5';
 
-const CategoryButton = styled(Button)(({ theme, active }) => ({
-  background: active ? 'rgba(0, 191, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-  color: '#f5f6f5',
-  border: active ? '1px solid #00BFFF' : '1px solid rgba(0, 191, 255, 0.1)',
-  borderRadius: '6px',
-  padding: theme.spacing(0.8, 2),
-  margin: theme.spacing(0, 0.5),
-  fontSize: '0.85rem',
-  fontWeight: 600,
-  fontFamily: '"Poppins", sans-serif',
-  textTransform: 'none',
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    background: 'rgba(0, 191, 255, 0.15)',
-    borderColor: '#00BFFF',
-    boxShadow: '0 2px 6px rgba(0, 191, 255, 0.2)',
-  },
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(0.5, 1.2),
-    fontSize: '0.75rem',
-    margin: theme.spacing(0, 0.3),
-  },
-}));
-
-const ProductCard = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 220,
-  background: 'rgba(255, 255, 255, 0.03)',
-  border: '1px solid rgba(0, 191, 255, 0.05)',
-  borderRadius: '8px',
-  overflow: 'hidden',
-  transition: 'all 0.3s ease',
-  display: 'flex',
-  flexDirection: 'column',
-  '&:hover': {
-    transform: 'translateY(-3px)',
-    boxShadow: '0 4px 12px rgba(0, 191, 255, 0.1)',
-    borderColor: 'rgba(0, 191, 255, 0.15)',
-  },
-  [theme.breakpoints.down('sm')]: {
-    maxWidth: '100%',
-  },
-}));
-
-const StyledFooter = styled('footer')(({ theme }) => ({
-  background: '#0d1515',
-  color: '#B0BEC5',
-  padding: theme.spacing(5, 0),
-  borderTop: '1px solid rgba(0, 191, 255, 0.1)',
-  width: '100%',
-}));
-
-const ContactCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(26, 42, 42, 0.9)',
-  borderRadius: '10px',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
-  color: '#f5f6f5',
-  border: '1px solid rgba(0, 191, 255, 0.05)',
-}));
-
-const PlainCard = styled(Card)(({ theme }) => ({
-  background: 'transparent',
-  borderRadius: '10px',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  boxShadow: 'none',
-  color: '#f5f6f5',
-}));
-
-const PhoneIcon = () => (
-  <svg viewBox="0 0 512 512" width="18" height="18" fill="#00BFFF">
-    <path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z"></path>
-  </svg>
-);
-
-const EnvelopeIcon = () => (
-  <svg viewBox="0 0 512 512" width="18" height="18" fill="#00BFFF">
-    <path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path>
-  </svg>
-);
-
-const MapMarkerIcon = () => (
-  <svg viewBox="0 0 384 512" width="18" height="18" fill="#00BFFF">
-    <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
-  </svg>
-);
-
-const theme = createTheme({
+// --- Custom Theme ---
+const customTheme = createTheme({
   typography: {
     fontFamily: ['"Poppins"', 'sans-serif'].join(','),
-    h3: { fontSize: { xs: '1.6rem', sm: '2rem', md: '2.4rem' }, fontWeight: 700 },
-    h5: { fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem', lg: '1.3rem' }, fontWeight: 600 },
-    h6: { fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' }, fontWeight: 600 },
-    body1: { fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem', lg: '0.95rem' } },
-    body2: { fontSize: { xs: '0.65rem', sm: '0.7rem', md: '0.75rem', lg: '0.8rem' } },
+    h3: { fontSize: '2.4rem', fontWeight: 800, color: TEXT_LIGHT, letterSpacing: '0.5px' },
+    h5: { fontSize: '1.2rem', fontWeight: 600 },
+    h6: { fontSize: '0.9rem', fontWeight: 700 },
+    body1: { fontSize: '0.9rem', color: TEXT_SECONDARY },
+    body2: { fontSize: '0.75rem', color: TEXT_SECONDARY },
   },
   components: {
     MuiTypography: {
       styleOverrides: {
         root: {
-          color: '#f5f6f5',
+          color: TEXT_LIGHT,
         },
       },
     },
     MuiLink: {
       styleOverrides: {
         root: {
-          color: '#B0BEC5',
+          color: TEXT_SECONDARY,
           textDecoration: 'none',
           transition: 'color 0.3s ease',
           '&:hover': {
-            color: '#00BFFF',
+            color: ACCENT_COLOR,
           },
         },
       },
@@ -165,94 +58,163 @@ const theme = createTheme({
   },
 });
 
+// --- Styled Components ---
+
+const AccessoriesWrapper = styled(Box)(({ theme }) => ({
+  paddingTop: theme.spacing(10),
+  paddingBottom: theme.spacing(8),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  background: PRIMARY_BG,
+  minHeight: '100vh',
+  width: '100%',
+  color: TEXT_LIGHT,
+}));
+
+const CategoryButton = styled(Button)(({ theme, active }) => ({
+  background: active ? `${ACCENT_COLOR}20` : `${TEXT_LIGHT}05`,
+  color: active ? ACCENT_COLOR : TEXT_LIGHT,
+  border: active ? `1px solid ${ACCENT_COLOR}` : `1px solid ${ACCENT_COLOR}10`,
+  borderRadius: '20px', // Pill shape for modern look
+  padding: theme.spacing(0.8, 2),
+  margin: theme.spacing(0.5, 0.5),
+  fontSize: '0.8rem',
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  transition: 'all 0.3s ease',
+  boxShadow: active ? `0 0 10px ${ACCENT_COLOR}30` : 'none',
+  '&:hover': {
+    background: `${ACCENT_COLOR}30`,
+    borderColor: ACCENT_COLOR,
+    color: TEXT_LIGHT,
+    boxShadow: `0 0 15px ${ACCENT_COLOR}40`,
+  },
+}));
+
+const AdvancedProductCard = styled(Card)(({ theme }) => ({
+  width: '100%',
+  // Compact vertical size - max width removed for better grid distribution on desktop
+  background: `${TEXT_LIGHT}03`, 
+  border: `1px solid ${ACCENT_COLOR}10`,
+  borderRadius: '12px',
+  overflow: 'hidden',
+  transition: 'all 0.4s cubic-bezier(0.17, 0.84, 0.44, 1)',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: `0 10px 25px ${ACCENT_COLOR}20`,
+    borderColor: `${ACCENT_COLOR}30`,
+  },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    mb: 2.5,
+    width: '100%', 
+    maxWidth: 500,
+    '& .MuiInputBase-root': {
+        background: `${TEXT_LIGHT}05`,
+        borderRadius: '8px',
+        color: TEXT_LIGHT,
+        border: `1px solid ${ACCENT_COLOR}20`,
+        transition: 'all 0.3s ease',
+        '&:hover': {
+            borderColor: ACCENT_COLOR,
+            boxShadow: `0 0 10px ${ACCENT_COLOR}20`,
+        },
+        '&.Mui-focused': {
+            borderColor: ACCENT_COLOR,
+            boxShadow: `0 0 12px ${ACCENT_COLOR}40`,
+            background: `${TEXT_LIGHT}08`,
+        },
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+        border: 'none',
+    },
+    '& .MuiInputBase-input': {
+        fontSize: '0.9rem',
+        padding: '10px 14px',
+        color: TEXT_LIGHT,
+    },
+}));
+
+
+// --- Main Component ---
 const Accesscories = () => {
-  const [selectedCategory, setSelectedCategory] = useState(AccesoriesData[0].category);
+  const [selectedCategory, setSelectedCategory] = useState(
+    AccesoriesData.length > 0 ? AccesoriesData[0].category : ''
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const muiTheme = useTheme();
-  const isSmScreen = useMediaQuery(muiTheme.breakpoints.down('sm'));
+  
+  // Find products based on selected category
+  const allProducts =
+    AccesoriesData.find((cat) => cat.category === selectedCategory)?.products || [];
 
-  const allProducts = AccesoriesData.find((cat) => cat.category === selectedCategory)?.products || [];
+  // Filter products based on search term
   const filteredProducts = allProducts.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={customTheme}>
       <AccessoriesWrapper>
-        <Box sx={{ mb: 3, textAlign: 'center' }}>
+        <Box sx={{ maxWidth: 1200, mx: 'auto', textAlign: 'center' }}>
+          
+          {/* Header & Search */}
           <Typography
             variant="h3"
             sx={{
-              fontWeight: 700,
-              color: '#fff',
+              color: ACCENT_COLOR,
               mb: 1.5,
-              letterSpacing: '0.2px',
+              textShadow: `0 0 10px ${ACCENT_COLOR}40`,
             }}
           >
-            Accessories Collection
+            Accessory Catalogue
           </Typography>
           <Typography
             variant="body1"
             sx={{
-              maxWidth: '600px',
+              maxWidth: '700px',
               mx: 'auto',
-              color: '#B0BEC5',
-              fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
-              mb: 3,
+              color: TEXT_SECONDARY,
+              mb: 4,
             }}
           >
-            Browse our high-performance accessories for Wet Scrubbers, Dust Collectors, Fume Extractors, and more.
+            Explore high-performance, precision-engineered accessories, spares, and consumables for all your air pollution control systems.
           </Typography>
-          <TextField
-            variant="outlined"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{
-              mb: 2.5,
-              width: { xs: '100%', sm: '70%', md: '50%' },
-              '& .MuiInputBase-root': {
-                background: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: '6px',
-                color: '#f5f6f5',
-                border: '1px solid rgba(0, 191, 255, 0.1)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  borderColor: '#00BFFF',
-                  boxShadow: '0 2px 6px rgba(0, 191, 255, 0.15)',
-                },
-                '&.Mui-focused': {
-                  borderColor: '#00BFFF',
-                  boxShadow: '0 0 8px rgba(0, 191, 255, 0.2)',
-                },
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-              },
-              '& .MuiInputBase-input': {
-                fontSize: { xs: '0.75rem', sm: '0.8rem' },
-                padding: '8px 10px',
-                fontFamily: '"Poppins", sans-serif',
-              },
-            }}
-            InputProps={{
-              sx: {
-                '&::placeholder': {
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontFamily: '"Poppins", sans-serif',
-                },
-              },
-            }}
-          />
+          
+          <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
+            <StyledTextField
+              variant="outlined"
+              placeholder="Search by product name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ color: ACCENT_COLOR, mr: 1, fontSize: '1.2rem' }} />
+                ),
+                sx: {
+                    // Placeholder styling within InputProps
+                    '& .MuiInputBase-input::placeholder': {
+                        color: `${TEXT_SECONDARY} !important`,
+                        opacity: 1,
+                    },
+                }
+              }}
+            />
+          </Box>
+          
+          {/* Category Filter Buttons */}
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'center',
               flexWrap: 'wrap',
-              gap: 0.8,
-              mb: 3,
-              px: { xs: 1, sm: 0 },
+              mb: 5,
             }}
           >
             {AccesoriesData.map((cat) => (
@@ -268,106 +230,121 @@ const Accesscories = () => {
               </CategoryButton>
             ))}
           </Box>
+
+          {/* Product Grid */}
+          <Grid
+            container
+            spacing={{ xs: 2, sm: 3, md: 4 }}
+            justifyContent="center"
+          >
+            {filteredProducts.length === 0 ? (
+              <Typography
+                variant="body1"
+                sx={{
+                  color: TEXT_SECONDARY,
+                  textAlign: 'center',
+                  width: '100%',
+                  mt: 3,
+                }}
+              >
+                No products found matching "{searchTerm}" in **{selectedCategory}**.
+              </Typography>
+            ) : (
+              filteredProducts.map((product) => (
+                <Grid item xs={6} sm={4} md={3} key={product.id}>
+                  <AdvancedProductCard elevation={0}>
+                    {/* Image Area */}
+                    <Box sx={{ height: 180, p: 1.5, background: `${TEXT_LIGHT}05`, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <CardMedia
+                            component="img"
+                            image={product.image}
+                            alt={product.title}
+                            sx={{
+                                objectFit: 'contain',
+                                maxHeight: '100%',
+                                maxWidth: '100%',
+                                transition: 'transform 0.4s ease',
+                                '&:hover': {
+                                    transform: 'scale(1.05)',
+                                }
+                            }}
+                            onError={(e) => {
+                                // Fallback image for failed load
+                                e.target.onerror = null; 
+                                e.target.src = 'https://via.placeholder.com/220x180/1a2a2a/00BFFF?text=Image+Missing';
+                            }}
+                        />
+                    </Box>
+                    
+                    {/* Content Area */}
+                    <CardContent
+                      sx={{
+                        p: 2,
+                        flexGrow: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Box sx={{ mb: 1, textAlign: 'center' }}>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color: ACCENT_COLOR,
+                            fontSize: '1rem',
+                            mb: 0.5,
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {product.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: TEXT_SECONDARY,
+                            fontSize: '0.7rem',
+                            fontWeight: 400,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {product.category}
+                        </Typography>
+                      </Box>
+                      
+                      <MuiLink
+                        component={RouterLink}
+                        to="/contact"
+                        underline="none"
+                        sx={{
+                          fontSize: '0.8rem',
+                          fontWeight: 600,
+                          color: TEXT_LIGHT,
+                          background: `${ACCENT_COLOR}30`,
+                          borderRadius: '20px',
+                          padding: '6px 16px',
+                          border: `1px solid ${ACCENT_COLOR}`,
+                          transition: 'all 0.3s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          '&:hover': {
+                            color: PRIMARY_BG,
+                            background: ACCENT_COLOR,
+                            boxShadow: `0 0 15px ${ACCENT_COLOR}80`,
+                            transform: 'scale(1.05)',
+                          },
+                        }}
+                      >
+                        Request Quote
+                        <SendIcon sx={{ ml: 1, fontSize: '0.8rem' }} />
+                      </MuiLink>
+                    </CardContent>
+                  </AdvancedProductCard>
+                </Grid>
+              ))
+            )}
+          </Grid>
         </Box>
-        <Grid
-          container
-          spacing={{ xs: 1.5, sm: 2, md: 2.5 }}
-          sx={{ justifyContent: 'center' }}
-        >
-          {filteredProducts.length === 0 ? (
-            <Typography
-              variant="body1"
-              sx={{
-                color: '#B0BEC5',
-                textAlign: 'center',
-                width: '100%',
-                mt: 3,
-                fontSize: { xs: '0.85rem', sm: '0.9rem' },
-              }}
-            >
-              No products found.
-            </Typography>
-          ) : (
-            filteredProducts.map((product) => (
-              <Grid item xs={12} sm={6} md={3} key={product.id}>
-                <ProductCard elevation={0}>
-                  <CardMedia
-                    component="img"
-                    height="160"
-                    image={product.image}
-                    alt={product.title}
-                    sx={{
-                      objectFit: 'contain',
-                      padding: '8px',
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      borderBottom: '1px solid rgba(0, 191, 255, 0.05)',
-                    }}
-                    onError={(e) => {
-                      console.error(`Failed to load image for ${product.title}: ${product.image}`);
-                      e.target.src = 'https://picsum.photos/220/160?text=Product+Image';
-                    }}
-                  />
-                  <CardContent
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      p: 1.2,
-                      flexGrow: 1,
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
-                        fontWeight: 600,
-                        mb: 0.5,
-                        color: '#00BFFF',
-                      }}
-                    >
-                      {product.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontSize: { xs: '0.65rem', sm: '0.7rem', md: '0.75rem' },
-                        color: '#B0BEC5',
-                        mb: 1,
-                        textAlign: 'center',
-                      }}
-                    >
-                      {product.category}
-                    </Typography>
-                    <MuiLink
-                      component={RouterLink}
-                      to="/contact"
-                      underline="none"
-                      sx={{
-                        fontSize: { xs: '0.75rem', sm: '0.8rem' },
-                        fontWeight: 600,
-                        color: '#f5f6f5',
-                        background: 'rgba(0, 191, 255, 0.1)',
-                        borderRadius: '6px',
-                        padding: '5px 14px',
-                        border: '1px solid rgba(0, 191, 255, 0.1)',
-                        transition: 'all 0.3s ease',
-                        textDecoration: 'none',
-                        '&:hover': {
-                          color: '#00BFFF',
-                          background: 'rgba(0, 191, 255, 0.15)',
-                          borderColor: '#00BFFF',
-                          boxShadow: '0 2px 6px rgba(0, 191, 255, 0.2)',
-                        },
-                      }}
-                    >
-                      Get a Quote
-                    </MuiLink>
-                  </CardContent>
-                </ProductCard>
-              </Grid>
-            ))
-          )}
-        </Grid>
       </AccessoriesWrapper>
     </ThemeProvider>
   );

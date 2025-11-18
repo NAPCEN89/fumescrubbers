@@ -8,12 +8,18 @@ import {
   CardContent,
   Link as MuiLink,
   Button,
+  Divider,
 } from '@mui/material';
 import { useTheme, keyframes } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import HandymanIcon from '@mui/icons-material/Handyman';
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 // Image paths for services
 import designConsultingImg from '../assets/images/design-consulting.png';
@@ -34,34 +40,44 @@ const fadeIn = keyframes`
   100% { opacity: 1; transform: translateY(0); }
 `;
 
+const pulsate = keyframes`
+  0% { box-shadow: 0 0 5px #00BFFF; }
+  50% { box-shadow: 0 0 15px #00BFFF, 0 0 20px rgba(0, 191, 255, 0.4); }
+  100% { box-shadow: 0 0 5px #00BFFF; }
+`;
+
 const services = [
   {
     image: designConsultingImg,
     title: 'Consulting & Design',
     description:
-      'At NAPCEN, we start with a detailed site assessment to tailor air pollution control systems, integrating wet and dry scrubbers, dust collectors, and more for optimal performance and compliance.',
+      'Detailed site assessment and tailored air pollution control system design, integrating wet/dry scrubbers and dust collectors for optimal performance.',
     link: '/services/consulting-design',
+    icon: DesignServicesIcon,
   },
   {
     image: manufacturingImg,
     title: 'Manufacturing & Supply',
     description:
-      'We produce high-performance equipment like wet scrubbers, dust collectors, and fume extractors, engineered to remove dust, fumes, and toxic vapors efficiently.',
+      'Production of high-performance equipment: wet scrubbers, dust collectors, and fume extractors engineered for efficient removal of pollutants.',
     link: '/services/manufacturing',
+    icon: PrecisionManufacturingIcon,
   },
   {
     image: installationImg,
-    title: 'Installation',
+    title: 'Turnkey Installation',
     description:
-      'Our certified technicians provide turnkey installation, ensuring seamless setup and compliance with environmental regulations across industries.',
+      'Certified technicians ensure seamless, on-time setup and strict compliance with environmental regulations across all industrial sectors.',
     link: '/services/installation',
+    icon: ConstructionIcon,
   },
   {
     image: maintenanceImg,
-    title: 'Maintenance',
+    title: 'Maintenance & Support',
     description:
-      'NAPCEN offers maintenance plans with inspections and troubleshooting to ensure equipment longevity and minimal downtime.',
+      'Proactive maintenance plans, routine inspections, and rapid troubleshooting to maximize equipment longevity and minimize operational downtime.',
     link: '/services/maintenance',
+    icon: SettingsIcon,
   },
 ];
 
@@ -70,93 +86,241 @@ const products = [
     image: wetScrubberImg,
     title: 'Wet Scrubber',
     description:
-      'Wet scrubbers use liquid to remove pollutants, ideal for chemical processing and metal finishing, with variants like venturi and odor control scrubbers.',
+      'Uses liquid to remove pollutants, ideal for chemical processing and metal finishing. Includes venturi and odor control variants.',
     link: '/products/wet-scrubber',
   },
   {
     image: dryScrubberImg,
     title: 'Dry Scrubber',
     description:
-      'Dry scrubbers remove acidic gases and VOCs using dry adsorption, offering economical solutions for hazardous exhaust gases.',
+      'Removes acidic gases and VOCs using dry adsorption, providing economical solutions for hazardous exhaust gases.',
     link: '/products/dry-scrubber',
   },
   {
     image: dustCollectorImg,
     title: 'Dust Collector',
     description:
-      'Dust collectors capture particulates from processes like grinding, enhancing air quality with variants like baghouse and cyclone collectors.',
+      'Captures particulates from processes like grinding, enhancing air quality with baghouse and cyclone collector variants.',
     link: '/products/dust-collector',
   },
   {
     image: downdraftTableImg,
     title: 'Down Draft Table',
     description:
-      'Downdraft tables capture dust and fumes during welding, ensuring a cleaner, safer workspace for manufacturing.',
+      'Captures dust and fumes at the source during welding and grinding, ensuring a cleaner, safer workspace for manufacturing.',
     link: '/products/down-draft-table',
   },
   {
     image: fumeExtractorImg,
     title: 'Fume Extractor',
     description:
-      'Fume extractors use HEPA and carbon filters for hazardous fumes in labs and industrial settings, customizable for soldering and more.',
+      'Utilizes HEPA and carbon filters for hazardous fumes in labs and industrial settings. Customizable for soldering and more.',
     link: '/products/fume-extractor',
   },
 ];
 
+// --- Flowchart Component (Kept for process clarity) ---
+const FlowStep = ({ title, icon: Icon, isLast }) => (
+  <Box sx={{ textAlign: 'center', mb: isLast ? 0 : 2 }}>
+    <Box
+      sx={{
+        fontWeight: 600,
+        color: '#E0F7FA',
+        fontSize: { xs: '1rem', md: '1.2rem' },
+        padding: '12px 20px',
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '12px',
+        border: '1px solid #00BFFF',
+        boxShadow: '0 0 10px rgba(0, 191, 255, 0.5)',
+        transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 1,
+        '&:hover': {
+          transform: 'scale(1.08)',
+          boxShadow: '0 0 20px #00BFFF',
+          animation: `${pulsate} 1.5s infinite`,
+        },
+      }}
+    >
+      <Icon sx={{ color: '#00BFFF', fontSize: '1.5rem' }} />
+      <Typography variant="h6" component="span" sx={{ fontSize: 'inherit', color: 'inherit' }}>
+        {title}
+      </Typography>
+    </Box>
+    {!isLast && (
+      <ArrowDownwardIcon sx={{ color: '#00BFFF', fontSize: '2rem', my: 1, animation: `${fadeIn} 1s infinite alternate` }} />
+    )}
+  </Box>
+);
+
+// --- NEW COMPACT CARD COMPONENT ---
+const CompactServiceProductCard = ({ item, isService }) => (
+  <Card
+    sx={{
+      borderRadius: 3,
+      background: 'rgba(30, 42, 42, 0.8)',
+      border: '1px solid rgba(0, 191, 255, 0.3)',
+      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      color: 'white',
+      maxWidth: 350, // **Fixed Max Width for a Vertical, Neat Look**
+      mx: 'auto', 
+      '&:hover': {
+        transform: 'translateY(-8px)',
+        boxShadow: '0 12px 30px rgba(0, 191, 255, 0.35)',
+        border: '1px solid #00BFFF',
+      },
+      animation: `${fadeIn} 0.5s ease-in forwards`,
+    }}
+  >
+    {/* Image Container with objectFit: 'contain' */}
+    <Box 
+        sx={{ 
+            height: { xs: 150, sm: 180 }, // Taller height for image
+            width: '100%', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            p: 1, // Padding ensures even small images have space
+            background: 'rgba(0, 0, 0, 0.2)', // Dark background behind image
+            borderBottom: '1px solid rgba(0, 191, 255, 0.3)'
+        }}
+    >
+      <CardMedia
+        component="img"
+        image={item.image}
+        alt={item.title}
+        sx={{
+          maxHeight: '100%',
+          maxWidth: '100%',
+          objectFit: 'contain', // **CRITICAL: Ensure whole image is visible**
+          width: 'auto', // Adjust width based on content/container
+          height: 'auto', // Adjust height based on content/container
+          transition: 'transform 0.5s ease',
+          '&:hover': {
+            transform: 'scale(1.05)', // Subtle zoom on hover
+          },
+        }}
+      />
+    </Box>
+    <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+        {isService && item.icon ? (
+          <item.icon sx={{ color: '#33FFFF', mr: 1.5, fontSize: '1.5rem' }} />
+        ) : (
+          <HandymanIcon sx={{ color: '#33FFFF', mr: 1.5, fontSize: '1.5rem' }} />
+        )}
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            color: '#00BFFF',
+            fontSize: '1.1rem',
+          }}
+        >
+          {item.title}
+        </Typography>
+      </Box>
+      <Divider sx={{ mb: 1.5, borderColor: 'rgba(0, 191, 255, 0.2)' }} />
+      <Typography
+        variant="body2"
+        sx={{
+          color: '#B0BEC5',
+          fontSize: '0.9rem',
+          lineHeight: 1.6,
+          mb: 2,
+          flexGrow: 1,
+        }}
+      >
+        {item.description}
+      </Typography>
+      <MuiLink
+        component={RouterLink}
+        to={item.link}
+        sx={{
+          textDecoration: 'none',
+          color: '#33FFFF',
+          fontWeight: 600,
+          fontSize: '0.9rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          alignSelf: 'flex-start',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          border: '1px solid transparent',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            textDecoration: 'none',
+            color: '#E0F7FA',
+            backgroundColor: 'rgba(0, 191, 255, 0.1)',
+            border: '1px solid #00BFFF',
+          },
+        }}
+      >
+        {isService ? 'Learn More' : 'Explore Product'}
+        <ArrowForwardIcon sx={{ ml: 0.5, fontSize: '1rem' }} />
+      </MuiLink>
+    </CardContent>
+  </Card>
+);
+
 export default function ServicesPage() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-
-  const flowchartTitles = [
-    'Consulting',
-    'Design',
-    'Manufacturing',
-    'Installation',
-    'Maintenance',
-  ];
+  
+  const flowchartSteps = services.map(s => ({
+    title: s.title.split(' ')[0], 
+    icon: s.icon,
+  }));
 
   return (
     <Box
       sx={{
-        py: 8,
+        py: { xs: 6, sm: 8, md: 10 },
         px: { xs: 2, sm: 4, md: 6 },
-        background: 'linear-gradient(to bottom, #1a2a2aff, #0d1515ff)',
+        background: 'radial-gradient(ellipse at bottom, #0A1929 0%, #000B15 100%)',
         color: 'white',
         minHeight: '100vh',
       }}
     >
-      <Box sx={{ maxWidth: 1000, mx: 'auto' }}>
+      <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+        
         {/* Header Section */}
         <Typography
           variant="h3"
           component="h1"
           sx={{
-            fontWeight: 800,
-            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
+            fontWeight: 900,
+            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
             textAlign: 'center',
-            color: '#00BFFF',
+            color: '#33FFFF', 
             mb: 2,
             textTransform: 'uppercase',
-            letterSpacing: '1.5px',
-            animation: `${fadeIn} 0.8s ease-in`,
+            letterSpacing: '3px',
+            textShadow: '0 0 10px rgba(51, 255, 255, 0.5)',
+            animation: `${fadeIn} 1s ease-in`,
           }}
         >
-          NAPCEN Services & Products
+          NAPCEN: Advanced Solutions
         </Typography>
         <Typography
           variant="body1"
           sx={{
             textAlign: 'center',
-            maxWidth: 600,
+            maxWidth: 700,
             mx: 'auto',
-            color: '#B0BEC5',
-            mb: 6,
-            fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' },
-            lineHeight: 1.6,
+            color: '#C0C0C0', 
+            mb: 8,
+            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
+            lineHeight: 1.7,
+            animation: `${fadeIn} 1.2s ease-in`,
           }}
         >
-          Comprehensive air pollution control solutions from design to maintenance, with innovative products tailored to your industry.
+          Your trusted partner for **complete air quality solutions**, from **expert consultation** and **precision manufacturing** to **seamless installation** and **long-term maintenance**.
         </Typography>
 
         {/* Services Section */}
@@ -164,467 +328,162 @@ export default function ServicesPage() {
           variant="h4"
           component="h2"
           sx={{
-            fontWeight: 700,
-            fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' },
+            fontWeight: 800,
+            fontSize: { xs: '1.6rem', sm: '2rem' },
             color: '#00BFFF',
-            mb: 4,
+            mb: 6,
             textAlign: 'center',
-            borderBottom: '2px solid #00BFFF',
-            pb: 1,
+            borderBottom: '3px solid #00BFFF',
+            pb: 1.5,
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
           }}
         >
-          Our Services
+          🛠️ Our End-to-End Services
         </Typography>
-        {isMobile ? (
-          // Mobile Layout: Stack flowchart and cards vertically
-          <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto' }}>
+
+        {/* Services Grid: Flowchart centered, cards on sides, but cards are now compact and vertical */}
+        <Grid
+          container
+          spacing={4}
+          alignItems="flex-start" 
+          justifyContent="center"
+          sx={{ mb: 8 }}
+        >
+          {/* Service Cards - Left Column (1 & 2) */}
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              order: { xs: 2, md: 1 }, 
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}
+          >
+            {/* Service 1 */}
+            <Box sx={{ animation: `${fadeIn} 0.5s ease-in 0.2s forwards`, opacity: 0 }}>
+              <CompactServiceProductCard item={services[0]} isService={true} />
+            </Box>
+            {/* Service 2 */}
+            <Box sx={{ animation: `${fadeIn} 0.5s ease-in 0.4s forwards`, opacity: 0 }}>
+              <CompactServiceProductCard item={services[1]} isService={true} />
+            </Box>
+          </Grid>
+
+          {/* Service Flowchart - Center Column (Process) */}
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              order: { xs: 1, md: 2 }, 
+              mb: { xs: 4, md: 0 },
+            }}
+          >
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 700, color: '#33FFFF', mb: 3, textTransform: 'uppercase' }}
+            >
+              The NAPCEN Process
+            </Typography>
             <Box
               sx={{
+                width: '100%',
+                maxWidth: 300,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                mb: 4,
-                animation: `${fadeIn} 0.5s ease-in`,
               }}
             >
-              {flowchartTitles.map((title, idx) => (
-                <Box key={idx} sx={{ textAlign: 'center', mb: idx < flowchartTitles.length - 1 ? 1 : 0 }}>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 600,
-                      color: '#00BFFF',
-                      fontSize: { xs: '1rem', sm: '1.2rem' },
-                      padding: '8px 16px',
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(5px)',
-                      borderRadius: '8px',
-                      border: '1px solid rgba(0, 191, 255, 0.3)',
-                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                      transition: 'transform 0.3s ease',
-                      '&:hover': {
-                        transform: 'scale(1.05)',
-                      },
-                    }}
-                  >
-                    {title}
-                  </Typography>
-                  {idx < flowchartTitles.length - 1 && (
-                    <ArrowDownwardIcon sx={{ color: '#00BFFF', fontSize: '1.5rem', my: 1 }} />
-                  )}
-                </Box>
+              {services.map((step, idx) => (
+                <FlowStep
+                  key={idx}
+                  title={flowchartSteps[idx].title}
+                  icon={flowchartSteps[idx].icon}
+                  isLast={idx === services.length - 1}
+                />
               ))}
             </Box>
-            {services.map((service, idx) => (
-              <Grid item xs={12} key={idx} sx={{ width: '100%', maxWidth: 350, mb: 2 }}>
-                <Card
-                  sx={{
-                    borderRadius: 2,
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(0, 191, 255, 0.2)',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: '0 6px 20px rgba(0, 191, 255, 0.15)',
-                    },
-                    animation: `${fadeIn} 0.5s ease-in ${idx * 0.2}s forwards`,
-                    opacity: 0,
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={service.image}
-                    alt={service.title}
-                    sx={{
-                      height: 100,
-                      objectFit: 'cover',
-                      width: '100%',
-                    }}
-                  />
-                  <CardContent sx={{ p: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                      <ArrowForwardIcon sx={{ color: '#00BFFF', mr: 1, fontSize: '1.2rem' }} />
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: 600,
-                          color: '#00BFFF',
-                          fontSize: '1rem',
-                        }}
-                      >
-                        {service.title}
-                      </Typography>
-                    </Box>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: '#B0BEC5',
-                        fontSize: '0.85rem',
-                        lineHeight: 1.5,
-                        mb: 1.5,
-                      }}
-                    >
-                      {service.description}
-                    </Typography>
-                    <MuiLink
-                      component={RouterLink}
-                      to={service.link}
-                      sx={{
-                        textDecoration: 'none',
-                        color: '#00BFFF',
-                        fontWeight: 500,
-                        fontSize: '0.85rem',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        '&:hover': {
-                          textDecoration: 'underline',
-                        },
-                      }}
-                    >
-                      Learn More <ArrowForwardIcon sx={{ ml: 0.5, fontSize: '0.9rem' }} />
-                    </MuiLink>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Box>
-        ) : (
-          // Desktop/Tablet Layout: Three-column grid centered
-          <Grid
-            container
-            spacing={4}
-            alignItems="stretch"
-            justifyContent="center"
-            sx={{ minHeight: '600px' }}
-          >
-            <Grid item xs={12} md={4}>
-              {services.map((service, idx) => (
-                (idx === 1 || idx === 2) && (
-                  <Box
-                    key={idx}
-                    sx={{
-                      mb: idx === 1 ? 4 : 0,
-                      mt: idx === 2 ? 4 : 0,
-                      animation: `${fadeIn} 0.5s ease-in ${idx * 0.2}s forwards`,
-                      opacity: 0,
-                    }}
-                  >
-                    <Card
-                      sx={{
-                        borderRadius: 2,
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '1px solid rgba(0, 191, 255, 0.2)',
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-5px)',
-                          boxShadow: '0 6px 20px rgba(0, 191, 255, 0.15)',
-                        },
-                        maxWidth: 350,
-                        mx: 'auto',
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        image={service.image}
-                        alt={service.title}
-                        sx={{
-                          height: 100,
-                          objectFit: 'cover',
-                          width: '100%',
-                        }}
-                      />
-                      <CardContent sx={{ p: 2 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <ArrowForwardIcon sx={{ color: '#00BFFF', mr: 1, fontSize: '1.2rem' }} />
-                          <Typography
-                            variant="h6"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#00BFFF',
-                              fontSize: '1rem',
-                            }}
-                          >
-                            {service.title}
-                          </Typography>
-                        </Box>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: '#B0BEC5',
-                            fontSize: '0.85rem',
-                            lineHeight: 1.5,
-                            mb: 1.5,
-                          }}
-                        >
-                          {service.description}
-                        </Typography>
-                        <MuiLink
-                          component={RouterLink}
-                          to={service.link}
-                          sx={{
-                            textDecoration: 'none',
-                            color: '#00BFFF',
-                            fontWeight: 500,
-                            fontSize: '0.85rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            '&:hover': {
-                              textDecoration: 'underline',
-                            },
-                          }}
-                        >
-                          Learn More <ArrowForwardIcon sx={{ ml: 0.5, fontSize: '0.9rem' }} />
-                        </MuiLink>
-                      </CardContent>
-                    </Card>
-                  </Box>
-                )
-              ))}
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={4}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  animation: `${fadeIn} 0.5s ease-in`,
-                }}
-              >
-                {flowchartTitles.map((title, idx) => (
-                  <Box key={idx} sx={{ textAlign: 'center', mb: idx < flowchartTitles.length - 1 ? 1 : 0 }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 600,
-                        color: '#00BFFF',
-                        fontSize: { xs: '1rem', md: '1.2rem' },
-                        padding: '8px 16px',
-                        background: 'rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(5px)',
-                        borderRadius: '8px',
-                        border: '1px solid rgba(0, 191, 255, 0.3)',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                        transition: 'transform 0.3s ease',
-                        '&:hover': {
-                          transform: 'scale(1.05)',
-                        },
-                      }}
-                    >
-                      {title}
-                    </Typography>
-                    {idx < flowchartTitles.length - 1 && (
-                      <ArrowDownwardIcon sx={{ color: '#00BFFF', fontSize: '1.5rem', my: 1 }} />
-                    )}
-                  </Box>
-                ))}
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              {services.map((service, idx) => (
-                (idx === 0 || idx === 3) && (
-                  <Box
-                    key={idx}
-                    sx={{
-                      mb: idx === 0 ? 4 : 0,
-                      mt: idx === 3 ? 4 : 0,
-                      animation: `${fadeIn} 0.5s ease-in ${idx * 0.2}s forwards`,
-                      opacity: 0,
-                    }}
-                  >
-                    <Card
-                      sx={{
-                        borderRadius: 2,
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '1px solid rgba(0, 191, 255, 0.2)',
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-5px)',
-                          boxShadow: '0 6px 20px rgba(0, 191, 255, 0.15)',
-                        },
-                        maxWidth: 350,
-                        mx: 'auto',
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        image={service.image}
-                        alt={service.title}
-                        sx={{
-                          height: 100,
-                          objectFit: 'cover',
-                          width: '100%',
-                        }}
-                      />
-                      <CardContent sx={{ p: 2 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <ArrowForwardIcon sx={{ color: '#00BFFF', mr: 1, fontSize: '1.2rem' }} />
-                          <Typography
-                            variant="h6"
-                            sx={{
-                              fontWeight: 600,
-                              color: '#00BFFF',
-                              fontSize: '1rem',
-                            }}
-                          >
-                            {service.title}
-                          </Typography>
-                        </Box>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: '#B0BEC5',
-                            fontSize: '0.85rem',
-                            lineHeight: 1.5,
-                            mb: 1.5,
-                          }}
-                        >
-                          {service.description}
-                        </Typography>
-                        <MuiLink
-                          component={RouterLink}
-                          to={service.link}
-                          sx={{
-                            textDecoration: 'none',
-                            color: '#00BFFF',
-                            fontWeight: 500,
-                            fontSize: '0.85rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            '&:hover': {
-                              textDecoration: 'underline',
-                            },
-                          }}
-                        >
-                          Learn More <ArrowForwardIcon sx={{ ml: 0.5, fontSize: '0.9rem' }} />
-                        </MuiLink>
-                      </CardContent>
-                    </Card>
-                  </Box>
-                )
-              ))}
-            </Grid>
           </Grid>
-        )}
+          
+          {/* Service Cards - Right Column (3 & 4) */}
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              order: { xs: 3, md: 3 }, 
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}
+          >
+            {/* Service 3 */}
+            <Box sx={{ animation: `${fadeIn} 0.5s ease-in 0.6s forwards`, opacity: 0 }}>
+              <CompactServiceProductCard item={services[2]} isService={true} />
+            </Box>
+            {/* Service 4 */}
+            <Box sx={{ animation: `${fadeIn} 0.5s ease-in 0.8s forwards`, opacity: 0 }}>
+              <CompactServiceProductCard item={services[3]} isService={true} />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 8, borderColor: 'rgba(0, 191, 255, 0.2)', borderStyle: 'dashed' }} />
 
         {/* Products Section */}
         <Typography
           variant="h4"
           component="h2"
           sx={{
-            fontWeight: 700,
-            fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' },
+            fontWeight: 800,
+            fontSize: { xs: '1.6rem', sm: '2rem' },
             color: '#00BFFF',
             mt: 6,
             mb: 4,
             textAlign: 'center',
-            borderBottom: '2px solid #00BFFF',
-            pb: 1,
+            borderBottom: '3px solid #00BFFF',
+            pb: 1.5,
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
           }}
         >
-          Our Products
+          🔬 Innovative Air Control Products
         </Typography>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={{ xs: 3, md: 4 }} justifyContent="center">
           {products.map((product, idx) => (
             <Grid
               item
               xs={12}
               sm={6}
-              md={4}
+              md={4} // 3 columns on medium screens and up
               key={idx}
-              sx={{ maxWidth: { xs: 350, sm: 400 } }}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                animation: `${fadeIn} 0.5s ease-in ${idx * 0.15}s forwards`,
+                opacity: 0,
+              }}
             >
-              <Card
-                sx={{
-                  borderRadius: 2,
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(0, 191, 255, 0.2)',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 6px 20px rgba(0, 191, 255, 0.15)',
-                  },
-                  animation: `${fadeIn} 0.5s ease-in ${idx * 0.2}s forwards`,
-                  opacity: 0,
-                  height: '100%',
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  image={product.image}
-                  alt={product.title}
-                  sx={{
-                    height: 100,
-                    objectFit: 'cover',
-                    width: '100%',
-                  }}
-                />
-                <CardContent sx={{ p: 2, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <ArrowForwardIcon sx={{ color: '#00BFFF', mr: 1, fontSize: '1.2rem' }} />
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 600,
-                        color: '#00BFFF',
-                        fontSize: '1rem',
-                      }}
-                    >
-                      {product.title}
-                    </Typography>
-                  </Box>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: '#B0BEC5',
-                      fontSize: '0.85rem',
-                      lineHeight: 1.5,
-                      mb: 1.5,
-                      flexGrow: 1,
-                    }}
-                  >
-                    {product.description}
-                  </Typography>
-                  <MuiLink
-                    component={RouterLink}
-                    to={product.link}
-                    sx={{
-                      textDecoration: 'none',
-                      color: '#00BFFF',
-                      fontWeight: 500,
-                      fontSize: '0.85rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                  >
-                    Explore Product <ArrowForwardIcon sx={{ ml: 0.5, fontSize: '0.9rem' }} />
-                  </MuiLink>
-                </CardContent>
-              </Card>
+              <CompactServiceProductCard item={product} isService={false} />
             </Grid>
           ))}
         </Grid>
 
         {/* Call to Action */}
-        <Box sx={{ mt: 6, textAlign: 'center' }}>
+        <Box sx={{ mt: 10, textAlign: 'center', animation: `${fadeIn} 1.5s ease-in forwards`, opacity: 0 }}>
           <Typography
-            variant="h6"
+            variant="h5"
             sx={{
-              color: '#B0BEC5',
-              mb: 2,
-              fontSize: { xs: '1rem', sm: '1.2rem' },
+              color: '#33FFFF',
+              mb: 3,
+              fontWeight: 600,
+              fontSize: { xs: '1.2rem', sm: '1.5rem' },
             }}
           >
             Ready to enhance your air pollution control systems?
@@ -633,21 +492,27 @@ export default function ServicesPage() {
             component={RouterLink}
             to="/contact"
             variant="contained"
+            size="large"
             sx={{
               backgroundColor: '#00BFFF',
               color: '#121212',
-              fontWeight: 600,
-              px: 3,
-              py: 1,
-              borderRadius: 2,
+              fontWeight: 700,
+              px: 4,
+              py: 1.5,
+              borderRadius: 3,
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              boxShadow: '0 0 10px #00BFFF',
+              transition: 'all 0.3s ease',
               '&:hover': {
                 backgroundColor: '#0288D1',
                 transform: 'scale(1.05)',
-                transition: 'all 0.3s ease',
+                boxShadow: '0 0 20px #00BFFF, 0 0 30px rgba(0, 191, 255, 0.5)',
               },
             }}
           >
-            Contact Us <ArrowForwardIcon sx={{ ml: 1, fontSize: '1rem' }} />
+            Schedule a Consultation
+            <ArrowForwardIcon sx={{ ml: 1, fontSize: '1.2rem' }} />
           </Button>
         </Box>
       </Box>
