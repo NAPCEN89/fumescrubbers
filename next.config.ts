@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Add this line to transpile the necessary MUI packages
+  transpilePackages: ['@mui/material', '@mui/icons-material'],
 };
 
-export default nextConfig;
+module.exports = nextConfig;

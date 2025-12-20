@@ -1,0 +1,58 @@
+﻿name: Build & Deploy Next.js to Metanet FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build & Export Static Site
+        run: |
+          npm run build
+          npm run export
+        env:
+          CI: false
+
+      - name: Add .htaccess for SPA routing
+        run: |
+          Set-Content -Path out/.htaccess -Value @"
+Options -MultiViews
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [QSA,L]
+"@
+
+      - name: Add deploy marker
+        run: |
+          "NEXT.JS SITE LIVE!" | Out-File -FilePath out/deploy-check.txt -Encoding utf8
+          "DEPLOYED: $(Get-Date -Format u)" | Out-File -FilePath out/deploy-check.txt -Append -Encoding utf8
+
+      - name: Deploy to FTP ROOT
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          user: fumescrubber
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: out
+          remoteDir: /
+          options: --delete --verbose
+
+      - name: DONE
+        run: echo "NEXT.JS SITE LIVE ON METANET!"
