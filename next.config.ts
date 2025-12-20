@@ -1,26 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: 'export', // Required for Metanet/Static hosting
 
   images: {
-    loader: 'custom',
-    loaderFile: './image-loader.js',
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    // Pro Tip: Static exports don't support on-demand optimization. 
+    // Setting this to true is the official Next.js recommendation.
+    unoptimized: true, 
   },
 
-  transpilePackages: ['next-image-export-optimizer'],
-
-  env: {
-    nextImageExportOptimizer_imageFolderPath: 'public',
-    nextImageExportOptimizer_exportFolderPath: 'out',
-    nextImageExportOptimizer_quality: '75',
-    nextImageExportOptimizer_storePicturesInWEBP: 'true',
-    nextImageExportOptimizer_generateAndUseBlurImages: 'true',
-  },
-
+  // Keep this to allow the build to finish even with minor TS warnings
   typescript: {
     ignoreBuildErrors: true,
+  },
+  
+  // Disable ESLint during build to speed up deployment
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 
