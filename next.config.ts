@@ -1,19 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Keep this for static build
-  // Remove images.unoptimized — we don't need it anymore
-
-  eslint: {
-    ignoreDuringBuilds: true,
+  output: 'export',
+  images: {
+    unoptimized: true,  // We'll fix images manually below
   },
   typescript: {
     ignoreBuildErrors: true,
-  },
-
-  // Add these for the optimizer
-  images: {
-    loader: 'custom',
-    loaderFile: './image-loader.js',  // We'll create this next
   },
 };
 

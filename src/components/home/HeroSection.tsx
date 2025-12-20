@@ -2,12 +2,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import ExportedImage from 'next-image-export-optimizer';  // ← Optimized images
 
 // ----------------------------------------------------------------------
-// CONFIGURATION - UPDATE THESE PATHS
+// CONFIGURATION - UPDATE THESE
 // ----------------------------------------------------------------------
-const VIDEO_SRC = '/napcenBg.mp4';           // Make sure this file exists in /public and is <10MB compressed!
-const FALLBACK_IMAGE = '/napcen-hero-fallback.jpg';  // High-quality compressed fallback (<400KB WebP recommended)
+const VIDEO_SRC = '/napcenBg.mp4';  // Must be in /public, compressed <10MB
+const FALLBACK_IMAGE = '/napcen-hero-fallback.webp';  // WebP, <400KB, in /public
 
 export default function HeroSection() {
   const [isMounted, setIsMounted] = useState(false);
@@ -19,51 +20,47 @@ export default function HeroSection() {
     setIsMounted(true);
   }, []);
 
-  // Smart detection: Only play on fast connections & no data saver
-  const getShouldPlay = () => {
-    if (typeof window === 'undefined' || !isMounted) return false;
+  // Only attempt video on fast connections
+  const shouldAttemptVideo = () => {
+    if (!isMounted || typeof window === 'undefined') return false;
     const conn = (navigator as any).connection;
     const reducedData = window.matchMedia('(prefers-reduced-data: reduce)').matches;
     const slow = conn?.saveData || ['slow-2g', '2g', '3g'].includes(conn?.effectiveType ?? '');
     return !slow && !reducedData;
   };
 
-  const shouldPlay = getShouldPlay();
+  const canPlayVideo = shouldAttemptVideo();
 
   useEffect(() => {
-    if (!shouldPlay || !videoRef.current) return;
+    if (!canPlayVideo || !videoRef.current) return;
 
     const video = videoRef.current;
     let timeout: NodeJS.Timeout;
 
-    const onCanPlay = () => {
+    const handleCanPlay = () => {
       clearTimeout(timeout);
       setVideoReady(true);
     };
 
-    const onError = () => {
+    const handleError = () => {
       clearTimeout(timeout);
-      setVideoError(true);  // Gracefully fall back to image
+      setVideoError(true);
     };
 
-    video.addEventListener('canplaythrough', onCanPlay);
-    video.addEventListener('error', onError);
+    video.addEventListener('canplaythrough', handleCanPlay);
+    video.addEventListener('error', handleError);
 
-    // Fallback timeout: Show image if video takes too long (>3s)
+    // Safety timeout: give up after 4s if video doesn't load
     timeout = setTimeout(() => {
-      setVideoReady(false);
       setVideoError(true);
-    }, 3000);
-
-    // Preload a bit to help detection
-    video.preload = 'metadata';
+    }, 4000);
 
     return () => {
-      video.removeEventListener('canplaythrough', onCanPlay);
-      video.removeEventListener('error', onError);
+      video.removeEventListener('canplaythrough', handleCanPlay);
+      video.removeEventListener('error', handleError);
       clearTimeout(timeout);
     };
-  }, [shouldPlay]);
+  }, [canPlayVideo]);
 
   return (
     <section
@@ -72,20 +69,20 @@ export default function HeroSection() {
       itemScope
       itemType="https://schema.org/Organization"
     >
-      {/* Fallback Image - Always visible first for instant LCP */}
-      <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${FALLBACK_IMAGE})`,
-          filter: 'brightness(0.85)',
-        }}
-        role="img"
-        aria-label="NAPCEN industrial air pollution control manufacturing facility in Puducherry"
+      {/* Optimized Fallback Image - Instant LCP, blur placeholder, WebP */}
+      <ExportedImage
+        src={FALLBACK_IMAGE}
+        alt="NAPCEN industrial air pollution control manufacturing facility and wet scrubber systems in Puducherry, India"
+        fill
+        sizes="100vw"
+        priority  // Critical for LCP
+        quality={85}
+        className="absolute inset-0 object-cover brightness-[0.85] z-0"
         itemProp="image"
       />
 
-      {/* Video Overlay - Only shows when fully ready */}
-      {shouldPlay && !videoError && (
+      {/* Video Background - Only renders if conditions good */}
+      {canPlayVideo && !videoError && (
         <video
           ref={videoRef}
           autoPlay
@@ -104,7 +101,7 @@ export default function HeroSection() {
         </video>
       )}
 
-      {/* Soft Overlay */}
+      {/* Gradient Overlay */}
       <div
         className="absolute inset-0 z-20"
         style={{
@@ -132,28 +129,37 @@ export default function HeroSection() {
           </span>
         </h1>
 
-        <p className="mt-8 md:mt-12 text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-3xl mx-auto leading-relaxed" itemProp="description">
+        <p
+          className="mt-8 md:mt-12 text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-3xl mx-auto leading-relaxed"
+          itemProp="description"
+        >
           Custom-engineered wet scrubbers, dust collectors, and fume extractors — 
           CPCB compliant, reliable, and built for Indian industries.
         </p>
 
+        {/* Hidden SEO Keywords */}
         <div className="sr-only" aria-hidden="false">
           Wet scrubber manufacturer Chennai, wet scrubber manufacturer Tamil Nadu, 
           wet scrubber manufacturer India, industrial dust collector manufacturer Chennai, 
           fume extractor manufacturer Puducherry, air pollution control equipment manufacturer India
         </div>
 
+        {/* CTA Buttons */}
         <div className="mt-12 md:mt-16 flex flex-col sm:flex-row gap-5 sm:gap-8 justify-center items-center">
           <Link
             href="/products"
-            className="px-8 py-4 text-base md:text-lg font-semibold text-white bg-cyan-600 rounded-full hover:bg-cyan-500 transition-all duration-300 shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-0.5"
+            className="px-8 py-4 text-base md:text-lg font-semibold text-white bg-cyan-600 rounded-full 
+                       hover:bg-cyan-500 transition-all duration-300 shadow-lg hover:shadow-cyan-500/30 
+                       hover:-translate-y-0.5"
           >
             Explore Our Solutions
           </Link>
 
           <Link
             href="/contact"
-            className="px-8 py-4 text-base md:text-lg font-semibold text-white border-2 border-white/80 rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 hover:-translate-y-0.5 backdrop-blur-sm"
+            className="px-8 py-4 text-base md:text-lg font-semibold text-white border-2 border-white/80 
+                       rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 
+                       shadow-lg hover:shadow-white/20 hover:-translate-y-0.5 backdrop-blur-sm"
           >
             Get Free Quote
           </Link>

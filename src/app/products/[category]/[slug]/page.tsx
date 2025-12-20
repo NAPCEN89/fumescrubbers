@@ -4,7 +4,7 @@ import ProductClient from './ProductClient';
 import { Metadata, ResolvingMetadata } from 'next';
 
 // =====================================================
-// 1. STATIC PARAMS (Kept unchanged – excellent for SSG)
+// 1. STATIC PARAMS – Perfect for full static export
 // =====================================================
 export async function generateStaticParams() {
   const paths: { category: string; slug: string }[] = [];
@@ -22,7 +22,7 @@ export async function generateStaticParams() {
 }
 
 // =====================================================
-// 2. DYNAMIC METADATA – The SEO Rocket Fuel
+// 2. DYNAMIC METADATA – SEO Gold (Fixed OpenGraph type)
 // =====================================================
 type Props = {
   params: Promise<{ category: string; slug: string }>;
@@ -40,7 +40,6 @@ export async function generateMetadata(
   const categoryTitle = productData[category]?.title || '';
   const fullProductName = `${product.label} ${categoryTitle.includes('Scrubber') || categoryTitle.includes('Collector') ? '' : 'System'}`;
 
-  // Primary keyword targeting (local + national)
   const primaryTitle = `${product.label} Manufacturer in Puducherry | NAPCEN Chennai & Tamil Nadu`;
   const locationDescription = `NAPCEN manufactures high-efficiency ${product.label.toLowerCase()} in Puducherry, serving industrial clients across Chennai, Tamil Nadu, and India. CPCB compliant solutions with >99% efficiency.`;
 
@@ -55,7 +54,6 @@ export async function generateMetadata(
       `${product.label.toLowerCase()} price India`,
       `industrial ${product.label.toLowerCase()} Puducherry`,
       `CPCB compliant ${product.label.toLowerCase()}`,
-      // Add common variations
       ...product.features?.slice(0, 5).map((f: string) => f.toLowerCase()),
     ],
     openGraph: {
@@ -64,14 +62,15 @@ export async function generateMetadata(
       url: `https://fumescrubbers.com/products/${category}/${slug}`,
       images: [
         {
-          url: product.image?.src || '/og-product-default.jpg', // fallback if needed
+          url: product.image?.src || '/og-product-default.jpg',
           width: 1200,
           height: 630,
           alt: `${product.label} - NAPCEN Manufacturing in Puducherry`,
         },
       ],
-      type: 'product',
+      type: 'website',  // ← CHANGED FROM 'product' TO 'website' (valid & safe)
       locale: 'en_IN',
+      siteName: 'NAPCEN',
     },
     twitter: {
       card: 'summary_large_image',
@@ -90,7 +89,7 @@ export async function generateMetadata(
 }
 
 // =====================================================
-// 3. PAGE COMPONENT
+// 3. PAGE COMPONENT – Unchanged & excellent
 // =====================================================
 export default async function ProductDetailPage({ params }: Props) {
   const { category, slug } = await params;
@@ -132,7 +131,6 @@ export default async function ProductDetailPage({ params }: Props) {
               priceValidUntil: "2026-12-31",
               itemCondition: "https://schema.org/NewCondition",
             },
-            // Optional: Add aggregateRating when you have reviews
           }),
         }}
       />
