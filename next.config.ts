@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  images: { unoptimized: true },
-  // ADD THESE TWO SECTIONS BELOW:
+  images: {
+    unoptimized: true,
+  },
+  // This is the correct way to handle these in Next.js 15
   eslint: {
     ignoreDuringBuilds: true,
   },

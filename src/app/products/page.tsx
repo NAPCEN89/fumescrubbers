@@ -1,5 +1,3 @@
-// src/app/products/[category]/page.tsx
-
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { productData } from '@/lib/products-data';
@@ -8,6 +6,16 @@ import DynamicProductList from '@/components/DynamicProductList';
 type Props = {
   params: Promise<{ category: string }>;
 };
+
+/**
+ * 1. MANDATORY FOR STATIC EXPORT
+ * This tells Next.js exactly which folders to create in /out/products/
+ */
+export async function generateStaticParams() {
+  return Object.keys(productData).map((category) => ({
+    category: category,
+  }));
+}
 
 // Dynamic Metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -23,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const pageTitle = `${categoryData.title} | Napcen India`;
   const pageDescription = categoryData.seoDescription || 
-    `${categoryData.title} – CPCB compliant industrial air pollution control systems manufactured in India. High-efficiency solutions for acid fumes, dust, and chemical gases.`;
+    `${categoryData.title} – CPCB compliant industrial air pollution control systems manufactured in India.`;
 
   return {
     title: pageTitle,
@@ -57,14 +65,12 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#0d1515] text-white">
-      {/* Dynamic Product Marquee List */}
       <DynamicProductList
         title={categoryData.title}
         products={categoryData.items}
         categorySlug={category}
       />
 
-      {/* SEO-Rich Content Block – Optimized for Indian Market */}
       <section className="py-16 md:py-24 px-6 max-w-5xl mx-auto">
         <div className="space-y-8 text-center md:text-left">
           <h2 className="text-4xl md:text-5xl font-black text-[#00BFFF] mb-8">
@@ -74,22 +80,16 @@ export default async function CategoryPage({ params }: Props) {
           <div className="prose prose-invert prose-lg max-w-none opacity-90 leading-relaxed space-y-6">
             <p>
               Napcen is a trusted name among <strong>industrial air pollution control equipment manufacturers in India</strong>. 
-              Our {categoryData.title.toLowerCase()} are engineered with premium materials like PP-FRP, PVDF, and SS 316 to deliver 
-              <strong> over 99% removal efficiency</strong> for acid fumes, particulates, chemical gases, and odors.
+              Our {categoryData.title.toLowerCase()} are engineered with premium materials like PP-FRP, PVDF, and SS 316.
             </p>
 
             <p>
-              Fully compliant with <strong>CPCB</strong> and <strong>State Pollution Control Board (SPCB)</strong> guidelines, 
-              our systems are widely installed across industries in <strong>Tamil Nadu, Gujarat, Maharashtra, Karnataka, Andhra Pradesh, Telangana</strong>, and pan-India.
-            </p>
-
-            <p>
-              Whether you need solutions for chemical processing, pharmaceutical manufacturing, steel pickling, foundries, or waste incineration — 
-              Napcen provides customized, energy-efficient, and low-maintenance systems backed by expert installation and after-sales support.
+              Fully compliant with <strong>CPCB</strong> and <strong>SPCB</strong> guidelines, 
+              our systems are widely installed across India.
             </p>
 
             <p className="text-[#00BFFF] font-semibold text-xl mt-10">
-              Contact us today for site assessment, design consultation, and competitive quotes across India.
+              Contact us today for site assessment and competitive quotes.
             </p>
           </div>
         </div>

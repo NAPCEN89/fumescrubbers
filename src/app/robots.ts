@@ -1,3 +1,5 @@
+export const dynamic = 'force-static'; // Add this line
+
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -5,8 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/private/',
     },
-    sitemap: 'https://www.napcen.com/sitemap.xml',
+    sitemap: 'https://fumescrubbers.in/sitemap.xml',
   };
 }

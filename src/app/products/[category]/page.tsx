@@ -1,5 +1,3 @@
-// src/app/products/[category]/page.tsx
-
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { productData } from '@/lib/products-data';
@@ -9,10 +7,20 @@ type Props = {
   params: Promise<{ category: string }>;
 };
 
+/**
+ * MANDATORY FOR STATIC EXPORT (output: 'export')
+ * This function tells the Next.js builder exactly which dynamic 
+ * folders to create during 'npm run build'.
+ */
+export async function generateStaticParams() {
+  return Object.keys(productData).map((category) => ({
+    category: category,
+  }));
+}
+
 // Generate SEO-friendly metadata for each category
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
-
   const categoryData = productData[category];
 
   if (!categoryData) {
@@ -40,7 +48,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // Main category page component
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;
-
   const categoryData = productData[category];
 
   // If category doesn't exist → 404
