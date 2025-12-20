@@ -1,30 +1,54 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-// --- STATIC IMAGE IMPORTS (Critical for loading performance) ---
-import wetScrubberImg from '../../assets/images/resource/wet-scrubber-home.png';
-import dustCollectorImg from '../../assets/images/products/dust collector/Wet-dust-collectors-chennai.jpg';
-import downdraftTableImg from '../../assets/images/Downdraft-table-india.jpg';
-import fumeExtractorImg from '../../assets/images/Acid-fume-scrubber-india.jpg';
-import dryScrubberImg from '../../assets/images/Dry-scrubber-pondicherry.jpg';
-
+// --- CONFIGURATION: String paths are much faster for Metanet static exports ---
+// --- CONFIGURATION: EXACT PATHS matching your public folder structure ---
 const PRODUCT_CATEGORIES = [
-  { name: 'Wet Scrubbers', image: wetScrubberImg, description: 'Efficiently remove pollutants like dust, gases, and chemicals from industrial exhaust using liquid sprays.', link: '/products/scrubbers/wet-scrubber' },
-  { name: 'Dry Scrubbers', image: dryScrubberImg, description: 'Control emissions using dry reagents to neutralize acidic gases like SO₂ and HCl.', link: '/products/scrubbers/dry-scrubber' },
-  { name: 'Dust Collectors', image: dustCollectorImg, description: 'Capture and filter dust particles to maintain clean air in facilities.', link: '/products/dust-collectors' },
-  { name: 'Fume Extractor', image: fumeExtractorImg, description: 'Remove harmful fumes and gases from welding, soldering, or chemical processes.', link: '/products/fume-extractors' },
-  { name: 'Downdraft Table', image: downdraftTableImg, description: 'Capture dust and fumes during cutting, grinding, or welding.', link: '/products/downdraft-tables' },
+  { 
+    name: 'Wet Scrubbers', 
+    // Found in: public\assets\images\products\Wet scrubber
+    image: '/assets/images/products/Wet scrubber/Wet-scrubber-chennai.jpg', 
+    description: 'Efficiently remove pollutants like dust, gases, and chemicals from industrial exhaust using liquid sprays.', 
+    link: '/products/scrubbers/wet-scrubber' 
+  },
+  { 
+    name: 'Dry Scrubbers', 
+    // Found in: public\assets\images
+    image: '/assets/images/Dry-scrubber-pondicherry.jpg', 
+    description: 'Control emissions using dry reagents to neutralize acidic gases like SO₂ and HCl.', 
+    link: '/products/scrubbers/dry-scrubber' 
+  },
+  { 
+    name: 'Dust Collectors', 
+    // Found in: public\assets\images\products\dust collector
+    image: '/assets/images/products/dust collector/Baghouse-duct-collector-chennai.jpg', 
+    description: 'Capture and filter dust particles to maintain clean air in facilities.', 
+    link: '/products/dust-collectors' 
+  },
+  { 
+    name: 'Fume Extractor', 
+    // Found in: public\assets\images\products\Fume extractor
+    image: '/assets/images/products/Fume extractor/Welding-fume-extractor.jpg', 
+    description: 'Remove harmful fumes and gases from welding, soldering, or chemical processes.', 
+    link: '/products/fume-extractors' 
+  },
+  { 
+    name: 'Downdraft Table', 
+    // Found in: public\assets\images\products\Downdraft tbale
+    image: '/assets/images/products/Downdraft tbale/welding-downdraft-table.jpg', 
+    description: 'Capture dust and fumes during cutting, grinding, or welding.', 
+    link: '/products/downdraft-tables' 
+  },
 ];
 
 export default function OurProductsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoCycling, setIsAutoCycling] = useState(true);
 
-  // Auto-cycling logic
   useEffect(() => {
     if (!isAutoCycling) return;
     const interval = setInterval(() => {
@@ -37,7 +61,6 @@ export default function OurProductsSection() {
     <section className="py-16 md:py-24 bg-[#0a1111] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         
-        {/* CENTERED HEADER */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-black text-cyan-400 uppercase mb-4 tracking-tight">
             Our Core Solutions
@@ -48,10 +71,9 @@ export default function OurProductsSection() {
           </p>
         </div>
 
-        {/* MAIN INTERACTIVE AREA: PERFECTLY CENTERED */}
         <div className="flex flex-col lg:flex-row items-center justify-center gap-10">
           
-          {/* LEFT NAV: FIXED WIDTH FOR BALANCE */}
+          {/* Nav List */}
           <nav className="w-full lg:w-[320px] space-y-3">
             {PRODUCT_CATEGORIES.map((cat, i) => (
               <button
@@ -69,10 +91,9 @@ export default function OurProductsSection() {
             ))}
           </nav>
 
-          {/* RIGHT CONTENT CARD: CENTERED & STABLE */}
+          {/* Card Area */}
           <div className="w-full lg:max-w-[800px] min-h-[420px] bg-gradient-to-br from-white/10 to-transparent backdrop-blur-xl rounded-[40px] border border-white/10 p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 relative">
             
-            {/* TEXT SIDE */}
             <div className="flex-1 space-y-6 text-center md:text-left">
               <span className="inline-block px-4 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-black uppercase tracking-widest">
                 Technical Expertise
@@ -92,9 +113,8 @@ export default function OurProductsSection() {
               </Link>
             </div>
 
-            {/* IMAGE SIDE: RE-ENABLED WITH STATIC DATA */}
+            {/* Image Box */}
             <div className="relative w-[280px] h-[280px] flex-shrink-0 group">
-              {/* Outer Glow Effect */}
               <div className="absolute inset-0 bg-cyan-500/20 blur-[40px] rounded-full group-hover:bg-cyan-500/40 transition-all" />
               
               <div className="relative w-full h-full rounded-3xl overflow-hidden border-2 border-cyan-500/30 shadow-2xl bg-[#111]">
@@ -103,16 +123,17 @@ export default function OurProductsSection() {
                   src={PRODUCT_CATEGORIES[activeIndex].image}
                   alt={PRODUCT_CATEGORIES[activeIndex].name}
                   fill
-                  priority={true} // Ensures the image is ready immediately
-                  className="object-cover animate-fadeIn transition-opacity duration-500"
                   sizes="280px"
+                  loading="lazy" // High performance: don't load until visible
+                  className="object-cover transition-opacity duration-500"
+                  quality={85}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* SEO SCHEMA (Invisible to users, visible to Google) */}
+        {/* SEO Script */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ItemList",

@@ -10,11 +10,14 @@ import {
   Instagram, 
   Mail, 
   Phone, 
-  MapPin,
-  ArrowRight
+  MapPin
 } from 'lucide-react';
 
-import logo from '../assets/images/Napcen-logo.png';
+// ----------------------------------------------------------------------
+// CONFIGURATION
+// ----------------------------------------------------------------------
+// Using a string path for public assets is much faster for static sites
+const LOGO_PATH = '/assets/images/Napcen-logo.png'; 
 
 const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <Link 
@@ -31,6 +34,7 @@ const SocialIcon = ({ href, Icon }: { href: string; Icon: React.ElementType }) =
     target="_blank"
     rel="noopener noreferrer"
     className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white transition-all duration-300 hover:bg-[#00E5FF] hover:text-black hover:shadow-lg hover:shadow-[#00E5FF]/30"
+    aria-label="Social Link"
   >
     <Icon size={20} />
   </a>
@@ -58,23 +62,26 @@ export default function Footer() {
   return (
     <footer className="bg-[#0f1515] text-white pt-12 pb-8 border-t border-[#00E5FF]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top: Logo + Description + Social */}
+        
+        {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
           <div className="text-center md:text-left">
+            {/* FIXED: Using string path and unoptimized prop for Metanet speed */}
             <Image
-              src={logo}
+              src={LOGO_PATH}
               alt="NAPCEN Logo"
               width={160}
               height={50}
               className="brightness-0 invert mx-auto md:mx-0 mb-4"
-              priority
+              // Footer images should NOT be priority, they load after the fold
+              loading="lazy" 
             />
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               Engineering the future of clean air. India's trusted leader in industrial air pollution control systems.
             </p>
           </div>
 
-          <div className="flex justify-center md:justify-center">
+          <div className="flex justify-center items-center">
             <div className="flex gap-3">
               <SocialIcon href="https://youtube.com" Icon={Youtube} />
               <SocialIcon href="https://linkedin.com" Icon={Linkedin} />
@@ -83,7 +90,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="text-center md:text-right space-y-3">
+          <div className="text-center md:text-right space-y-3 flex flex-col justify-center">
             <div className="flex items-center justify-center md:justify-end gap-3 text-sm">
               <Phone size={18} className="text-[#00E5FF]" />
               <a href="tel:+917904469219" className="hover:text-[#00E5FF] transition">+91 79044 69219</a>
@@ -95,7 +102,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Middle: Links */}
+        {/* Links Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-10 border-y border-white/10">
           <div>
             <h4 className="text-[#00E5FF] font-bold uppercase tracking-wider text-sm mb-5">Company</h4>
@@ -131,7 +138,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom: Copyright + Legal */}
+        {/* Copyright */}
         <div className="mt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm text-gray-500">
           <p>© {currentYear} NAPCEN POLLUTION CONTROL. ALL RIGHTS RESERVED.</p>
           <div className="flex gap-6">

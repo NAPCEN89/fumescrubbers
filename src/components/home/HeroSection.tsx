@@ -1,162 +1,76 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-// Change 1: Import standard Next.js Image
-import Image from 'next/image'; 
+import Image from 'next/image';
 
 // ----------------------------------------------------------------------
-// CONFIGURATION - UPDATE THESE
+// CONFIGURATION
 // ----------------------------------------------------------------------
-const VIDEO_SRC = '/napcenBg.mp4';  
-const FALLBACK_IMAGE = '/napcen-hero-fallback.webp';  
+const FALLBACK_IMAGE = '/napcen-hero-fallback.webp'; // Ensure this is WebP and < 200KB
 
 export default function HeroSection() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const shouldAttemptVideo = () => {
-    if (!isMounted || typeof window === 'undefined') return false;
-    const conn = (navigator as any).connection;
-    const reducedData = window.matchMedia('(prefers-reduced-data: reduce)').matches;
-    const slow = conn?.saveData || ['slow-2g', '2g', '3g'].includes(conn?.effectiveType ?? '');
-    return !slow && !reducedData;
-  };
-
-  const canPlayVideo = shouldAttemptVideo();
-
-  useEffect(() => {
-    if (!canPlayVideo || !videoRef.current) return;
-
-    const video = videoRef.current;
-    let timeout: NodeJS.Timeout;
-
-    const handleCanPlay = () => {
-      clearTimeout(timeout);
-      setVideoReady(true);
-    };
-
-    const handleError = () => {
-      clearTimeout(timeout);
-      setVideoError(true);
-    };
-
-    video.addEventListener('canplaythrough', handleCanPlay);
-    video.addEventListener('error', handleError);
-
-    timeout = setTimeout(() => {
-      setVideoError(true);
-    }, 4000);
-
-    return () => {
-      video.removeEventListener('canplaythrough', handleCanPlay);
-      video.removeEventListener('error', handleError);
-      clearTimeout(timeout);
-    };
-  }, [canPlayVideo]);
-
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative flex items-center justify-center overflow-hidden min-h-[80vh] sm:min-h-[85vh] md:min-h-screen pt-24 md:pt-32 pb-16 md:pb-24"
-      itemScope
-      itemType="https://schema.org/Organization"
+      className="relative flex items-center justify-center overflow-hidden min-h-[70vh] sm:min-h-[80vh] md:min-h-screen pt-20 md:pt-24"
     >
-      {/* Change 2: Replaced ExportedImage with standard Image */}
-      <Image
-        src={FALLBACK_IMAGE}
-        alt="NAPCEN industrial air pollution control manufacturing facility and wet scrubber systems in Puducherry, India"
-        fill
-        sizes="100vw"
-        priority // Critical for LCP - tells Google this is the most important image
-        className="absolute inset-0 object-cover brightness-[0.85] z-0"
-        itemProp="image"
-      />
+      {/* OPTIMIZED BACKGROUND IMAGE 
+         Using 'priority' ensures this loads first, fixing your LCP speed score.
+      */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={FALLBACK_IMAGE}
+          alt="NAPCEN industrial air pollution control facility"
+          fill
+          priority
+          quality={85}
+          className="object-cover brightness-[0.6]"
+        />
+      </div>
 
-      {canPlayVideo && !videoError && (
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={FALLBACK_IMAGE}
-          className={`
-            absolute inset-0 w-full h-full object-cover z-10
-            transition-opacity duration-3000 ease-in-out
-            ${videoReady ? 'opacity-100' : 'opacity-0'}
-          `}
-          aria-hidden="true"
-        >
-          <source src={VIDEO_SRC} type="video/mp4" />
-        </video>
-      )}
-
-      {/* Gradient Overlay */}
+      {/* Gradient Overlay for Text Readability */}
       <div
-        className="absolute inset-0 z-20"
+        className="absolute inset-0 z-10"
         style={{
-          background: 'linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(5,15,35,0.5) 100%)',
+          background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(5,15,35,0.6) 100%)',
         }}
         aria-hidden="true"
       />
 
-      <div className="relative z-30 text-center px-6 sm:px-8 md:px-12 max-w-5xl mx-auto">
+      {/* Hero Content */}
+      <div className="relative z-20 text-center px-4 sm:px-6 md:px-8 max-w-5xl mx-auto">
         <h1
           id="hero-heading"
-          className="font-black text-white tracking-tight leading-tight text-4xl xs:text-5xl sm:text-6xl md:text-7xl"
-          itemProp="name"
+          className="font-black text-white tracking-tight leading-tight text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl"
         >
-          Leading Industrial
-          <br className="hidden sm:block" />
-          Air Pollution Control
-          <br />
-          <span className="block text-2xl sm:text-3xl md:text-4xl font-semibold mt-6 text-cyan-300">
-            Manufacturer in Puducherry
-            <br className="sm:hidden" />
-            <span className="hidden sm:inline"> • </span>
-            Serving Chennai & Tamil Nadu
-          </span>
+          Industrial Air<br className="sm:hidden" />{' '}
+          <span className="text-cyan-400">Pollution</span>
+          <br className="hidden sm:block" /> Control Solutions
         </h1>
 
-        <p
-          className="mt-8 md:mt-12 text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-3xl mx-auto leading-relaxed"
-          itemProp="description"
-        >
-          Custom-engineered wet scrubbers, dust collectors, and fume extractors — 
-          CPCB compliant, reliable, and built for Indian industries.
+        <p className="mt-6 text-lg sm:text-xl md:text-2xl font-semibold text-white/95">
+          Wet Scrubber • Dry Scrubber • Dust Collector • Fume Extraction
         </p>
 
-        {/* Hidden SEO Keywords - Senior Dev trick for indexing */}
-        <div className="sr-only" aria-hidden="false">
-          Wet scrubber manufacturer Chennai, wet scrubber manufacturer Tamil Nadu, 
-          wet scrubber manufacturer India, industrial dust collector manufacturer Chennai, 
-          fume extractor manufacturer Puducherry, air pollution control equipment manufacturer India
-        </div>
+        <p className="mt-4 max-w-3xl mx-auto text-sm sm:text-base md:text-lg text-white/80 leading-relaxed">
+          Leading manufacturer in Pondicherry, India. Factory-direct prices. 
+          Trusted air pollution control solutions worldwide.
+        </p>
 
-        <div className="mt-12 md:mt-16 flex flex-col sm:flex-row gap-5 sm:gap-8 justify-center items-center">
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link
             href="/products"
-            className="px-8 py-4 text-base md:text-lg font-semibold text-white bg-cyan-600 rounded-full 
-                       hover:bg-cyan-500 transition-all duration-300 shadow-lg hover:shadow-cyan-500/30 
-                       hover:-translate-y-0.5"
+            className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-white bg-cyan-600 rounded-full hover:bg-cyan-500 transition-all shadow-lg hover:-translate-y-1"
           >
-            Explore Our Solutions
+            Explore Products
           </Link>
 
           <Link
             href="/contact"
-            className="px-8 py-4 text-base md:text-lg font-semibold text-white border-2 border-white/80 
-                       rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 
-                       shadow-lg hover:shadow-white/20 hover:-translate-y-0.5 backdrop-blur-sm"
+            className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-white border-2 border-white/50 rounded-full hover:bg-white/10 transition-all shadow-lg hover:-translate-y-1"
           >
-            Get Free Quote
+            Get Quote
           </Link>
         </div>
       </div>

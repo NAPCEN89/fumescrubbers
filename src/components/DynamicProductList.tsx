@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, Zap, ShieldCheck } from 'lucide-react';
 
 interface Product {
   label: string;
@@ -16,97 +16,74 @@ interface DynamicProductListProps {
   title: string;
   products: Product[];
   categorySlug: string;
-  seoDescription?: string; // Added from category page
+  seoDescription?: string;
 }
 
 export default function DynamicProductList({ 
   title, 
   products, 
-  categorySlug,
-  seoDescription 
+  categorySlug 
 }: DynamicProductListProps) {
   if (products.length === 0) return null;
 
-  // Dynamic H1 with location targeting
   const getCategoryH1 = () => {
     const mappings: Record<string, string> = {
-      'wet-scrubbers': 'Wet Scrubber Manufacturer in Puducherry | Serving Chennai & Tamil Nadu',
-      'dust-collectors': 'Industrial Dust Collector Manufacturer Chennai | Tamil Nadu & India',
-      'fume-extractors': 'Fume Extractor Manufacturer Chennai | Welding & Laser Fume Control',
-      'dry-scrubbers': 'Dry Scrubber Manufacturer India | Low-Water Acid Gas Solutions',
-      'downdraft-tables': 'Downdraft Table Manufacturer India | Grinding & Welding Workstations',
+      'wet-scrubbers': 'Wet Scrubber Manufacturer | Puducherry & Chennai',
+      'dust-collectors': 'Dust Collector Manufacturer | Tamil Nadu',
+      'fume-extractors': 'Fume Extractor Manufacturer | India',
+      'dry-scrubbers': 'Dry Scrubber Manufacturer | CPCB Compliant',
+      'downdraft-tables': 'Downdraft Table Manufacturer | NAPCEN',
     };
-    return mappings[categorySlug] || `${title} Manufacturer in Puducherry | NAPCEN India`;
+    return mappings[categorySlug] || `${title} Manufacturer in Puducherry`;
   };
 
   return (
     <section 
-      className="bg-gradient-to-l from-[#334746ff] to-[#151d1dff] py-20 md:py-28 overflow-hidden font-poppins"
+      className="relative bg-[#0A1F22] py-20 md:py-32 overflow-hidden selection:bg-cyan-500/30"
       itemScope
       itemType="https://schema.org/ItemList"
     >
-      {/* Ethical Hidden Keywords */}
-      <meta itemProp="name" content={title} />
-      <meta itemProp="description" content={seoDescription || `${title} by NAPCEN – CPCB-compliant industrial air pollution control systems manufactured in Puducherry.`} />
-      <div className="sr-only" aria-hidden="true">
-        {title} manufacturer Chennai, {title} manufacturer Tamil Nadu, {title} manufacturer Puducherry, 
-        best {title.toLowerCase()} India, CPCB compliant {title.toLowerCase()}, NAPCEN {title}
-      </div>
+      {/* Background Decorative Element */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] -z-10" />
 
       <div className="max-w-7xl mx-auto px-6">
-        {/* Enhanced Header with SEO H1 */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-20">
-          <div>
-            <p className="text-[#00E5FF] font-black uppercase tracking-[0.3em] text-sm mb-4">
-              Premium Industrial Solutions
+        {/* HEADER SECTION */}
+        <div className="relative z-10 mb-16 max-w-3xl">
+          <div className="flex items-center space-x-3 mb-4">
+            <ShieldCheck className="w-5 h-5 text-[#00E5FF] animate-pulse" />
+            <p className="text-[#00E5FF] font-black uppercase tracking-[0.3em] text-[10px] md:text-xs">
+              Industrial Air Solutions // 2025
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase leading-tight">
-              {title}{' '}
-              <span className="text-[#00E5FF]">.</span>
-              <br className="md:hidden" />
-              <span className="block text-2xl md:text-3xl lg:text-4xl font-bold normal-case mt-4 text-white/90">
-                {getCategoryH1()}
-              </span>
-            </h1>
-            {seoDescription && (
-              <p className="mt-6 text-lg md:text-xl text-gray-200 max-w-4xl leading-relaxed">
-                {seoDescription} Proudly manufactured in Puducherry with nationwide delivery and export capabilities.
-              </p>
-            )}
           </div>
-          <div className="hidden md:block w-40 h-1 bg-[#00E5FF]/50 rounded-full" />
+          
+          <h1 className="text-4xl md:text-7xl font-black text-white leading-none uppercase tracking-tighter mb-6">
+            {title} <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-emerald-400">Systems</span>
+          </h1>
+          
+          <p className="text-sm md:text-xl text-gray-400 font-medium border-l-2 border-[#00E5FF] pl-6 py-2">
+            {getCategoryH1()}
+          </p>
         </div>
 
-        {/* Marquee Container */}
-        <div className="relative group">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 md:w-48 bg-gradient-to-r from-[#151d1dff] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 md:w-48 bg-gradient-to-l from-[#151d1dff] to-transparent z-10" />
+        {/* MARQUEE ENGINE */}
+        <div className="relative group/marquee">
+          {/* Visual Fades */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0A1F22] to-transparent z-20" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0A1F22] to-transparent z-20" />
 
-          <div className="overflow-hidden">
-            <div className="flex animate-marquee gap-8 py-8 hover:[animation-play-state:paused]">
-              
-              {/* Real SEO-Visible Cards (Indexed by Google) */}
-              {products.map((product, index) => (
-                <li key={`real-${product.slug}`} itemProp="itemListElement" itemScope itemType="https://schema.org/Product">
-                  <meta itemProp="position" content={String(index + 1)} />
-                  <ProductCard
-                    product={product}
-                    categorySlug={categorySlug}
-                    priority={index < 3}
+          <div className="flex overflow-hidden select-none">
+            <div className="flex flex-nowrap shrink-0 gap-6 py-10 animate-marquee group-hover/marquee:[animation-play-state:paused]">
+              {/* Loop twice for perfect continuous scroll */}
+              {[...products, ...products].map((product, index) => (
+                <div 
+                  key={`${product.slug}-${index}`}
+                  className="flex-shrink-0 w-[280px] sm:w-[320px] md:w-[380px]"
+                >
+                  <ProductCard 
+                    product={product} 
+                    categorySlug={categorySlug} 
+                    priority={index < 4} 
                   />
-                </li>
-              ))}
-
-              {/* Visual Clones (Hidden from screen readers & crawlers) */}
-              {products.map((product) => (
-                <div key={`clone1-${product.slug}`} aria-hidden="true">
-                  <ProductCard product={product} categorySlug={categorySlug} isClone />
-                </div>
-              ))}
-
-              {products.map((product) => (
-                <div key={`clone2-${product.slug}`} aria-hidden="true">
-                  <ProductCard product={product} categorySlug={categorySlug} isClone />
                 </div>
               ))}
             </div>
@@ -114,10 +91,10 @@ export default function DynamicProductList({
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
+          100% { transform: translateX(-50%); }
         }
         .animate-marquee {
           animation: marquee 40s linear infinite;
@@ -127,69 +104,44 @@ export default function DynamicProductList({
   );
 }
 
-// Optimized Product Card
-function ProductCard({
-  product,
-  categorySlug,
-  isClone = false,
-  priority = false,
-}: {
-  product: Product;
-  categorySlug: string;
-  isClone?: boolean;
-  priority?: boolean;
-}) {
-  const linkText = `${product.label} Manufacturer Chennai | View Details`;
-
+function ProductCard({ product, categorySlug, priority }: { product: Product, categorySlug: string, priority: boolean }) {
   return (
-    <div className="flex-shrink-0 w-[290px] sm:w-[340px] md:w-[380px] lg:w-[420px]">
-      <Link
-        href={`/products/${categorySlug}/${product.slug}`}
-        className="block h-full"
-        tabIndex={isClone ? -1 : 0}
-        aria-label={isClone ? undefined : `View details for ${product.label}`}
-        itemProp="url"
-      >
-        <div className="group/card relative h-full bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-[#00E5FF]/60 hover:bg-white/10 hover:shadow-2xl hover:shadow-[#00E5FF]/20">
-          
-          <div className="relative h-64 md:h-72 bg-black/30 overflow-hidden">
-            <Image
-              src={product.image ?? '/images/placeholder-product.jpg'}
-              alt={`${product.label} - High-Efficiency Industrial Air Pollution Control Equipment by NAPCEN, Manufactured in Puducherry, India`}
-              fill
-              sizes="(max-width: 768px) 290px, 420px"
-              className="object-contain p-8 transition-transform duration-700 group-hover/card:scale-110"
-              priority={priority}
-              placeholder={product.image?.blurDataURL ? 'blur' : 'empty'}
-              blurDataURL={product.image?.blurDataURL}
-              itemProp="image"
-            />
-            <div className="absolute top-4 right-4 bg-[#00E5FF] text-black p-2.5 rounded-xl shadow-lg">
-              <Zap className="w-5 h-5" />
-            </div>
-          </div>
-
-          <div className="p-6 md:p-8">
-            <h3 
-              className="text-xl md:text-2xl font-black text-white mb-4 line-clamp-2 group-hover/card:text-[#00E5FF] transition-colors"
-              itemProp="name"
-            >
-              {product.label}
-            </h3>
-            <p 
-              className="text-gray-300 text-sm md:text-base leading-relaxed mb-8 line-clamp-3"
-              itemProp="description"
-            >
-              {product.description}
-            </p>
-
-            <div className="flex items-center justify-between px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-xs uppercase tracking-wider transition-all group-hover:bg-[#00E5FF] group-hover:text-black group-hover:border-[#00E5FF]">
-              <span itemProp="name">{linkText}</span>
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
-            </div>
-          </div>
+    <Link
+      href={`/products/${categorySlug}/${product.slug}`}
+      className="group block h-full bg-white/[0.03] backdrop-blur-xl rounded-[2.5rem] border border-white/5 p-4 transition-all duration-500 hover:border-[#00E5FF]/50 hover:bg-white/[0.07] hover:-translate-y-2"
+    >
+      {/* Image Container with Soft Shadow */}
+      <div className="relative h-60 md:h-72 bg-white rounded-[2rem] flex items-center justify-center overflow-hidden shadow-inner">
+        <Image
+          src={product.image?.src || '/images/placeholder.jpg'}
+          alt={product.label}
+          fill
+          className="object-contain p-10 transition-transform duration-700 group-hover:scale-110"
+          priority={priority}
+          sizes="(max-width: 768px) 280px, 380px"
+        />
+        
+        {/* Quality Badge */}
+        <div className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full border border-white/10 uppercase tracking-widest">
+          99.9% Efficiency
         </div>
-      </Link>
-    </div>
+      </div>
+
+      {/* Textual Info */}
+      <div className="pt-8 pb-4 px-4 text-center">
+        <h3 className="text-white font-black text-lg md:text-xl mb-3 uppercase tracking-tight group-hover:text-[#00E5FF] transition-colors">
+          {product.label}
+        </h3>
+        <p className="text-gray-400 text-xs md:text-sm leading-relaxed mb-8 line-clamp-2 h-10">
+          {product.description}
+        </p>
+
+        <div className="inline-flex items-center space-x-3 text-[10px] font-black uppercase tracking-[0.2em] text-[#00E5FF]">
+          <span>Exploration Data</span>
+          <div className="w-8 h-[1px] bg-[#00E5FF]/30 transition-all group-hover:w-12 group-hover:bg-[#00E5FF]" />
+          <ArrowRight className="w-4 h-4" />
+        </div>
+      </div>
+    </Link>
   );
 }

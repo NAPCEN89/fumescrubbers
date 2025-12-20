@@ -1,22 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Required for Metanet/Static hosting
-
+  output: 'export', 
+  
+  // This is the most important part for Metanet
   images: {
-    // Pro Tip: Static exports don't support on-demand optimization. 
-    // Setting this to true is the official Next.js recommendation.
     unoptimized: true, 
   },
 
-  // Keep this to allow the build to finish even with minor TS warnings
   typescript: {
+    // Keeps the build from failing due to minor type mismatches
     ignoreBuildErrors: true,
   },
-  
-  // Disable ESLint during build to speed up deployment
+
+  // In Next.js 16, this is the safest way to skip linting during the export
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  // Optional: Improves build speed by skipping source maps
+  productionBrowserSourceMaps: false,
 };
 
 module.exports = nextConfig;

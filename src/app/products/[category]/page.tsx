@@ -3,171 +3,100 @@ import { notFound } from 'next/navigation';
 import DynamicProductList from '@/components/DynamicProductList';
 import { Metadata } from 'next';
 
-type Props = {
-  params: Promise<{ category: string }>;
-};
+type Props = { params: Promise<{ category: string }> };
 
-// =====================================================
-// 1. STATIC PARAMS – Unchanged (Perfect for SSG)
-// =====================================================
+/**
+ * Pre-renders all category paths at build time for maximum speed.
+ */
 export async function generateStaticParams() {
-  return Object.keys(productData).map((category) => ({
-    category,
-  }));
+  return Object.keys(productData).map((category) => ({ category }));
 }
 
-// =====================================================
-// 2. DYNAMIC METADATA – Hyper-Targeted for Local + National Rankings
-// =====================================================
+/**
+ * Dynamic SEO for Category Pages
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
   const categoryData = productData[category];
+  
+  if (!categoryData) return { title: 'Category Not Found | NAPCEN' };
 
-  if (!categoryData) {
-    return {
-      title: 'Category Not Found | NAPCEN',
-      description: 'The requested product category does not exist.',
-    };
-  }
-
-  // Map category slugs to primary keyword targets
-  const keywordMap: Record<string, { primary: string; secondary: string }> = {
-    'wet-scrubbers': {
-      primary: 'Wet Scrubber Manufacturer Chennai | Puducherry & Tamil Nadu',
-      secondary: 'Leading manufacturer of packed bed, venturi, ammonia, HCl, and specialized wet scrubbers in India.',
-    },
-    'dry-scrubbers': {
-      primary: 'Dry Scrubber Manufacturer India | NAPCEN',
-      secondary: 'Water-free and semi-dry scrubbing systems for acid gases, H2S, VOCs, and odor control.',
-    },
-    'dust-collectors': {
-      primary: 'Industrial Dust Collector Manufacturer Chennai | Tamil Nadu',
-      secondary: 'Pulse jet baghouse, cartridge, cyclone, and portable dust collection systems for heavy industrial applications.',
-    },
-    'fume-extractors': {
-      primary: 'Fume Extractor Manufacturer Chennai | Welding & Laser Fume Control',
-      secondary: 'Mobile and centralized fume extraction systems for welding, soldering, laser cutting, and laboratory fumes.',
-    },
-    'downdraft-tables': {
-      primary: 'Downdraft Table Manufacturer India | Grinding & Welding',
-      secondary: 'Dry and wet downdraft workstations for safe dust and fume capture during grinding, welding, and polishing.',
-    },
-  };
-
-  const keywords = keywordMap[category] || {
-    primary: `${categoryData.title} Manufacturer in Puducherry | NAPCEN India`,
-    secondary: categoryData.seoDescription || `${categoryData.title} – High-efficiency, CPCB-compliant industrial solutions.`,
-  };
+  const title = `${categoryData.title} Manufacturer in Chennai & Puducherry | NAPCEN`;
+  const description = `Leading manufacturer of high-efficiency ${categoryData.title.toLowerCase()} systems. CPCB compliant solutions for industrial air pollution control in Tamil Nadu and India.`;
 
   return {
-    title: `${categoryData.title} | ${keywords.primary} | NAPCEN`,
-    description: `${keywords.secondary} Manufactured in Puducherry, serving industries across Chennai, Tamil Nadu, and India with guaranteed performance and compliance.`,
-    keywords: [
-      `${categoryData.title.toLowerCase()} manufacturer Chennai`,
-      `${categoryData.title.toLowerCase()} manufacturer Tamil Nadu`,
-      `${categoryData.title.toLowerCase()} manufacturer Puducherry`,
-      `${categoryData.title.toLowerCase()} manufacturer India`,
-      `industrial ${categoryData.title.toLowerCase()} price`,
-      `CPCB compliant ${categoryData.title.toLowerCase()}`,
-      `best ${categoryData.title.toLowerCase()} India`,
-    ],
+    title,
+    description,
+    alternates: {
+      canonical: `https://napcen.com/products/${category}`,
+    },
     openGraph: {
-      title: `${categoryData.title} | ${keywords.primary} | NAPCEN`,
-      description: keywords.secondary,
-      url: `https://fumescrubbers.com/products/${category}`,
-      siteName: 'NAPCEN Industrial Air Solutions',
+      title,
+      description,
+      type: 'website',
+      url: `https://napcen.com/products/${category}`,
       images: [
         {
-          url: '/og-category-default.jpg', // Create one hero image per category or use a general one
+          url: '/og-category-default.jpg', // Ensure this exists in /public
           width: 1200,
           height: 630,
-          alt: `${categoryData.title} - NAPCEN Manufacturing in Puducherry`,
+          alt: `${categoryData.title} Industrial Solutions`,
         },
       ],
-      locale: 'en_IN',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${categoryData.title} | ${keywords.primary}`,
-      description: keywords.secondary,
-      images: ['/og-category-default.jpg'],
-    },
-    alternates: {
-      canonical: `https://fumescrubbers.com/products/${category}`,
-    },
-    robots: {
-      index: true,
-      follow: true,
     },
   };
 }
 
-// =====================================================
-// 3. CATEGORY PAGE WITH SCHEMA
-// =====================================================
 export default async function CategoryPage({ params }: Props) {
   const { category } = await params;
   const categoryData = productData[category];
 
-  if (!categoryData) {
-    notFound();
-  }
+  if (!categoryData) notFound();
+
+  // JSON-LD for Search Engines to understand this is a Collection of Products
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: categoryData.title,
+    description: `Industrial catalog of ${categoryData.title} manufactured by NAPCEN.`,
+    url: `https://napcen.com/products/${category}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: categoryData.items.map((item: any, index: number) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `https://napcen.com/products/${category}/${item.slug}`,
+        name: item.label,
+      })),
+    },
+  };
 
   return (
     <>
-      {/* ItemList Schema – Helps Google show rich "product carousel" results */}
+      {/* Schema.org Integration */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: categoryData.title,
-            description: categoryData.seoDescription || `${categoryData.title} by NAPCEN – Industrial air pollution control equipment.`,
-            numberOfItems: categoryData.items.length,
-            itemListElement: categoryData.items.map((item: any, index: number) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              url: `https://fumescrubbers.com/products/${category}/${item.slug}`,
-              name: item.label,
-              image: item.image?.src || '',
-              description: item.description,
-            })),
-          }),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Breadcrumb Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: "https://fumescrubbers.com" },
-              { "@type": "ListItem", position: 2, name: categoryData.title },
-            ],
-          }),
-        }}
-      />
+      <main className="min-h-screen bg-[#0A1F22] selection:bg-cyan-500/30">
+        {/* Hidden SEO Keywords */}
+        <div className="sr-only" aria-hidden="true">
+          <h1>{categoryData.title} manufacturer in Chennai, Puducherry, India.</h1>
+          <p>Industrial {categoryData.title} with 99.9% efficiency for environmental compliance.</p>
+        </div>
 
-      {/* Ethical Hidden Keywords for Crawlers */}
-      <div className="sr-only" aria-hidden="true">
-        {categoryData.title} manufacturer Chennai, {categoryData.title} manufacturer Tamil Nadu, 
-        {categoryData.title} manufacturer Puducherry, {categoryData.title} manufacturer India, 
-        best {categoryData.title.toLowerCase()} in India, CPCB compliant {categoryData.title.toLowerCase()}
-      </div>
-
-      <main className="min-h-screen bg-[#0A1F22]">
-        <DynamicProductList
-          title={categoryData.title}
-          products={categoryData.items}
-          categorySlug={category}
-          // Pass categoryData for potential use in DynamicProductList if needed
-          seoDescription={categoryData.seoDescription}
-        />
+        {/* Dynamic List with Entrance Animation Container */}
+        <div className="relative pt-10">
+          {/* Subtle Global Background Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-cyan-500/5 blur-[120px] pointer-events-none" />
+          
+          <DynamicProductList
+            title={categoryData.title}
+            products={categoryData.items}
+            categorySlug={category}
+          />
+        </div>
       </main>
     </>
   );
