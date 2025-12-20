@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',      // <--- THIS IS THE FIX
+  output: 'export',      // This is mandatory for FTP
   images: {
-    unoptimized: true,   // Required for static FTP hosting
+    unoptimized: true,   // This is mandatory for static export
   },
-  // Optional: ensures your links work correctly on FTP
-  trailingSlash: true, 
+  trailingSlash: true,
 };
 
 export default nextConfig;

@@ -3,7 +3,7 @@
 on:
   push:
     branches:
-      - master  # Changed from main to master
+      - main  # Changed from main to master
 
 jobs:
   build-and-deploy:
