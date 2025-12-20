@@ -1,14 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',      // Forces Next.js to create the 'out' folder
-  images: {
-    unoptimized: true,   // Required for static FTP hosting
-  },
+  output: 'export',
+  images: { unoptimized: true },
+  // ADD THESE TWO SECTIONS BELOW:
   eslint: {
-    ignoreDuringBuilds: true, // Prevents small linting errors from stopping the build
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true,  // Prevents type errors from stopping the build
+    ignoreBuildErrors: true,
   },
 };
 
