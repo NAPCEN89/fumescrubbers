@@ -3,7 +3,7 @@
 on:
   push:
     branches:
-      - main
+      - master  # Changed from main to master
 
 jobs:
   build-and-deploy:
@@ -20,29 +20,28 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install  # Changed from npm ci for better compatibility with major upgrades
 
-      - name: Build & Export Static Site
-        run: |
-          npm run build
-          npm run export
+      - name: Build Next.js
+        run: npm run build
         env:
           CI: false
 
-      - name: Add .htaccess for SPA routing
+      - name: Add .htaccess for Routing (Linux Style)
         run: |
-          Set-Content -Path out/.htaccess -Value @"
-Options -MultiViews
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [QSA,L]
-"@
+          mkdir -p out
+          cat <<EOF > out/.htaccess
+          Options -MultiViews
+          RewriteEngine On
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule ^ index.html [QSA,L]
+          EOF
 
       - name: Add deploy marker
         run: |
-          "NEXT.JS SITE LIVE!" | Out-File -FilePath out/deploy-check.txt -Encoding utf8
-          "DEPLOYED: $(Get-Date -Format u)" | Out-File -FilePath out/deploy-check.txt -Append -Encoding utf8
+          echo "NEXT.JS SITE LIVE!" > out/deploy-check.txt
+          echo "DEPLOYED: $(date)" >> out/deploy-check.txt
 
       - name: Deploy to FTP ROOT
         uses: sebastianpopp/ftp-action@releases/v2
@@ -52,6 +51,7 @@ RewriteRule ^ index.html [QSA,L]
           password: ${{ secrets.FTP_PASSWORD }}
           localDir: out
           remoteDir: /
+          force: true
           options: --delete --verbose
 
       - name: DONE

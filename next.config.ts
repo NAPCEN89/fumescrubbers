@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Add this line to transpile the necessary MUI packages
-  transpilePackages: ['@mui/material', '@mui/icons-material'],
+  output: 'export', // <--- ADD THIS LINE
+  images: {
+    unoptimized: true, // Required for static export
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
