@@ -2,13 +2,14 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import ExportedImage from 'next-image-export-optimizer';  // ← Optimized images
+// Change 1: Import standard Next.js Image
+import Image from 'next/image'; 
 
 // ----------------------------------------------------------------------
 // CONFIGURATION - UPDATE THESE
 // ----------------------------------------------------------------------
-const VIDEO_SRC = '/napcenBg.mp4';  // Must be in /public, compressed <10MB
-const FALLBACK_IMAGE = '/napcen-hero-fallback.webp';  // WebP, <400KB, in /public
+const VIDEO_SRC = '/napcenBg.mp4';  
+const FALLBACK_IMAGE = '/napcen-hero-fallback.webp';  
 
 export default function HeroSection() {
   const [isMounted, setIsMounted] = useState(false);
@@ -20,7 +21,6 @@ export default function HeroSection() {
     setIsMounted(true);
   }, []);
 
-  // Only attempt video on fast connections
   const shouldAttemptVideo = () => {
     if (!isMounted || typeof window === 'undefined') return false;
     const conn = (navigator as any).connection;
@@ -50,7 +50,6 @@ export default function HeroSection() {
     video.addEventListener('canplaythrough', handleCanPlay);
     video.addEventListener('error', handleError);
 
-    // Safety timeout: give up after 4s if video doesn't load
     timeout = setTimeout(() => {
       setVideoError(true);
     }, 4000);
@@ -69,19 +68,17 @@ export default function HeroSection() {
       itemScope
       itemType="https://schema.org/Organization"
     >
-      {/* Optimized Fallback Image - Instant LCP, blur placeholder, WebP */}
-      <ExportedImage
+      {/* Change 2: Replaced ExportedImage with standard Image */}
+      <Image
         src={FALLBACK_IMAGE}
         alt="NAPCEN industrial air pollution control manufacturing facility and wet scrubber systems in Puducherry, India"
         fill
         sizes="100vw"
-        priority  // Critical for LCP
-        quality={85}
+        priority // Critical for LCP - tells Google this is the most important image
         className="absolute inset-0 object-cover brightness-[0.85] z-0"
         itemProp="image"
       />
 
-      {/* Video Background - Only renders if conditions good */}
       {canPlayVideo && !videoError && (
         <video
           ref={videoRef}
@@ -110,7 +107,6 @@ export default function HeroSection() {
         aria-hidden="true"
       />
 
-      {/* Hero Content */}
       <div className="relative z-30 text-center px-6 sm:px-8 md:px-12 max-w-5xl mx-auto">
         <h1
           id="hero-heading"
@@ -137,14 +133,13 @@ export default function HeroSection() {
           CPCB compliant, reliable, and built for Indian industries.
         </p>
 
-        {/* Hidden SEO Keywords */}
+        {/* Hidden SEO Keywords - Senior Dev trick for indexing */}
         <div className="sr-only" aria-hidden="false">
           Wet scrubber manufacturer Chennai, wet scrubber manufacturer Tamil Nadu, 
           wet scrubber manufacturer India, industrial dust collector manufacturer Chennai, 
           fume extractor manufacturer Puducherry, air pollution control equipment manufacturer India
         </div>
 
-        {/* CTA Buttons */}
         <div className="mt-12 md:mt-16 flex flex-col sm:flex-row gap-5 sm:gap-8 justify-center items-center">
           <Link
             href="/products"
