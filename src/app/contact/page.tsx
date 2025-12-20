@@ -13,11 +13,6 @@ import {
   ChevronDown 
 } from 'lucide-react';
 
-// --- Configuration Constants ---
-const PRIMARY_COLOR = '#33FFFF'; 
-const BG_DARK = '#0d1515';
-const INPUT_BG = '#202023';
-
 const products = [
   'Wet Scrubbers',
   'Dust Collectors',
@@ -38,165 +33,195 @@ export default function ContactUs() {
   });
   const [status, setStatus] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.mobile || !formData.product) {
-      setStatus('Please fill in Email, Mobile, and Product');
+      setStatus('Please fill Email, Mobile & Product');
+      setTimeout(() => setStatus(''), 5000);
       return;
     }
 
-    // Simulation
+    // Simulated submission
     setTimeout(() => {
       const success = Math.random() > 0.1;
       if (success) {
-        setStatus('Thank you! We will contact you soon');
+        setStatus('Thank you! We will contact you soon.');
         setFormData({ product: '', name: '', email: '', mobile: '', message: '' });
       } else {
-        setStatus('Failed to send. Please try again later.');
+        setStatus('Submission failed. Please try again.');
       }
-      setTimeout(() => setStatus(''), 5000);
-    }, 1000);
+      setTimeout(() => setStatus(''), 6000);
+    }, 1200);
   };
 
   const isSuccess = status.includes('Thank');
 
   return (
-    <main className="min-h-screen bg-[#0a0f0f] flex items-center justify-center py-20 px-6 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none" />
+    <main className="min-h-screen bg-[#0a0f0f] pt-20 md:pt-28 px-4 sm:px-6 lg:px-8 flex flex-col">
+      {/* Subtle Background Glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
+        <div className="w-[800px] h-[800px] bg-cyan-500/8 blur-[160px] rounded-full" />
+      </div>
 
-      <div className="max-w-xl w-full relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4">
-            Request A Quote
-          </h1>
-          <p className="text-gray-400 text-sm font-medium uppercase tracking-widest">
-            Get Expert Assistance Today
-          </p>
-        </motion.div>
+      {/* Main Content - Perfectly Centered with Gap from Header */}
+      <div className="flex-1 flex items-center justify-center py-12 md:py-16">
+        <div className="w-full max-w-2xl mx-auto">
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-emerald-400 mb-6">
+              Request a Quote
+            </h1>
+            <p className="text-gray-300 text-base sm:text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+              Share your requirements — get expert guidance and customized pricing from NAPCEN
+            </p>
+          </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/5 border border-cyan-500/30 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-2xl"
-        >
-          <form onSubmit={handleSubmit} className="space-y-5">
-            
-            {/* Name Input */}
-            <div className="group relative bg-[#202023] border border-white/10 rounded-2xl p-4 transition-all focus-within:border-cyan-500 focus-within:ring-4 focus-within:ring-cyan-500/10">
-              <label className="block text-[10px] uppercase font-black tracking-widest text-cyan-500/60 mb-1">Full Name</label>
-              <div className="flex items-center gap-3">
-                <User className="w-4 h-4 text-cyan-400" />
-                <input 
-                  name="name"
-                  value={formData.name}
+          {/* Form Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="bg-white/5 backdrop-blur-2xl border border-cyan-500/20 rounded-3xl p-8 sm:p-10 md:p-12 shadow-2xl"
+          >
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Product Select */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">
+                  Interested In *
+                </label>
+                <div className="relative">
+                  <Factory className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
+                  <select
+                    name="product"
+                    required
+                    value={formData.product}
+                    onChange={handleChange}
+                    className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl pl-12 pr-10 py-4 text-white text-base focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>
+                      Select a product
+                    </option>
+                    {products.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Name */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your full name"
+                    className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">
+                  Email Address *
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@company.com"
+                    className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">
+                  Mobile Number *
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
+                  <input
+                    type="tel"
+                    name="mobile"
+                    required
+                    value={formData.mobile}
+                    onChange={handleChange}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Message */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">
+                  Your Requirements
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
                   onChange={handleChange}
-                  placeholder="John Doe"
-                  className="bg-transparent w-full outline-none text-white text-sm placeholder:text-white/20"
+                  rows={5}
+                  placeholder="Describe your project, capacity needs, industry type, timeline, or any specific requirements..."
+                  className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl px-4 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all resize-none"
                 />
               </div>
-            </div>
 
-            {/* Email Input */}
-            <div className="group relative bg-[#202023] border border-white/10 rounded-2xl p-4 transition-all focus-within:border-cyan-500 focus-within:ring-4 focus-within:ring-cyan-500/10">
-              <label className="block text-[10px] uppercase font-black tracking-widest text-cyan-500/60 mb-1">Email Address *</label>
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-cyan-400" />
-                <input 
-                  type="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="john@company.com"
-                  className="bg-transparent w-full outline-none text-white text-sm placeholder:text-white/20"
-                />
-              </div>
-            </div>
-
-            {/* Mobile Input */}
-            <div className="group relative bg-[#202023] border border-white/10 rounded-2xl p-4 transition-all focus-within:border-cyan-500 focus-within:ring-4 focus-within:ring-cyan-500/10">
-              <label className="block text-[10px] uppercase font-black tracking-widest text-cyan-500/60 mb-1">Mobile Number *</label>
-              <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-cyan-400" />
-                <input 
-                  type="tel"
-                  name="mobile"
-                  required
-                  value={formData.mobile}
-                  onChange={handleChange}
-                  placeholder="+91 00000 00000"
-                  className="bg-transparent w-full outline-none text-white text-sm placeholder:text-white/20"
-                />
-              </div>
-            </div>
-
-            {/* Product Select */}
-            <div className="group relative bg-[#202023] border border-white/10 rounded-2xl p-4 transition-all focus-within:border-cyan-500">
-              <label className="block text-[10px] uppercase font-black tracking-widest text-cyan-500/60 mb-1">Select Product *</label>
-              <div className="flex items-center gap-3 relative">
-                <Factory className="w-4 h-4 text-cyan-400" />
-                <select 
-                  name="product"
-                  required
-                  value={formData.product}
-                  onChange={handleChange}
-                  className="bg-transparent w-full outline-none text-white text-sm appearance-none cursor-pointer"
-                >
-                  <option value="" disabled className="bg-[#0d1515]">Choose product type</option>
-                  {products.map(p => (
-                    <option key={p} value={p} className="bg-[#0d1515]">{p}</option>
-                  ))}
-                </select>
-                <ChevronDown className="w-4 h-4 text-cyan-400 absolute right-0 pointer-events-none" />
-              </div>
-            </div>
-
-            {/* Message Input */}
-            <div className="group relative bg-[#202023] border border-white/10 rounded-2xl p-4 transition-all focus-within:border-cyan-500">
-              <label className="block text-[10px] uppercase font-black tracking-widest text-cyan-500/60 mb-1">Requirement Details</label>
-              <textarea 
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={3}
-                placeholder="Tell us what you need..."
-                className="bg-transparent w-full outline-none text-white text-sm placeholder:text-white/20 resize-none mt-1"
-              />
-            </div>
-
-            {/* Submit Button */}
-            <button 
-              type="submit"
-              className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-black uppercase tracking-widest py-5 rounded-2xl shadow-[0_0_20px_rgba(51,255,255,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
-            >
-              <Send className="w-4 h-4 fill-black" />
-              Submit Quote Request
-            </button>
-
-            {/* Status Messages */}
-            {status && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex items-center justify-center gap-2 p-4 rounded-xl text-xs font-bold uppercase tracking-wider ${
-                  isSuccess ? 'bg-cyan-500/20 text-cyan-400' : 'bg-red-500/20 text-red-400'
-                }`}
+              {/* Submit Button */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-black uppercase tracking-wider py-5 rounded-2xl text-lg shadow-xl hover:shadow-cyan-500/40 transition-all duration-300 flex items-center justify-center gap-3"
               >
-                {isSuccess ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-                {status}
-              </motion.div>
-            )}
-          </form>
-        </motion.div>
+                <Send className="w-5 h-5" />
+                Submit Request
+              </motion.button>
+
+              {/* Status Message */}
+              {status && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-6 p-5 rounded-2xl text-center font-bold text-base flex items-center justify-center gap-3 ${
+                    isSuccess
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                      : 'bg-red-500/20 text-red-300 border border-red-500/40'
+                  }`}
+                >
+                  {isSuccess ? <CheckCircle2 className="w-6 h-6" /> : <AlertCircle className="w-6 h-6" />}
+                  {status}
+                </motion.div>
+              )}
+            </form>
+          </motion.div>
+        </div>
       </div>
     </main>
   );

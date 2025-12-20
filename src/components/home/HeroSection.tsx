@@ -4,10 +4,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
 // ----------------------------------------------------------------------
-// CONFIGURATION
+// CONFIGURATION - UPDATE THESE PATHS
 // ----------------------------------------------------------------------
-const VIDEO_SRC = '/napcenBg.mp4';
-const FALLBACK_IMAGE = '/napcen-hero-fallback.jpg';
+const VIDEO_SRC = '/napcenBg.mp4';           // Make sure this file exists in /public and is <10MB compressed!
+const FALLBACK_IMAGE = '/napcen-hero-fallback.jpg';  // High-quality compressed fallback (<400KB WebP recommended)
 
 export default function HeroSection() {
   const [isMounted, setIsMounted] = useState(false);
@@ -15,12 +15,11 @@ export default function HeroSection() {
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // 1. Handle Mounting (Fixes Hydration Mismatch)
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // 2. Logic to detect if we should play video (Client-only)
+  // Smart detection: Only play on fast connections & no data saver
   const getShouldPlay = () => {
     if (typeof window === 'undefined' || !isMounted) return false;
     const conn = (navigator as any).connection;
@@ -31,102 +30,132 @@ export default function HeroSection() {
 
   const shouldPlay = getShouldPlay();
 
-  // 3. Manual Playback Trigger
   useEffect(() => {
-    if (shouldPlay && videoRef.current) {
-      const video = videoRef.current;
-      
-      const onCanPlay = () => setVideoReady(true);
-      const onError = () => setVideoError(true);
+    if (!shouldPlay || !videoRef.current) return;
 
-      video.addEventListener('canplaythrough', onCanPlay);
-      video.addEventListener('error', onError);
+    const video = videoRef.current;
+    let timeout: NodeJS.Timeout;
 
-      // Fallback: If event doesn't fire, show video anyway after 1.8s
-      const timeout = setTimeout(() => setVideoReady(true), 1800);
+    const onCanPlay = () => {
+      clearTimeout(timeout);
+      setVideoReady(true);
+    };
 
-      return () => {
-        video.removeEventListener('canplaythrough', onCanPlay);
-        video.removeEventListener('error', onError);
-        clearTimeout(timeout);
-      };
-    }
+    const onError = () => {
+      clearTimeout(timeout);
+      setVideoError(true);  // Gracefully fall back to image
+    };
+
+    video.addEventListener('canplaythrough', onCanPlay);
+    video.addEventListener('error', onError);
+
+    // Fallback timeout: Show image if video takes too long (>3s)
+    timeout = setTimeout(() => {
+      setVideoReady(false);
+      setVideoError(true);
+    }, 3000);
+
+    // Preload a bit to help detection
+    video.preload = 'metadata';
+
+    return () => {
+      video.removeEventListener('canplaythrough', onCanPlay);
+      video.removeEventListener('error', onError);
+      clearTimeout(timeout);
+    };
   }, [shouldPlay]);
 
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative flex items-center justify-center overflow-hidden min-h-[80vh] sm:min-h-[85vh] md:min-h-screen pt-20 md:pt-24"
+      className="relative flex items-center justify-center overflow-hidden min-h-[80vh] sm:min-h-[85vh] md:min-h-screen pt-24 md:pt-32 pb-16 md:pb-24"
+      itemScope
+      itemType="https://schema.org/Organization"
     >
-      {/* Background Fallback Image (Always visible first) */}
+      {/* Fallback Image - Always visible first for instant LCP */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${FALLBACK_IMAGE})`,
-          filter: 'brightness(0.65)',
+          filter: 'brightness(0.85)',
         }}
         role="img"
-        aria-label="NAPCEN industrial facility"
+        aria-label="NAPCEN industrial air pollution control manufacturing facility in Puducherry"
+        itemProp="image"
       />
 
-      {/* Video Container */}
-      <video
-        ref={videoRef}
-        autoPlay={shouldPlay}
-        muted
-        loop
-        playsInline
-        poster={FALLBACK_IMAGE}
-        className={`
-          absolute inset-0 w-full h-full object-cover z-10
-          transition-opacity duration-1000 ease-in-out
-          ${isMounted && shouldPlay && videoReady && !videoError ? 'opacity-100' : 'opacity-0'}
-        `}
-        aria-hidden="true"
-      >
-        {/* The Source is ONLY rendered on the client after mounting */}
-        {isMounted && shouldPlay && (
+      {/* Video Overlay - Only shows when fully ready */}
+      {shouldPlay && !videoError && (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={FALLBACK_IMAGE}
+          className={`
+            absolute inset-0 w-full h-full object-cover z-10
+            transition-opacity duration-3000 ease-in-out
+            ${videoReady ? 'opacity-100' : 'opacity-0'}
+          `}
+          aria-hidden="true"
+        >
           <source src={VIDEO_SRC} type="video/mp4" />
-        )}
-      </video>
+        </video>
+      )}
 
-      {/* Dark Overlay */}
+      {/* Soft Overlay */}
       <div
         className="absolute inset-0 z-20"
         style={{
-          background: 'linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(5,15,35,0.75) 100%)',
+          background: 'linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(5,15,35,0.5) 100%)',
         }}
         aria-hidden="true"
       />
 
-      {/* Content Layer */}
-      <div className="relative z-30 text-center px-4 sm:px-6 md:px-8 max-w-5xl mx-auto">
+      {/* Hero Content */}
+      <div className="relative z-30 text-center px-6 sm:px-8 md:px-12 max-w-5xl mx-auto">
         <h1
           id="hero-heading"
-          className="font-black text-white drop-shadow-2xl tracking-tight leading-tight text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+          className="font-black text-white tracking-tight leading-tight text-4xl xs:text-5xl sm:text-6xl md:text-7xl"
+          itemProp="name"
         >
-          Industrial Air<br className="sm:hidden" />{' '}
-          <span className="block sm:inline">Pollution</span>
-          <br className="hidden sm:block" /> Control Solutions
+          Leading Industrial
+          <br className="hidden sm:block" />
+          Air Pollution Control
+          <br />
+          <span className="block text-2xl sm:text-3xl md:text-4xl font-semibold mt-6 text-cyan-300">
+            Manufacturer in Puducherry
+            <br className="sm:hidden" />
+            <span className="hidden sm:inline"> • </span>
+            Serving Chennai & Tamil Nadu
+          </span>
         </h1>
 
-        <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-white/95 drop-shadow-xl">
-          Wet Scrubber • Dry Scrubber • Dust Collector • Fume Extraction
+        <p className="mt-8 md:mt-12 text-lg sm:text-xl md:text-2xl font-light text-white/90 max-w-3xl mx-auto leading-relaxed" itemProp="description">
+          Custom-engineered wet scrubbers, dust collectors, and fume extractors — 
+          CPCB compliant, reliable, and built for Indian industries.
         </p>
 
-        <div className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+        <div className="sr-only" aria-hidden="false">
+          Wet scrubber manufacturer Chennai, wet scrubber manufacturer Tamil Nadu, 
+          wet scrubber manufacturer India, industrial dust collector manufacturer Chennai, 
+          fume extractor manufacturer Puducherry, air pollution control equipment manufacturer India
+        </div>
+
+        <div className="mt-12 md:mt-16 flex flex-col sm:flex-row gap-5 sm:gap-8 justify-center items-center">
           <Link
             href="/products"
-            className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all shadow-xl hover:-translate-y-1"
+            className="px-8 py-4 text-base md:text-lg font-semibold text-white bg-cyan-600 rounded-full hover:bg-cyan-500 transition-all duration-300 shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-0.5"
           >
-            Explore Products
+            Explore Our Solutions
           </Link>
 
           <Link
             href="/contact"
-            className="w-full sm:w-auto px-8 py-4 text-lg font-bold text-white border-2 border-white/70 rounded-full hover:bg-white/10 transition-all shadow-xl hover:-translate-y-1"
+            className="px-8 py-4 text-base md:text-lg font-semibold text-white border-2 border-white/80 rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 shadow-lg hover:shadow-white/20 hover:-translate-y-0.5 backdrop-blur-sm"
           >
-            Get Quote
+            Get Free Quote
           </Link>
         </div>
       </div>
