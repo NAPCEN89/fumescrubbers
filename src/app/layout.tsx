@@ -117,7 +117,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="manifest" href="/site.webmanifest" />
 
         {/* Preload critical hero image — update path when ready */}
-        <link rel="preload" as="image" href="/napcen-hero-optimized.webp" />
+    {/* Match the actual image path used on your homepage for a faster LCP */}
+<link rel="preload" as="image" href="/assets/images/products/Wet scrubber/Wet-scrubber-chennai.jpg" />
       </head>
       <body className="bg-[#0A1F22] text-white min-h-screen flex flex-col">
         <Header />

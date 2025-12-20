@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export', 
+  trailingSlash: true,
   
   // This is the most important part for Metanet
   images: {
