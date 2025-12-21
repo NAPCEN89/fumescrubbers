@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck, Activity, Settings2, ShieldAlert, Cpu } from 'lucide-react';
@@ -10,7 +10,7 @@ interface Product {
   slug: string;
   description: string;
   image: any;
-  parentCategory?: string; // Added to support the 'all' view
+  parentCategory?: string;
 }
 
 interface DynamicProductListProps {
@@ -24,6 +24,30 @@ export default function DynamicProductList({
   products, 
   categorySlug 
 }: DynamicProductListProps) {
+
+  // --- 1. SMART PRE-CACHE ENGINE ---
+  // Background-loads all 30+ product images during idle time to ensure marquee is flicker-free
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const warmUpCache = () => {
+      // Use unique images to avoid redundant downloads
+      const uniqueImages = Array.from(new Set(products.map(p => p.image?.src))).filter(Boolean);
+      
+      uniqueImages.forEach((src) => {
+        const img = new window.Image();
+        img.src = src;
+      });
+    };
+
+    // requestIdleCallback prevents the cache-loading from slowing down the marquee animation
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(warmUpCache);
+    } else {
+      setTimeout(warmUpCache, 2000);
+    }
+  }, [products]);
+
   if (products.length === 0) return null;
 
   const getCategoryH1 = () => {
@@ -38,7 +62,7 @@ export default function DynamicProductList({
     return mappings[categorySlug] || `${title} Systems Manufacturer India`;
   };
 
-  // Ensure marquee is always full even with few products
+  // Logic to ensure the marquee is physically long enough to loop seamlessly
   const marqueeItems = products.length < 5 
     ? [...products, ...products, ...products, ...products] 
     : [...products, ...products];
@@ -49,7 +73,7 @@ export default function DynamicProductList({
       itemScope
       itemType="https://schema.org/ItemList"
     >
-      {/* Background Glow */}
+      {/* Background Aesthetic Glow */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] -z-10" />
 
       <div className="max-w-7xl mx-auto px-6">
@@ -73,10 +97,12 @@ export default function DynamicProductList({
 
         {/* MARQUEE ENGINE */}
         <div className="relative group/marquee mb-24">
+          {/* Edge Fades for Seamless Loop Look */}
           <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0A1F22] to-transparent z-20" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0A1F22] to-transparent z-20" />
 
           <div className="flex overflow-hidden select-none">
+            {/* The Animation Container */}
             <div className="flex flex-nowrap shrink-0 gap-6 py-10 animate-marquee group-hover/marquee:[animation-play-state:paused]">
               {marqueeItems.map((product, index) => (
                 <div 
@@ -86,7 +112,7 @@ export default function DynamicProductList({
                   <ProductCard 
                     product={product} 
                     categorySlug={categorySlug} 
-                    priority={index < 4} 
+                    priority={index < 5} 
                   />
                 </div>
               ))}
@@ -120,13 +146,14 @@ export default function DynamicProductList({
         </div>
       </div>
 
+      {/* Tailwind handles the animation, but global CSS ensures smoothness */}
       <style jsx global>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 50s linear infinite;
+          animation: marquee 60s linear infinite;
         }
       `}</style>
     </section>
@@ -134,7 +161,6 @@ export default function DynamicProductList({
 }
 
 function ProductCard({ product, categorySlug, priority }: { product: Product, categorySlug: string, priority: boolean }) {
-  // CRITICAL: Determine correct path if in 'all' view
   const currentCategory = product.parentCategory || categorySlug;
 
   return (
@@ -154,10 +180,10 @@ function ProductCard({ product, categorySlug, priority }: { product: Product, ca
           className="object-contain p-10 transition-transform duration-700 group-hover:scale-105"
           priority={priority}
           sizes="(max-width: 768px) 280px, 380px"
-          unoptimized // Added to fix common static export image optimization issues
+          quality={85}
         />
         <div className="absolute bottom-4 left-4 bg-[#0A1F22]/90 backdrop-blur-md text-[#00E5FF] text-[9px] font-black px-3 py-1.5 rounded-full border border-[#00E5FF]/20 uppercase tracking-widest">
-           Quality Assured
+            CPCB Approved
         </div>
       </div>
 

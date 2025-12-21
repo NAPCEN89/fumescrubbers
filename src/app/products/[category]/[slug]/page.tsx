@@ -5,15 +5,12 @@ import { Metadata } from 'next';
 
 type Props = { params: Promise<{ category: string; slug: string }> };
 
-// 1. FIX: Ensure all categories and slugs are mapped correctly for static export
 export async function generateStaticParams() {
   return Object.entries(productData).flatMap(([category, data]) => {
-    // Safety check: ensure items exist in this category
     if (!data.items) return [];
-    
     return data.items.map((item: any) => ({
-      category: category, // matches [category] folder
-      slug: item.slug,     // matches [slug] folder
+      category: category,
+      slug: item.slug,
     }));
   });
 }
@@ -29,9 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description: desc,
-    alternates: {
-      canonical: `https://napcen.com/products/${category}/${slug}`,
-    },
+    alternates: { canonical: `https://napcen.com/products/${category}/${slug}` },
     openGraph: {
       title,
       description: desc,
@@ -43,16 +38,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductDetailPage({ params }: Props) {
   const { category, slug } = await params;
   const categoryData = productData[category];
-  const product = categoryData?.items.find((p: any) => p.slug === slug);
+  const items = categoryData?.items || [];
+  const productIndex = items.findIndex((p: any) => p.slug === slug);
+  const product = items[productIndex];
 
   if (!product || !categoryData) return notFound();
 
-  // Structured Data (JSON-LD) for Amazon-level SEO
+  // PRE-CACHE STRATEGY: Get the next product in the list to "warm up" the next page
+  const nextProduct = items[(productIndex + 1) % items.length];
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.label,
-    // Use encodeURI to handle spaces in filenames correctly
     image: `https://napcen.com${encodeURI(product.image?.src || '')}`,
     description: product.description,
     brand: { '@type': 'Brand', name: 'NAPCEN' },
@@ -65,10 +63,22 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <>
+      <head>
+        {/* 1. CRITICAL PRELOAD: Load this specific product image at MAX priority */}
+        <link rel="preload" as="image" href={product.image?.src} fetchPriority="high" />
+        
+        {/* 2. SPECULATIVE PRELOAD: Pre-fetch the next product's image while user is reading */}
+        {nextProduct && (
+          <link rel="preload" as="image" href={nextProduct.image?.src} fetchPriority="low" />
+        )}
+      </head>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      
+      {/* 3. WRAPPER FOR BACKGROUND CACHING */}
       <ProductClient 
         product={product} 
         categoryTitle={categoryData.title || 'Industrial Systems'} 

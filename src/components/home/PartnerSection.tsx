@@ -6,11 +6,11 @@ import CountUp from 'react-countup';
 
 // --- CONFIGURATION: Using string paths for better build performance ---
 const PARTNER_LOGOS = [
-  '/assets/images/clients/C1.png',
-  '/assets/images/clients/C2.png',
-  '/assets/images/clients/C10.png',
-  '/assets/images/clients/C4.png',
-  '/assets/images/clients/C5.png',
+  '/assets/images/clients/C1.webp',
+  '/assets/images/clients/C2.webp',
+  '/assets/images/clients/C10.webp',
+  '/assets/images/clients/C4.webp',
+  '/assets/images/clients/C5.webp',
 ];
 
 const REVIEWS = [

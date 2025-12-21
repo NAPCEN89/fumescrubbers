@@ -16,49 +16,49 @@ interface Application {
 const industrialApplications: Application[] = [
   { 
     name: 'Chemical Industries', 
-    imagePath: '/gallery/Chemical%20Manufacturing.webp', 
+    imagePath: '/gallery/Chemical Manufacturing.webp', 
     description: 'Advanced scrubbers for VOCs and corrosive gases.', 
     slug: 'chemical' 
   },
   { 
     name: 'Electronics & Semi', 
-    imagePath: '/gallery/Electronic%20and%20Semiconductor%20Manufacturing.webp', 
+    imagePath: '/gallery/Electronic and Semiconductor Manufacturing.webp', 
     description: 'Cleanroom-grade air filtration systems.', 
     slug: 'electronics' 
   },
   { 
     name: 'Food Processing', 
-    imagePath: '/gallery/Food%20Processing.webp', 
+    imagePath: '/gallery/Food Processing.webp', 
     description: 'Odor control and hygiene compliance.', 
     slug: 'food-processing' 
   },
   { 
     name: 'Metal Processing', 
-    imagePath: '/gallery/Metal%20Processing.webp', 
+    imagePath: '/gallery/Metal Processing.webp', 
     description: 'Fume extraction for welding and cutting.', 
     slug: 'metal-processing' 
   },
   { 
     name: 'Mining & Ore', 
-    imagePath: '/gallery/Mining%20and%20Ore%20Processing.webp', 
+    imagePath: '/gallery/Mining and Ore Processing.webp', 
     description: 'Heavy-duty dust and SO2 control.', 
     slug: 'mining' 
   },
   { 
     name: 'Pharma Industries', 
-    imagePath: '/gallery/Pharmaceutical%20Manufacturing.webp', 
+    imagePath: '/gallery/Pharmaceutical Manufacturing.webp', 
     description: 'GMP-compliant solvent recovery.', 
     slug: 'pharma' 
   },
   { 
     name: 'Oil & Gas', 
-    imagePath: '/gallery/Oil%20and%20Gas%20Industry.webp', 
+    imagePath: '/gallery/Oil and Gas Industry.webp', 
     description: 'H2S and methane control systems.', 
     slug: 'oil-gas' 
   },
   { 
     name: 'Wood Working', 
-    imagePath: '/gallery/Woodworking%20and%20Furniture%20Manufacturing.webp', 
+    imagePath: '/gallery/Woodworking and Furniture Manufacturing.webp', 
     description: 'Fine dust extraction for safety.', 
     slug: 'wood-working' 
   }
@@ -67,19 +67,21 @@ const industrialApplications: Application[] = [
 // --- SUB-COMPONENT ---
 const IndustryCard = memo(({ app, isActive }: { app: Application; isActive: boolean }) => {
   return (
-    <div className={`group relative w-full h-[280px] rounded-xl overflow-hidden bg-[#111] border transition-all duration-500 ${isActive ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'border-white/10 hover:border-cyan-500/50'}`}>
+    <div className={`group relative w-full h-[280px] rounded-xl overflow-hidden bg-[#1a1a1a] border transition-all duration-500 ${isActive ? 'border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'border-white/10 hover:border-cyan-500/50'}`}>
       <Image
         src={app.imagePath}
         alt={app.name}
         fill
-        sizes="(max-width: 768px) 100vw, 300px"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
         className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+        priority={true} // Changed to true for instant visibility in the grid
+        quality={75}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent p-5 flex flex-col justify-end">
-        <h6 className="font-bold text-lg text-white mb-1 uppercase tracking-tight">{app.name}</h6>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-5 flex flex-col justify-end">
+        <h6 className="font-black text-lg text-white mb-1 uppercase tracking-tight shadow-black drop-shadow-md">{app.name}</h6>
         <Link 
           href={`/industries/${app.slug}`} 
-          className="inline-block py-2 bg-cyan-500/10 border border-cyan-500/30 rounded text-[10px] font-bold text-white text-center uppercase tracking-widest hover:bg-cyan-600 transition-all"
+          className="inline-block py-2 bg-cyan-500/10 border border-cyan-500/30 rounded text-[10px] font-bold text-white text-center uppercase tracking-widest hover:bg-cyan-600 transition-all backdrop-blur-sm"
         >
           View Solution
         </Link>
@@ -96,6 +98,21 @@ const IndustrialApplicationsSection = memo(({ activeLink = "" }: { activeLink?: 
 
   return (
     <section className="relative py-16 bg-[#050808]">
+      
+      {/* HIDDEN PRE-CACHE LAYER: Forces browser to fetch all gallery images instantly */}
+      <div className="hidden" aria-hidden="true">
+        {industrialApplications.map((app) => (
+          <Image 
+            key={`preload-${app.slug}`} 
+            src={app.imagePath} 
+            alt="preload" 
+            width={1} 
+            height={1} 
+            priority={true} 
+          />
+        ))}
+      </div>
+
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="mb-10 text-center md:text-left">
           <h3 className="text-cyan-500 font-bold mb-1 text-[10px] uppercase tracking-[0.4em]">Sector Expertise</h3>
@@ -126,12 +143,13 @@ const IndustrialApplicationsSection = memo(({ activeLink = "" }: { activeLink?: 
         )}
       </div>
 
+      {/* Full Directory Overlay */}
       {open && (
-        <div className="fixed inset-0 z-[9999] bg-black/95 p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-[9999] bg-black/95 p-6 overflow-y-auto animate-in fade-in duration-300">
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-between items-center mb-12">
               <h2 className="text-2xl font-black text-white uppercase tracking-tight">Industrial Directory</h2>
-              <button onClick={() => setOpen(false)} className="text-white">
+              <button onClick={() => setOpen(false)} className="text-white hover:text-cyan-400 transition-colors">
                 <CloseIcon sx={{ fontSize: 40 }} />
               </button>
             </div>

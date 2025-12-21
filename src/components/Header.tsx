@@ -4,13 +4,12 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaUserAlt } from 'react-icons/fa';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight, Phone, Mail, FileText } from 'lucide-react';
 
-// 1. IMPORT DATA - No logo import here!
+// IMPORT DATA
 import { menuItems, NavItem, NavSubItem } from '../app/data/navData';
 
-const useIsMobile = (breakpoint = 768) => {
+const useIsMobile = (breakpoint = 1024) => {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < breakpoint);
@@ -21,138 +20,156 @@ const useIsMobile = (breakpoint = 768) => {
   return isMobile;
 };
 
-// 2. UPDATED LOGO COMPONENT
 const Logo: React.FC = () => (
-  <Link href="/" className="flex items-center">
-    <Image
-      src="/assets/images/Napcen-logo.webp" // String path is faster for static sites
-      alt="Napcen Logo"
-      width={120} // Slightly larger for clarity
-      height={64}
-      className="h-9 w-auto object-contain brightness-[1.8] saturate-[1.3] md:h-12 lg:h-[54px]"
-      priority // This tells the browser: "Load this image first!"
-    />
-  </Link>
-);
-
-const ContactButton: React.FC = () => (
-  <Link
-    href="/contact"
-    className="bg-[rgba(255,255,255,0.1)] backdrop-blur-sm text-white border border-[rgba(255,255,255,0.25)] rounded-full py-2 px-4 md:py-[9px] md:px-[18px] text-sm md:text-[14px] font-semibold flex items-center gap-2 transition-all duration-300 hover:bg-[rgba(76,175,80,0.2)] hover:border-[#4caf50] hover:text-[#4caf50] hover:-translate-y-px"
-  >
-    <FaUserAlt className="text-xs" />
-    Contact Us
-  </Link>
+  <div className="flex-none"> {/* Keeps logo from stretching */}
+    <Link href="/" className="flex items-center">
+      <Image
+        src="/assets/images/Napcen-logo.webp"
+        alt="Napcen Logo"
+        width={130}
+        height={55}
+        className="h-8 w-auto object-contain brightness-[1.8] md:h-10 lg:h-12"
+        priority
+      />
+    </Link>
+  </div>
 );
 
 const Header: React.FC = () => {
-  const isMobile = useIsMobile();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileSubOpen, setMobileSubOpen] = useState<{ [key: string]: boolean }>({});
 
-  const toggleMobile = useCallback(() => setMobileOpen(prev => !prev), []);
-  const closeMobile = useCallback(() => {
-    setMobileOpen(false);
-    setMobileSubOpen({});
-  }, []);
-
   const toggleDesktopDropdown = useCallback((label: string) => {
     setOpenDropdown(prev => (prev === label ? null : label));
   }, []);
 
-  const toggleMobileSub = useCallback((label: string) => {
-    setMobileSubOpen(prev => ({ ...prev, [label]: !prev[label] }));
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : 'unset';
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [mobileOpen]);
-
   useEffect(() => {
     if (!openDropdown) return;
     const handler = () => setOpenDropdown(null);
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    window.addEventListener('click', handler);
+    return () => window.removeEventListener('click', handler);
   }, [openDropdown]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[1300] bg-gradient-to-r from-[#424242] to-[#030303] shadow-lg">
-      <div className="container mx-auto flex items-center justify-between h-16 md:h-20 px-4 md:px-8 lg:px-12">
-        <Logo />
-
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8 justify-center flex-1">
-          {menuItems.map((item: NavItem) => (
-            <div key={item.label} className="relative">
-              {item.dropdown ? (
-                <button
-                  onClick={(e) => { e.stopPropagation(); toggleDesktopDropdown(item.label); }}
-                  className={`flex items-center gap-1 text-white font-medium text-[15px] px-4 py-2 rounded-lg transition-all hover:text-[#4caf50] ${openDropdown === item.label ? 'text-[#4caf50]' : ''}`}
-                >
-                  {item.label}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />
-                </button>
-              ) : (
-                <Link
-                  href={item.link}
-                  className={`text-white font-medium text-[15px] px-4 py-2 rounded-lg transition-all hover:text-[#4caf50] ${pathname === item.link ? 'text-[#4caf50] font-bold' : ''}`}
-                >
-                  {item.label}
-                </Link>
-              )}
-              {item.dropdown && openDropdown === item.label && (
-                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-56 bg-[#111] border border-[#4caf50] rounded-xl shadow-2xl py-3 z-50">
-                  {item.items.map((sub: NavSubItem) => (
-                    <Link key={sub.path} href={sub.path} onClick={() => setOpenDropdown(null)} className="block px-6 py-3 text-sm text-gray-200 hover:bg-[#4caf50]/10 hover:text-[#4caf50] transition">
-                      {sub.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </nav>
-
-        <div className="hidden lg:block">
-          <ContactButton />
-        </div>
-
-        {/* Mobile Nav Toggle */}
-        <div className="lg:hidden">
-          <button onClick={toggleMobile} className="text-white p-2">
-            {mobileOpen ? <X size={28} /> : <Menu size={32} />}
-          </button>
+    <header className="fixed top-0 left-0 right-0 z-[1300] transition-all duration-300">
+      
+      {/* 1. TOP UTILITY BAR */}
+      <div className="hidden lg:block bg-black/40 backdrop-blur-md border-b border-white/5 py-1.5">
+        <div className="container mx-auto px-6 flex justify-end gap-8">
+          <a href="tel:+917904469219" className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-[#00E5FF] transition-all">
+            <Phone size={11} className="text-[#00E5FF]" /> 
+            <span>+91 79044 69219</span>
+          </a>
+          <a href="mailto:info@napcen.com" className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-[#00E5FF] transition-all">
+            <Mail size={11} className="text-[#00E5FF]" /> 
+            <span className="lowercase">info@napcen.com</span>
+          </a>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
-      <div className={`fixed top-0 right-0 h-full w-80 bg-black z-[1400] transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex items-center justify-between p-5 border-b border-white/10">
+      {/* 2. MAIN NAVIGATION BAR */}
+      <div className="bg-[#0A1111]/90 backdrop-blur-xl border-b border-white/5">
+        <div className="container mx-auto flex items-center justify-between h-16 md:h-20 px-4 lg:px-6">
+          
           <Logo />
-          <button onClick={closeMobile} className="text-white"><X size={28} /></button>
+
+          {/* DESKTOP NAV: Centered with Glass pill background */}
+          <nav className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 px-2 py-1.5 rounded-full backdrop-blur-md shadow-inner">
+            {menuItems.map((item: NavItem) => (
+              <div key={item.label} className="relative">
+                {item.dropdown ? (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleDesktopDropdown(item.label); }}
+                    className={`flex items-center gap-1 font-black text-[10px] uppercase tracking-[0.1em] px-4 py-2 rounded-full transition-all hover:bg-white/5 hover:text-[#00E5FF] ${openDropdown === item.label ? 'text-[#00E5FF] bg-white/5' : 'text-gray-300'}`}
+                  >
+                    {item.label}
+                    <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === item.label ? 'rotate-180' : ''}`} />
+                  </button>
+                ) : (
+                  <Link
+                    href={item.link}
+                    className={`font-black text-[10px] uppercase tracking-[0.1em] px-4 py-2 rounded-full transition-all hover:bg-white/5 hover:text-[#00E5FF] ${pathname === item.link ? 'text-[#00E5FF] bg-white/10 shadow-sm' : 'text-gray-300'}`}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+
+                {/* Dropdown Menu */}
+                {item.dropdown && openDropdown === item.label && (
+                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-4 w-60 bg-[#0A1111] border border-[#00E5FF]/30 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.6)] py-3 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0A1111] border-l border-t border-[#00E5FF]/30 rotate-45"></div>
+                    {item.items.map((sub: NavSubItem) => (
+                      <Link 
+                        key={sub.path} 
+                        href={sub.path} 
+                        onClick={() => setOpenDropdown(null)} 
+                        className="block px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-[#00E5FF] hover:translate-x-1 transition-all"
+                      >
+                        {sub.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          {/* ACTION BUTTON */}
+          <div className="flex items-center gap-4 flex-none">
+            <Link
+              href="/contact"
+              className="hidden md:flex bg-[#00E5FF] text-black rounded-full py-2.5 px-6 text-[10px] font-black uppercase tracking-widest items-center gap-2 transition-all hover:bg-white hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95"
+            >
+              <FileText size={14} />
+              Quote
+            </Link>
+
+            <div className="lg:hidden">
+              <button onClick={() => setMobileOpen(!mobileOpen)} className="text-white p-1">
+                {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
+          </div>
         </div>
-        <nav className="mt-6 px-4">
+      </div>
+
+      {/* 3. MOBILE DRAWER */}
+      <div className={`fixed inset-0 bg-black/80 backdrop-blur-sm z-[1400] transition-opacity duration-300 ${mobileOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileOpen(false)} />
+      
+      <div className={`fixed top-0 right-0 h-full w-[85%] max-w-sm bg-[#050505] z-[1500] border-l border-white/10 transition-transform duration-500 ease-out ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#0A1111]">
+          <Logo />
+          <button onClick={() => setMobileOpen(false)} className="text-white"><X size={24} /></button>
+        </div>
+        
+        <nav className="p-6 space-y-2">
           {menuItems.map((item: NavItem) => (
-            <div key={item.label} className="py-2">
+            <div key={item.label} className="border-b border-white/5 last:border-0 pb-2">
               {item.dropdown ? (
                 <>
-                  <button onClick={() => toggleMobileSub(item.label)} className="w-full flex justify-between text-white font-semibold py-2">
+                  <button 
+                    onClick={() => setMobileSubOpen(prev => ({ ...prev, [item.label]: !prev[item.label] }))} 
+                    className={`w-full flex justify-between items-center font-black uppercase tracking-widest text-[12px] py-4 transition-colors ${mobileSubOpen[item.label] ? 'text-[#00E5FF]' : 'text-white'}`}
+                  >
                     {item.label}
-                    {mobileSubOpen[item.label] ? <ChevronDown size={20}/> : <ChevronRight size={20}/>}
+                    <ChevronDown size={18} className={`transition-transform duration-300 ${mobileSubOpen[item.label] ? 'rotate-180' : ''}`}/>
                   </button>
                   {mobileSubOpen[item.label] && (
-                    <div className="pl-4 border-l border-[#4caf50] mt-2">
+                    <div className="pl-4 space-y-1 mb-4 border-l-2 border-[#00E5FF]/30">
                       {item.items.map((sub) => (
-                        <Link key={sub.path} href={sub.path} onClick={closeMobile} className="block py-2 text-gray-400">{sub.name}</Link>
+                        <Link key={sub.path} href={sub.path} onClick={() => setMobileOpen(false)} className="block py-3 text-[11px] font-bold text-gray-400 uppercase tracking-tighter hover:text-[#00E5FF]">
+                          {sub.name}
+                        </Link>
                       ))}
                     </div>
                   )}
                 </>
               ) : (
-                <Link href={item.link} onClick={closeMobile} className="block text-white font-semibold py-2">{item.label}</Link>
+                <Link href={item.link} onClick={() => setMobileOpen(false)} className="block text-white font-black uppercase tracking-widest text-[12px] py-4 hover:text-[#00E5FF]">
+                  {item.label}
+                </Link>
               )}
             </div>
           ))}

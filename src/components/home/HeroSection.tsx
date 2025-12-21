@@ -7,7 +7,7 @@ import Image from 'next/image';
 // ----------------------------------------------------------------------
 // CONFIGURATION
 // ----------------------------------------------------------------------
-const FALLBACK_IMAGE = '/napcen-hero-fallback.webp'; // Ensure this is WebP and < 200KB
+
 
 export default function HeroSection() {
   return (
@@ -19,14 +19,7 @@ export default function HeroSection() {
          Using 'priority' ensures this loads first, fixing your LCP speed score.
       */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={FALLBACK_IMAGE}
-          alt="NAPCEN industrial air pollution control facility"
-          fill
-          priority
-          quality={85}
-          className="object-cover brightness-[0.6]"
-        />
+       
       </div>
 
       {/* Gradient Overlay for Text Readability */}

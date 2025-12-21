@@ -3,22 +3,27 @@ const nextConfig = {
   output: 'export', 
   trailingSlash: true,
   
-  // This is the most important part for Metanet
   images: {
+    // When using 'export', unoptimized MUST be true.
+    // The other settings (formats, sizes) only apply if you are NOT using 'unoptimized',
+    // but keeping them here won't crash the build as long as they are at this level.
     unoptimized: true, 
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
 
   typescript: {
-    // Keeps the build from failing due to minor type mismatches
+    // Corrected to ignoreBuildErrors
     ignoreBuildErrors: true,
   },
 
-  // In Next.js 16, this is the safest way to skip linting during the export
   eslint: {
+    // Corrected to ignoreDuringBuilds
     ignoreDuringBuilds: true,
   },
 
-  // Optional: Improves build speed by skipping source maps
   productionBrowserSourceMaps: false,
 };
 

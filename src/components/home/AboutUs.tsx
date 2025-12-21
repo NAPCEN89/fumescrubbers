@@ -11,11 +11,8 @@ import {
   Star,
 } from '@mui/icons-material';
 
-// ----------------------------------------------------------------------
-// CONFIGURATION
-// ----------------------------------------------------------------------
-const ABOUT_IMAGE_SRC = '/napcenAbout.webp'; // Path in /public
-const BG_IMAGE_SRC = '/bgnap.jpeg';        // Path in /public
+const ABOUT_IMAGE_SRC = '/napcenAbout.webp'; 
+const BG_IMAGE_SRC = '/bgnap.jpeg';        
 
 const features = [
   { icon: <Schedule className="w-6 h-6" />, text: 'On-Time Delivery' },
@@ -28,37 +25,22 @@ const features = [
 export default function AboutUs() {
   return (
     <>
-      {/* Structured Data remain unchanged for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Organization',
-            name: 'NAPCEN Engineering',
-            url: 'https://napcen.in',
-            logo: 'https://napcen.in/napcen-logo.png',
-            description: 'Leading manufacturer of Wet Scrubbers...',
-          }),
-        }}
-      />
-
       <section
         id="about"
         className="relative min-h-screen flex items-center justify-center overflow-hidden py-16 md:py-24"
         aria-labelledby="about-heading"
       >
-        {/* HIGH PERFORMANCE BACKGROUND 
-           Using Next/Image 'fill' is 10x faster than CSS backgroundImage
-        */}
+        {/* BACKGROUND IMAGE - FORCED PRIORITY */}
         <div className="absolute inset-0 z-0">
           <Image
             src={BG_IMAGE_SRC}
-            alt="Background"
+            alt="NAPCEN Industrial Background"
             fill
             className="object-cover brightness-[0.35]"
-            quality={75}
-            priority={false} // Only Hero section images should be priority
+            quality={70}
+            priority={true}           // Forces Next.js to load it immediately
+            loading="eager"           // Tells browser to download now
+            fetchPriority="high"      // Directs network priority
           />
         </div>
 
@@ -102,17 +84,18 @@ export default function AboutUs() {
                 </Link>
               </div>
 
-              {/* OPTIMIZED MAIN IMAGE */}
+              {/* MAIN IMAGE - FORCED PRIORITY */}
               <div className="order-1 md:order-2">
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-700 aspect-[3/2]">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-700 aspect-[3/2] bg-white/10">
                   <Image
                     src={ABOUT_IMAGE_SRC}
-                    alt="NAPCEN Factory Manufacturing"
+                    alt="NAPCEN Factory Manufacturing Facility"
                     fill
                     sizes="(max-width: 768px) 100vw, 600px"
                     className="object-cover"
-                    loading="lazy" // Don't load until the user scrolls here
-                    quality={80}
+                    priority={true}      // Bypasses lazy loading
+                    loading="eager"      // Initiates download immediately
+                    quality={85}
                   />
                 </div>
               </div>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, memo } from 'react';
 import Link from 'next/link';
@@ -42,10 +42,18 @@ const GlassButton = ({ text }: { text: string }) => (
 const MobileBoxCard = memo(({ service }: { service: any }) => (
   <Link
     href={service.link}
-    className="flex-shrink-0 w-[150px] h-[210px] rounded-xl overflow-hidden bg-white/5 border border-white/10 flex flex-col snap-center"
+    className="flex-shrink-0 w-[150px] h-[210px] rounded-xl overflow-hidden bg-[#111] border border-white/10 flex flex-col snap-center"
   >
     <div className="flex-none h-[120px] relative">
-      <Image src={service.image} alt={service.title} fill sizes="150px" className="object-cover" />
+      <Image 
+        src={service.image} 
+        alt={service.title} 
+        fill 
+        sizes="150px" 
+        className="object-cover"
+        loading="eager" // Forces mobile images to load immediately
+        quality={60}    // Reduced quality for faster mobile data loading
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0f1414] to-transparent" />
     </div>
     <div className="flex-1 p-3 flex flex-col justify-between">
@@ -56,6 +64,7 @@ const MobileBoxCard = memo(({ service }: { service: any }) => (
     </div>
   </Link>
 ));
+MobileBoxCard.displayName = "MobileBoxCard";
 
 function ServicesSection() {
   const [activeCard, setActiveCard] = useState(0);
@@ -77,7 +86,7 @@ function ServicesSection() {
           </h2>
         </div>
 
-        {/* Desktop Accordion - Height reduced to 380px */}
+        {/* Desktop Accordion */}
         <div className="hidden md:flex flex-row gap-3 justify-center items-stretch h-[380px]">
           {services.map((service, idx) => (
             <div 
@@ -89,9 +98,19 @@ function ServicesSection() {
               <Link href={service.link} className="block h-full w-full">
                 <div className={`
                   relative w-full h-full rounded-2xl overflow-hidden border transition-all duration-500
-                  ${activeCard === idx ? 'border-cyan-500/40 shadow-xl' : 'border-white/5 grayscale opacity-50'}
+                  ${activeCard === idx ? 'border-cyan-500/40 shadow-xl' : 'border-white/5 grayscale-0 opacity-100'}
+                  ${activeCard !== idx ? 'md:grayscale md:opacity-50' : ''}
                 `}>
-                  <Image src={service.image} alt={service.title} fill className="object-cover" />
+                  <Image 
+                    src={service.image} 
+                    alt={service.title} 
+                    fill 
+                    sizes="(max-width: 1200px) 50vw, 400px" 
+                    className="object-cover"
+                    priority={idx === 0} // High priority for the first card
+                    loading={idx === 0 ? "eager" : "lazy"}
+                    quality={75}
+                  />
                   
                   {/* Expanded Content */}
                   <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-300 flex flex-col justify-end p-6
@@ -118,7 +137,7 @@ function ServicesSection() {
           ))}
         </div>
 
-        {/* Mobile Scroller - Compact size */}
+        {/* Mobile Scroller */}
         <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
           {services.map((service, idx) => (
             <MobileBoxCard key={idx} service={service} />

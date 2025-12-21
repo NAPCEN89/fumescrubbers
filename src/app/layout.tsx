@@ -2,22 +2,14 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Roboto } from 'next/font/google'; // ← CHANGE THIS TO YOUR ACTUAL FONT
+import { Roboto } from 'next/font/google';
 
-// === UPDATE THIS FONT TO MATCH YOUR SITE ===
-// Common options: Inter, Poppins, Montserrat, Roboto, Open_Sans, etc.
-// Check your globals.css or site inspector for font-family
 const primaryFont = Roboto({
   subsets: ['latin'],
   weight: ['300', '400', '500', '700', '900'],
   display: 'swap',
 });
 
-// Replace above with e.g.:
-// import { Inter } from 'next/font/google';
-// const primaryFont = Inter({ subsets: ['latin'], display: 'swap' });
-
-// Dynamic JSON-LD (kept exactly as you had — excellent for SEO)
 const JsonLdScript = () => (
   <script
     type="application/ld+json"
@@ -64,13 +56,11 @@ export const metadata: Metadata = {
     default: 'NAPCEN | Wet Scrubber & Dust Collector Manufacturer in Puducherry | Serving Chennai & Tamil Nadu',
     template: '%s | NAPCEN - Wet Scrubber & Dust Collector Manufacturer',
   },
-  description: 'NAPCEN: Leading wet scrubber manufacturer in Puducherry. High-efficiency industrial dust collectors, fume extractors, venturi & packed bed scrubbers serving Chennai, Tamil Nadu & India-wide. CPCB compliant air pollution control systems.',
+  description: 'NAPCEN: Leading wet scrubber manufacturer in Puducherry. High-efficiency industrial dust collectors, fume extractors, venturi & packed bed scrubbers serving Chennai, Tamil Nadu & India-wide.',
   keywords: [
     'wet scrubber manufacturer Chennai', 'wet scrubber manufacturer Tamil Nadu', 'wet scrubber manufacturer India',
     'wet scrubber manufacturer Puducherry', 'industrial dust collector Chennai', 'fume extractor manufacturer Chennai',
-    'venturi scrubber Puducherry', 'packed bed scrubber manufacturer India', 'air pollution control equipment Chennai',
-    'pulse jet dust collector Tamil Nadu', 'fume extraction system Puducherry', 'CPCB compliant scrubber India',
-    'PP FRP wet scrubber manufacturer', 'industrial air filtration Puducherry', 'downdraft table manufacturer India'
+    'venturi scrubber Puducherry', 'packed bed scrubber manufacturer India', 'air pollution control equipment Chennai'
   ],
   authors: [{ name: 'NAPCEN Team', url: 'https://fumescrubbers.com/about' }],
   creator: 'NAPCEN',
@@ -78,32 +68,27 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://fumescrubbers.com'),
   openGraph: {
     title: 'NAPCEN | Wet Scrubber Manufacturer Puducherry | Dust Collector Chennai',
-    description: 'High-efficiency industrial air pollution control systems from Puducherry: Wet Scrubbers, Dust Collectors, Fume Extractors serving Chennai, Tamil Nadu & exports.',
+    description: 'High-efficiency industrial air pollution control systems from Puducherry: Wet Scrubbers, Dust Collectors, Fume Extractors.',
     url: 'https://fumescrubbers.com',
     siteName: 'NAPCEN Industrial Air Solutions',
     locale: 'en_IN',
     type: 'website',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'NAPCEN Wet Scrubber and Dust Collector Manufacturing in Puducherry', type: 'image/jpeg' }],
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'NAPCEN Manufacturing' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'NAPCEN | Wet Scrubber Manufacturer Puducherry | Chennai & Tamil Nadu',
-    description: 'Top industrial air pollution control equipment manufacturer in Puducherry serving Chennai. Custom wet scrubbers & dust collectors.',
+    title: 'NAPCEN | Wet Scrubber Manufacturer Puducherry',
+    description: 'Top industrial air pollution control equipment manufacturer.',
     images: ['/og-image.jpg'],
-    site: '@napcen',
-    creator: '@napcen',
   },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
-  verification: { google: 'your-google-verification-code-here' },
+  robots: { index: true, follow: true },
   alternates: { canonical: 'https://fumescrubbers.com' },
-  other: { 'geo.region': 'IN-PY', 'geo.placename': 'Villianur, Puducherry', 'geo.position': '11.916;79.755', 'ICBM': '11.916, 79.755' },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  userScalable: true,
   themeColor: '#00E5FF',
 };
 
@@ -112,15 +97,57 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-IN" className={primaryFont.className}>
       <head>
         <JsonLdScript />
+        
+        {/* 1. Preconnect to external APIs (EmailJS) */}
+        <link rel="preconnect" href="https://api.emailjs.com" />
+        
+        {/* 2. Critical Image Preloading with High Fetch Priority */}
+        {/* This tells the browser to start downloading the Hero image before anything else */}
+       {/* PRELOAD ABOUT SECTION IMAGES */}
+<link 
+  rel="preload" 
+  as="image" 
+  href="/bgnap.jpeg" 
+  // @ts-ignore
+  fetchpriority="high" 
+/>
+<link 
+  rel="preload" 
+  as="image" 
+  href="/napcenAbout.webp" 
+  // @ts-ignore
+  fetchpriority="high" 
+/>
+
+{/* PRELOAD SERVICES IMAGES */}
+<link rel="preload" as="image" href="/assets/images/design-consulting.webp" />
+<link rel="preload" as="image" href="/assets/images/manufacturing.webp" />
+<link rel="preload" as="image" href="/assets/images/installation.webp" />
+<link rel="preload" as="image" href="/assets/images/maintenance.webp" />
+
+{/* PRELOAD CORE PRODUCT IMAGES */}
+<link rel="preload" as="image" href="/assets/images/Wet-scrubber-chennai.webp" />
+<link rel="preload" as="image" href="/assets/images/Dry-scrubber-pondicherry.webp" />
+<link rel="preload" as="image" href="/assets/images/products/dust-collector/Baghouse-duct-collector-chennai.webp" />
+<link rel="preload" as="image" href="/assets/images/products/fume-extractor/Welding-fume-extractor.webp" />
+<link rel="preload" as="image" href="/assets/images/products/downdraft-table/welding-downdraft-table.webp" />
+
+<link rel="preload" as="image" href="/bgnap.jpeg" fetchPriority="high" />
+        <link rel="preload" as="image" href="/napcenAbout.webp" fetchPriority="high" />
+
+        {/* PRODUCT CATEGORIES (Pre-cache for instant switching) */}
+        <link rel="preload" as="image" href="/assets/images/Wet-scrubber-chennai.webp" />
+        <link rel="preload" as="image" href="/assets/images/Dry-scrubber-pondicherry.webp" />
+
+        {/* INDUSTRIAL GALLERY (Pre-cache first row) */}
+        <link rel="preload" as="image" href="/gallery/Chemical Manufacturing.webp" />
+        <link rel="preload" as="image" href="/gallery/Electronic and Semiconductor Manufacturing.webp" />
+
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-
-        {/* Preload critical hero image — update path when ready */}
-    {/* Match the actual image path used on your homepage for a faster LCP */}
-<link rel="preload" as="image" href="/assets/images/products/Wet scrubber/Wet-scrubber-chennai.jpg" />
       </head>
-      <body className="bg-[#0A1F22] text-white min-h-screen flex flex-col">
+      <body className="bg-[#0A1F22] text-white min-h-screen flex flex-col antialiased">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
