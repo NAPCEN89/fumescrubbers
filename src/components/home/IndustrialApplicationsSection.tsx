@@ -16,49 +16,49 @@ interface Application {
 const industrialApplications: Application[] = [
   { 
     name: 'Chemical Industries', 
-    imagePath: '/gallery/Chemical%20Manufacturing.jpg', 
+    imagePath: '/gallery/Chemical%20Manufacturing.webp', 
     description: 'Advanced scrubbers for VOCs and corrosive gases.', 
     slug: 'chemical' 
   },
   { 
     name: 'Electronics & Semi', 
-    imagePath: '/gallery/Electronic%20and%20Semiconductor%20Manufacturing.jpg', 
+    imagePath: '/gallery/Electronic%20and%20Semiconductor%20Manufacturing.webp', 
     description: 'Cleanroom-grade air filtration systems.', 
     slug: 'electronics' 
   },
   { 
     name: 'Food Processing', 
-    imagePath: '/gallery/Food%20Processing.jpg', 
+    imagePath: '/gallery/Food%20Processing.webp', 
     description: 'Odor control and hygiene compliance.', 
     slug: 'food-processing' 
   },
   { 
     name: 'Metal Processing', 
-    imagePath: '/gallery/Metal%20Processing.jpg', 
+    imagePath: '/gallery/Metal%20Processing.webp', 
     description: 'Fume extraction for welding and cutting.', 
     slug: 'metal-processing' 
   },
   { 
     name: 'Mining & Ore', 
-    imagePath: '/gallery/Mining%20and%20Ore%20Processing.jpg', 
+    imagePath: '/gallery/Mining%20and%20Ore%20Processing.webp', 
     description: 'Heavy-duty dust and SO2 control.', 
     slug: 'mining' 
   },
   { 
     name: 'Pharma Industries', 
-    imagePath: '/gallery/Pharmaceutical%20Manufacturing.jpg', 
+    imagePath: '/gallery/Pharmaceutical%20Manufacturing.webp', 
     description: 'GMP-compliant solvent recovery.', 
     slug: 'pharma' 
   },
   { 
     name: 'Oil & Gas', 
-    imagePath: '/gallery/Oil%20and%20Gas%20Industry.jpg', 
+    imagePath: '/gallery/Oil%20and%20Gas%20Industry.webp', 
     description: 'H2S and methane control systems.', 
     slug: 'oil-gas' 
   },
   { 
     name: 'Wood Working', 
-    imagePath: '/gallery/Woodworking%20and%20Furniture%20Manufacturing.jpg', 
+    imagePath: '/gallery/Woodworking%20and%20Furniture%20Manufacturing.webp', 
     description: 'Fine dust extraction for safety.', 
     slug: 'wood-working' 
   }

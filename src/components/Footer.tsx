@@ -17,7 +17,7 @@ import {
 // CONFIGURATION
 // ----------------------------------------------------------------------
 // Using a string path for public assets is much faster for static sites
-const LOGO_PATH = '/assets/images/Napcen-logo.png'; 
+const LOGO_PATH = '/assets/images/Napcen-logo.webp'; 
 
 const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <Link 

@@ -21,52 +21,53 @@ const services = [
     description: 'Site assessment and tailored air pollution control system blueprints.', 
     link: '/services/consulting-design', 
     Icon: PenTool, 
-    image: '/assets/images/design-consulting.png' 
+    image: '/assets/images/design-consulting.webp' 
   },
   { 
     title: 'Manufacturing', 
     description: 'Precision-engineered hardware built for maximum pollutant removal.', 
     link: '/services/manufacturing', 
     Icon: Factory, 
-    image: '/assets/images/manufacturing.png' 
+    image: '/assets/images/manufacturing.webp' 
   },
   { 
     title: 'Turnkey Installation', 
     description: 'On-time setup and strict environmental compliance by certified techs.', 
     link: '/services/installation', 
     Icon: Construction, 
-    image: '/assets/images/installation.png' 
+    image: '/assets/images/installation.webp' 
   },
   { 
     title: 'Support & AMC', 
     description: 'Proactive maintenance plans to maximize equipment longevity.', 
     link: '/services/maintenance', 
     Icon: Settings, 
-    image: '/assets/images/maintenance.png' 
+    image: '/assets/images/maintenance.webp' 
   },
 ];
-
 const products = [
   { 
     title: 'Wet Scrubber', 
     description: 'Industrial gas cleaning using liquid absorption.', 
     link: '/products/wet-scrubbers', 
-    image: '/assets/images/products/Wet scrubber/Packed-Bed-Scrubbers.jpg' 
+    // Updated: lowercase and hyphenated
+    image: '/assets/images/products/wet-scrubber/Packed-Bed-Scrubbers.webp' 
   },
   { 
     title: 'Dust Collector', 
     description: 'High-volume particulate filtration systems.', 
     link: '/products/dust-collectors', 
-    image: '/assets/images/products/dust collector/Baghouse-duct-collector-chennai.jpg' 
+    // Updated: lowercase and hyphenated
+    image: '/assets/images/products/dust-collector/Baghouse-duct-collector-chennai.webp' 
   },
   { 
     title: 'Fume Extractor', 
     description: 'Portable units for hazardous vapors.', 
     link: '/products/fume-extractors', 
-    image: '/assets/images/products/Fume extractor/Welding-fume-extractor.jpg' 
+    // Updated: lowercase and hyphenated
+    image: '/assets/images/products/fume-extractor/Welding-fume-extractor.webp' 
   },
 ];
-
 const ActionCard = ({ item, type }: { item: any, type: 'service' | 'product' }) => (
   <div className="group relative flex flex-col bg-white/[0.03] backdrop-blur-xl rounded-[2.5rem] border border-white/10 overflow-hidden transition-all duration-500 hover:border-cyan-500/50 hover:bg-white/[0.07] hover:-translate-y-2 w-full max-w-[380px]">
     <div className="relative h-56 w-full bg-white/5 overflow-hidden flex items-center justify-center p-8">

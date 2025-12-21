@@ -7,25 +7,25 @@ import { ChevronRight } from 'lucide-react';
 
 const services = [
   { 
-    image: '/assets/images/design-consulting.png', 
+    image: '/assets/images/design-consulting.webp', 
     title: 'Consulting & Design', 
     description: 'Expert site assessment and custom engineering.', 
     link: '/services/consulting-design' 
   },
   { 
-    image: '/assets/images/manufacturing.png', 
+    image: '/assets/images/manufacturing.webp', 
     title: 'Manufacturing & Supply', 
     description: 'High-performance equipment from scrubbers to collectors.', 
     link: '/services/manufacturing' 
   },
   { 
-    image: '/assets/images/installation.png', 
+    image: '/assets/images/installation.webp', 
     title: 'Installation', 
     description: 'Certified technicians ensure perfect commissioning.', 
     link: '/services/installation' 
   },
   { 
-    image: '/assets/images/maintenance.png', 
+    image: '/assets/images/maintenance.webp', 
     title: 'Maintenance', 
     description: 'Keep systems at peak efficiency with AMC plans.', 
     link: '/services/maintenance' 

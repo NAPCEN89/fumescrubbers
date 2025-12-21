@@ -10,41 +10,40 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 const PRODUCT_CATEGORIES = [
   { 
     name: 'Wet Scrubbers', 
-    // Found in: public\assets\images\products\Wet scrubber
-    image: '/assets/images/products/Wet scrubber/Wet-scrubber-chennai.jpg', 
+    // Path updated: 'Wet scrubber' -> 'wet-scrubber'
+    image: '/assets/images/Wet-scrubber-chennai.webp', 
     description: 'Efficiently remove pollutants like dust, gases, and chemicals from industrial exhaust using liquid sprays.', 
-    link: '/products/scrubbers/wet-scrubber' 
+    link: '/products/wet-scrubbers' 
   },
   { 
     name: 'Dry Scrubbers', 
-    // Found in: public\assets\images
-    image: '/assets/images/Dry-scrubber-pondicherry.jpg', 
+    // Direct path in assets/images
+    image: '/assets/images/Dry-scrubber-pondicherry.webp', 
     description: 'Control emissions using dry reagents to neutralize acidic gases like SO₂ and HCl.', 
-    link: '/products/scrubbers/dry-scrubber' 
+    link: '/products/dry-scrubbers' 
   },
   { 
     name: 'Dust Collectors', 
-    // Found in: public\assets\images\products\dust collector
-    image: '/assets/images/products/dust collector/Baghouse-duct-collector-chennai.jpg', 
+    // Path updated: 'dust collector' -> 'dust-collector'
+    image: '/assets/images/products/dust-collector/Baghouse-duct-collector-chennai.webp', 
     description: 'Capture and filter dust particles to maintain clean air in facilities.', 
     link: '/products/dust-collectors' 
   },
   { 
     name: 'Fume Extractor', 
-    // Found in: public\assets\images\products\Fume extractor
-    image: '/assets/images/products/Fume extractor/Welding-fume-extractor.jpg', 
+    // Path updated: 'Fume extractor' -> 'fume-extractor'
+    image: '/assets/images/products/fume-extractor/Welding-fume-extractor.webp', 
     description: 'Remove harmful fumes and gases from welding, soldering, or chemical processes.', 
     link: '/products/fume-extractors' 
   },
   { 
     name: 'Downdraft Table', 
-    // Found in: public\assets\images\products\Downdraft tbale
-    image: '/assets/images/products/Downdraft tbale/welding-downdraft-table.jpg', 
+    // Path updated: 'Downdraft tbale' -> 'downdraft-table'
+    image: '/assets/images/products/downdraft-table/welding-downdraft-table.webp', 
     description: 'Capture dust and fumes during cutting, grinding, or welding.', 
     link: '/products/downdraft-tables' 
   },
 ];
-
 export default function OurProductsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoCycling, setIsAutoCycling] = useState(true);

@@ -18,6 +18,9 @@ export type CaseStudy = {
   products: string[]; // For related product links
 };
 
+// Base path for case study images
+const CASE_STUDY_IMG_BASE = '/assets/images/case-studies';
+
 export const caseStudies: CaseStudy[] = [
   {
     id: 1,
@@ -37,8 +40,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     quote: 'NAPCEN delivered a turnkey solution that exceeded our expectations. Compliance achieved with zero production downtime.',
     quoteAuthor: 'Plant Manager',
-    image: '/images/case-studies/hcl-pharma-main.jpg',
-    thumbnail: '/images/case-studies/hcl-pharma-thumb.jpg',
+    image: `${CASE_STUDY_IMG_BASE}/hcl-pharma-main.webp`,
+    thumbnail: `${CASE_STUDY_IMG_BASE}/hcl-pharma-thumb.webp`,
     date: 'October 2025',
     products: ['HCl Scrubber', 'Packed Bed Scrubber'],
   },
@@ -60,8 +63,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     quote: 'Best investment for our foundry — production uptime and air quality dramatically improved.',
     quoteAuthor: 'Production Head',
-    image: '/images/case-studies/foundry-main.jpg',
-    thumbnail: '/images/case-studies/foundry-thumb.jpg',
+    image: `${CASE_STUDY_IMG_BASE}/foundry-main.webp`,
+    thumbnail: `${CASE_STUDY_IMG_BASE}/foundry-thumb.webp`,
     date: 'September 2025',
     products: ['Venturi Scrubber', 'Foundry Exhaust Scrubber'],
   },
@@ -82,10 +85,9 @@ export const caseStudies: CaseStudy[] = [
     ],
     quote: 'NAPCEN transformed our welding bay into a safe, compliant workspace. Highly recommended.',
     quoteAuthor: 'EHS Manager',
-    image: '/images/case-studies/welding-auto-main.jpg',
-    thumbnail: '/images/case-studies/welding-auto-thumb.jpg',
+    image: `${CASE_STUDY_IMG_BASE}/welding-auto-main.webp`,
+    thumbnail: `${CASE_STUDY_IMG_BASE}/welding-auto-thumb.webp`,
     date: 'August 2025',
     products: ['Mobile Welding Fume Extractor', 'Centralized Fume Extraction'],
   },
-  // Add more when you have real projects
 ];

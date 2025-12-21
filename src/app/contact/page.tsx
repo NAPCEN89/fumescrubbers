@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser'; // 1. Import EmailJS
 import { 
   User, 
   Mail, 
@@ -10,7 +11,8 @@ import {
   CheckCircle2, 
   AlertCircle, 
   Factory, 
-  ChevronDown 
+  ChevronDown,
+  Loader2 // Import a loader icon
 } from 'lucide-react';
 
 const products = [
@@ -32,6 +34,7 @@ export default function ContactUs() {
     message: '',
   });
   const [status, setStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // 2. Add loading state
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -39,40 +42,58 @@ export default function ContactUs() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation
     if (!formData.email || !formData.mobile || !formData.product) {
       setStatus('Please fill Email, Mobile & Product');
       setTimeout(() => setStatus(''), 5000);
       return;
     }
 
-    // Simulated submission
-    setTimeout(() => {
-      const success = Math.random() > 0.1;
-      if (success) {
-        setStatus('Thank you! We will contact you soon.');
-        setFormData({ product: '', name: '', email: '', mobile: '', message: '' });
-      } else {
-        setStatus('Submission failed. Please try again.');
-      }
+    setIsSubmitting(true);
+    setStatus('Sending your request...');
+
+    // 3. EmailJS Integration
+  const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          name: formData.name,
+          email: formData.email,
+          mobile: formData.mobile,
+          product: formData.product,
+          message: formData.message,
+        },
+        PUBLIC_KEY
+      );
+
+      setStatus('Thank you! We will contact you soon.');
+      setFormData({ product: '', name: '', email: '', mobile: '', message: '' });
+    } catch (error) {
+      console.error("Email Error:", error);
+      setStatus('Submission failed. Please try again or call us.');
+    } finally {
+      setIsSubmitting(false);
       setTimeout(() => setStatus(''), 6000);
-    }, 1200);
+    }
   };
 
   const isSuccess = status.includes('Thank');
 
   return (
     <main className="min-h-screen bg-[#0a0f0f] pt-20 md:pt-28 px-4 sm:px-6 lg:px-8 flex flex-col">
-      {/* Subtle Background Glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
         <div className="w-[800px] h-[800px] bg-cyan-500/8 blur-[160px] rounded-full" />
       </div>
 
-      {/* Main Content - Perfectly Centered with Gap from Header */}
       <div className="flex-1 flex items-center justify-center py-12 md:py-16">
         <div className="w-full max-w-2xl mx-auto">
-          {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,7 +108,6 @@ export default function ContactUs() {
             </p>
           </motion.div>
 
-          {/* Form Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -109,13 +129,9 @@ export default function ContactUs() {
                     onChange={handleChange}
                     className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl pl-12 pr-10 py-4 text-white text-base focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all appearance-none cursor-pointer"
                   >
-                    <option value="" disabled>
-                      Select a product
-                    </option>
+                    <option value="" disabled>Select a product</option>
                     {products.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
+                      <option key={p} value={p} className="bg-[#1a2222]">{p}</option>
                     ))}
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400 pointer-events-none" />
@@ -188,20 +204,25 @@ export default function ContactUs() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={5}
-                  placeholder="Describe your project, capacity needs, industry type, timeline, or any specific requirements..."
+                  placeholder="Describe your project requirements..."
                   className="w-full bg-[#1a2222]/80 border border-white/10 rounded-2xl px-4 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/20 transition-all resize-none"
                 />
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button with Loading State */}
               <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={!isSubmitting ? { scale: 1.03 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                 type="submit"
-                className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-black uppercase tracking-wider py-5 rounded-2xl text-lg shadow-xl hover:shadow-cyan-500/40 transition-all duration-300 flex items-center justify-center gap-3"
+                disabled={isSubmitting}
+                className={`w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-black uppercase tracking-wider py-5 rounded-2xl text-lg shadow-xl hover:shadow-cyan-500/40 transition-all duration-300 flex items-center justify-center gap-3 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                <Send className="w-5 h-5" />
-                Submit Request
+                {isSubmitting ? (
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
+                {isSubmitting ? 'Sending...' : 'Submit Request'}
               </motion.button>
 
               {/* Status Message */}

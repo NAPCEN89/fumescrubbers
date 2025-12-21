@@ -1,7 +1,6 @@
 /**
  * NAPCEN - HIGH PERFORMANCE PRODUCT DATA (2025 COMPLETE)
- * Synchronized with Physical Directory Structure
- * Location: /public/assets/images/products/
+ * Optimized for WebP and SEO-friendly paths.
  */
 
 const IMG_BASE = '/assets/images/products';
@@ -15,7 +14,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Packed Bed Scrubber',
         slug: 'packed-bed',
-        image: { src: `${IMG_BASE}/Wet scrubber/Packed-Bed-Scrubbers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Packed-Bed-Scrubbers.webp` },
         description: 'Counter-current packed tower for superior gas absorption of soluble gases like HCl, NH3, SO2, HF with >99% efficiency.',
         specs: { MOC: 'PP-FRP / PVDF / SS 316', Efficiency: 'Up to 99.9%', Airflow: 'Up to 1,00,000 CMH' },
         applications: ['Pharma Manufacturing', 'Chemical Processing', 'Steel Pickling Lines']
@@ -23,7 +22,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Venturi Scrubber',
         slug: 'venturi',
-        image: { src: `${IMG_BASE}/Wet scrubber/venturi-scrubbers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/venturi-scrubbers.webp` },
         description: 'High-energy scrubber for sub-micron particulate and sticky dust removal down to 0.5 microns.',
         specs: { PressureDrop: '250-1000 mm WG', Material: 'MS-FRP Lined', Efficiency: '>99%' },
         applications: ['Foundries', 'Boiler Exhaust', 'Incinerators']
@@ -31,7 +30,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Ammonia Scrubber',
         slug: 'ammonia-scrubber',
-        image: { src: `${IMG_BASE}/Wet scrubber/Ammonia-scrubber-manufacturers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Ammonia-scrubber-manufacturers.webp` },
         description: 'Packed bed system with acid reagent for neutralization of NH3.',
         specs: { Automation: 'Auto pH Dosing', Efficiency: '99.9%' },
         applications: ['Fertilizer Plants', 'Cold Storages']
@@ -39,7 +38,7 @@ export const productData: Record<string, any> = {
       {
         label: 'HCl Scrubber',
         slug: 'hcl-scrubber',
-        image: { src: `${IMG_BASE}/Wet scrubber/HCL-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/HCL-Scrubber-manufacturer.webp` },
         description: 'Efficient packed bed system for hydrochloric acid fumes.',
         specs: { Reagent: 'Water / NaOH', MOC: 'PP-FRP / PVDF' },
         applications: ['Pickling Lines', 'Galvanizing Plants']
@@ -47,7 +46,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Chlorine Scrubber',
         slug: 'chlorine-scrubber',
-        image: { src: `${IMG_BASE}/Wet scrubber/Chlorine-Scrubber-india.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Chlorine-Scrubber-india.webp` },
         description: 'Caustic-based packed tower for emergency Cl2 gas neutralization.',
         specs: { Reagent: 'NaOH Solution', Efficiency: '99.9%' },
         applications: ['Water Treatment', 'Chemical Storage Vents']
@@ -55,8 +54,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Boiler Flue Gas Scrubber',
         slug: 'boiler-flue',
-        // FIXED: Exact match for file "Boiler -flue-gas-scrubber.jpg"
-        image: { src: `${IMG_BASE}/Wet scrubber/Boiler -flue-gas-scrubber.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Boiler-flue-gas-scrubber.webp` },
         description: 'Alkaline reagent system for sulfur dioxide and acid gas removal.',
         specs: { Efficiency: '95-99% SO2 Removal' },
         applications: ['Industrial Boilers', 'Incinerators']
@@ -64,7 +62,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Chromic Acid Scrubber',
         slug: 'chromic-acid',
-        image: { src: `${IMG_BASE}/Wet scrubber/Chromic-Acid-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Chromic-Acid-Scrubber-manufacturer.webp` },
         description: 'Specialized system for hexavalent chromium mist removal.',
         specs: { Efficiency: '>99% for Cr(VI)', MOC: 'PVDF / PP' },
         applications: ['Chrome Plating', 'Anodizing']
@@ -72,7 +70,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Nitric Acid / NOx Scrubber',
         slug: 'nitric-acid',
-        image: { src: `${IMG_BASE}/Wet scrubber/Nitric-Acid-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Nitric-Acid-Scrubber-manufacturer.webp` },
         description: 'Multi-stage system for NOx control using specialized reagents.',
         specs: { Efficiency: '90-99% for NOx' },
         applications: ['Nitration Processes', 'Metal Etching']
@@ -80,7 +78,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Sulfuric Acid Scrubber',
         slug: 'sulfuric-acid',
-        image: { src: `${IMG_BASE}/Wet scrubber/sulfuric-acid-scrubber-manufacturers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/sulfuric-acid-scrubber-manufacturers.webp` },
         description: 'High-concentration H2SO4 mist capture system.',
         specs: { MOC: 'Special Alloys / PP-FRP' },
         applications: ['Acid Production', 'Alkylation Units']
@@ -88,7 +86,7 @@ export const productData: Record<string, any> = {
       {
         label: 'CO2 Scrubber',
         slug: 'co2',
-        image: { src: `${IMG_BASE}/Wet scrubber/CO2-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/CO2-Scrubber-manufacturer.webp` },
         description: 'Alkaline solution-based system for carbon dioxide capture.',
         specs: { Reagent: 'MEA / Caustic', Efficiency: 'Up to 95%' },
         applications: ['Biogas Upgrading', 'Food Processing']
@@ -96,7 +94,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Foundry Exhaust Scrubber',
         slug: 'foundry-exhaust',
-        image: { src: `${IMG_BASE}/Wet scrubber/Foundry-Exhaust-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Foundry-Exhaust-Scrubber-manufacturer.webp` },
         description: 'Combined particulate and fume control for metal casting.',
         specs: { Efficiency: '>98%', SparkArrestor: 'Integrated' },
         applications: ['Iron Foundries', 'Aluminum Melting']
@@ -104,7 +102,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Glue Vapour / VOC Scrubber',
         slug: 'glue-vapour',
-        image: { src: `${IMG_BASE}/Wet scrubber/Glue-Vapor-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Glue-Vapor-Scrubber-manufacturer.webp` },
         description: 'Solvent vapor and VOC removal from adhesive processes.',
         specs: { Media: 'Activated Carbon / Water' },
         applications: ['Adhesive Production', 'Lamination']
@@ -112,7 +110,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Caustic / Alkali Scrubber',
         slug: 'caustic',
-        image: { src: `${IMG_BASE}/Wet scrubber/caustic.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/caustic.webp` },
         description: 'Acid reagent dosing for neutralization of alkaline vapors.',
         specs: { Efficiency: '>99%', MOC: 'PP-FRP' },
         applications: ['Caustic Soda Plants', 'Soap Manufacturing']
@@ -120,7 +118,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Plastic Fume Scrubber',
         slug: 'plastic-fume',
-        image: { src: `${IMG_BASE}/Wet scrubber/Plastic-Fume-Scrubber-manufacturer.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Plastic-Fume-Scrubber-manufacturer.webp` },
         description: 'Control of HCl and organic fumes from plastic processing.',
         specs: { Type: 'Multi-stage Quench + Bed' },
         applications: ['PVC Extrusion', 'Plastic Recycling']
@@ -128,7 +126,7 @@ export const productData: Record<string, any> = {
       {
         label: 'General Acid Fume Scrubber',
         slug: 'acid-fume',
-        image: { src: `${IMG_BASE}/Wet scrubber/Acid-fume-scrubber-chennai.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Acid-fume-scrubber-chennai.webp` },
         description: 'Versatile system for mixed acid fumes.',
         specs: { MOC: 'PP-FRP / PVDF' },
         applications: ['Laboratory Exhaust', 'Battery Charging']
@@ -136,7 +134,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Hospital Waste Scrubber',
         slug: 'hospital-waste',
-        image: { src: `${IMG_BASE}/Wet scrubber/Hospital-waste-Incinerator-wet scrubber-manufacturers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Hospital-waste-Incinerator-wet-scrubber-manufacturers.webp` },
         description: 'Multi-stage system for medical waste incineration emissions.',
         specs: { Compliance: 'Strict CPCB Standards' },
         applications: ['Medical Waste Incinerators']
@@ -144,7 +142,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Alkali Fume Scrubber',
         slug: 'alkali-fume',
-        image: { src: `${IMG_BASE}/Wet scrubber/Alkali-fume-scrubber-manufacturers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/Alkali-fume-scrubber-manufacturers.webp` },
         description: 'Dedicated system for strong alkaline gas streams.',
         specs: { Reagent: 'Dilute Acid' },
         applications: ['Chemical Processing', 'Cleaning Lines']
@@ -152,7 +150,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Vent Gas Scrubber',
         slug: 'vent-gas',
-        image: { src: `${IMG_BASE}/Wet scrubber/vent-gas-scrubber-manufacturers.jpg` },
+        image: { src: `${IMG_BASE}/wet-scrubber/vent-gas-scrubber-manufacturers.webp` },
         description: 'Treatment of storage tank or reactor vent gases.',
         specs: { Features: 'Explosion-proof fan' },
         applications: ['Storage Tanks', 'Reactor Vents']
@@ -167,7 +165,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Pulse Jet Baghouse',
         slug: 'pulse-jet-baghouse',
-        image: { src: `${IMG_BASE}/dust collector/Baghouse-duct-collector-chennai.jpg` },
+        image: { src: `${IMG_BASE}/dust-collector/Baghouse-duct-collector-chennai.webp` },
         description: 'Continuous duty filtration for heavy dust loads.',
         specs: { Efficiency: '99.99% @ 1 Micron' },
         applications: ['Steel Industry', 'Cement Plants']
@@ -175,7 +173,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Cartridge Dust Collector',
         slug: 'cartridge-collector',
-        image: { src: `${IMG_BASE}/dust collector/cartridge-duct-collector-manufacturers-pondicherry.jpg` },
+        image: { src: `${IMG_BASE}/dust-collector/cartridge-duct-collector-manufacturers-pondicherry.webp` },
         description: 'Compact high-efficiency pleated filtration.',
         specs: { Media: 'Nanofiber' },
         applications: ['Powder Coating', 'Pharma']
@@ -183,7 +181,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Cyclone Separator',
         slug: 'cyclone-separator',
-        image: { src: `${IMG_BASE}/dust collector/cyclone-duct-collector-chennai.jpg` },
+        image: { src: `${IMG_BASE}/dust-collector/cyclone-duct-collector-chennai.webp` },
         description: 'Centrifugal pre-cleaner for coarse particles.',
         specs: { Type: 'Filter-free' },
         applications: ['Sawmills', 'Wood Chips']
@@ -191,7 +189,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Portable Dust Collector',
         slug: 'portable-collector',
-        image: { src: `${IMG_BASE}/dust collector/Portable-duct-collectors-chennai.jpg` },
+        image: { src: `${IMG_BASE}/dust-collector/Portable-duct-collectors-chennai.webp` },
         description: 'Mobile unit for localized dust capture.',
         specs: { Mobility: 'Locked Castors' },
         applications: ['Workshops', 'Spot Cleaning']
@@ -199,7 +197,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Single Stage Dust Collector',
         slug: 'single-stage',
-        image: { src: `${IMG_BASE}/dust collector/Single-stage-duct-collector-coimbathur.jpg` },
+        image: { src: `${IMG_BASE}/dust-collector/Single-stage-duct-collector-coimbathur.webp` },
         description: 'Direct blower-mounted collector for light loads.',
         specs: { Efficiency: '95-98%' },
         applications: ['Woodworking Shops']
@@ -207,7 +205,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Two Stage Dust Collector',
         slug: 'two-stage',
-        image: { src: `${IMG_BASE}/dust collector/Two-stage-duct-collector-chennai.jpg` },
+        image: { src: `${IMG_BASE}/dust-collector/Two-stage-duct-collector-chennai.webp` },
         description: 'Cyclone pre-separator + secondary filter.',
         specs: { Extends: 'Filter Life' },
         applications: ['Heavy Woodworking', 'Metal Grinding']
@@ -222,7 +220,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Welding Fume Extractor',
         slug: 'welding-fume',
-        image: { src: `${IMG_BASE}/Fume extractor/Welding-fume-extractor.jpg` },
+        image: { src: `${IMG_BASE}/fume-extractor/Welding-fume-extractor.webp` },
         description: 'Portable source capture with flexible arm.',
         specs: { Filter: '3-Stage' },
         applications: ['Manual Welding']
@@ -230,7 +228,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Laser Fume Extractor',
         slug: 'laser-fume',
-        image: { src: `${IMG_BASE}/Fume extractor/Laser-fume-extractor.jpg` },
+        image: { src: `${IMG_BASE}/fume-extractor/Laser-fume-extractor.webp` },
         description: 'High-vacuum system for CNC machines.',
         specs: { Media: 'PTFE HEPA' },
         applications: ['Fiber Laser Cutting']
@@ -238,7 +236,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Soldering Fume Extractor',
         slug: 'soldering-fume',
-        image: { src: `${IMG_BASE}/Fume extractor/Soldering-fume-Extractor.jpg` },
+        image: { src: `${IMG_BASE}/fume-extractor/Soldering-fume-Extractor.webp` },
         description: 'Benchtop extractor for PCB soldering.',
         specs: { ESD: 'Safe' },
         applications: ['Electronics Assembly']
@@ -246,7 +244,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Gold Fume Extractor',
         slug: 'gold-fume',
-        image: { src: `${IMG_BASE}/Fume extractor/Gold-fume-extractor.jpg` },
+        image: { src: `${IMG_BASE}/fume-extractor/Gold-fume-extractor.webp` },
         description: 'Acid-resistant system for refining fumes.',
         specs: { MOC: 'PP' },
         applications: ['Jewelry Mfg']
@@ -254,7 +252,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Laboratory Fume Extractor',
         slug: 'lab-fume',
-        image: { src: `${IMG_BASE}/Fume extractor/Laboratory-fume-extractor.jpg` },
+        image: { src: `${IMG_BASE}/fume-extractor/Laboratory-fume-extractor.webp` },
         description: 'Ductless extractor for lab chemical vapors.',
         specs: { Filtration: 'Carbon + HEPA' },
         applications: ['Chemical Labs']
@@ -262,7 +260,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Printing Fume Extractor',
         slug: 'printing-fume',
-        image: { src: `${IMG_BASE}/Fume extractor/Printing-fume-extractor.jpg` },
+        image: { src: `${IMG_BASE}/fume-extractor/Printing-fume-extractor.webp` },
         description: 'Solvent vapor extraction for printing.',
         specs: { Safety: 'Explosion Proof' },
         applications: ['Digital Printing']
@@ -277,8 +275,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Dry Downdraft Table',
         slug: 'dry-downdraft',
-        // FIXED: Exact file name "Downdraft-table-dust-collector.jpg"
-        image: { src: `${IMG_BASE}/Downdraft tbale/Downdraft-table-dust-collector.jpg` },
+        image: { src: `${IMG_BASE}/downdraft-table/Downdraft-table-dust-collector.webp` },
         description: 'Ergonomic workbench with built-in filtration.',
         specs: { Load: '1000 kg' },
         applications: ['Metal Finishing', 'Deburring']
@@ -286,7 +283,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Grinding Downdraft Table',
         slug: 'grinding-downdraft',
-        image: { src: `${IMG_BASE}/Downdraft tbale/Grinding-downdraft-table.jpg` },
+        image: { src: `${IMG_BASE}/downdraft-table/Grinding-downdraft-table.webp` },
         description: 'Heavy-duty table for grinding sparks.',
         specs: { Safety: 'Spark Arrestor' },
         applications: ['Heavy Grinding']
@@ -294,7 +291,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Polishing Downdraft Table',
         slug: 'polishing-downdraft',
-        image: { src: `${IMG_BASE}/Downdraft tbale/Polishing-downdraft-table.jpg` },
+        image: { src: `${IMG_BASE}/downdraft-table/Polishing-downdraft-table.webp` },
         description: 'Fine dust capture for buffing.',
         specs: { Surface: 'Non-scratch' },
         applications: ['Jewelry Finishing']
@@ -302,8 +299,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Portable Downdraft Table',
         slug: 'portable-downdraft',
-        // FIXED: Exact space in file "Portable-downdraft -table.jpg"
-        image: { src: `${IMG_BASE}/Downdraft tbale/Portable-downdraft -table.jpg` },
+        image: { src: `${IMG_BASE}/downdraft-table/Portable-downdraft-table.webp` },
         description: 'Mobile workstation for flexible use.',
         specs: { Mobility: 'Locked Castors' },
         applications: ['Field Maintenance']
@@ -311,7 +307,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Welding Downdraft Table',
         slug: 'welding-downdraft',
-        image: { src: `${IMG_BASE}/Downdraft tbale/welding-downdraft-table.jpg` },
+        image: { src: `${IMG_BASE}/downdraft-table/welding-downdraft-table.webp` },
         description: 'Source capture for welding fumes.',
         specs: { Features: 'Vented Back Stop' },
         applications: ['Small Part Welding']
@@ -319,7 +315,7 @@ export const productData: Record<string, any> = {
       {
         label: 'Woodworking Downdraft Table',
         slug: 'woodworking-downdraft',
-        image: { src: `${IMG_BASE}/Downdraft tbale/woodworking-downdraft-table.jpg` },
+        image: { src: `${IMG_BASE}/downdraft-table/woodworking-downdraft-table.webp` },
         description: 'Large surface for sanding dust.',
         specs: { Noise: 'Low' },
         applications: ['Furniture Sanding']
@@ -328,21 +324,15 @@ export const productData: Record<string, any> = {
   }
 };
 
-/**
- * MASTER CATALOG AGGREGATOR
- * This logic creates the "all" category and injects the parent category 
- * slug into each item to ensure links work correctly in the "All" view.
- */
 export const extendedProductData: Record<string, any> = {
   ...productData,
   "all": {
     title: "Complete Industrial Air Solutions",
     seoDescription: "NAPCEN's complete 2025 catalog of Wet Scrubbers, Dust Collectors, Fume Extractors, and Downdraft Tables. CPCB & SPCB compliant industrial air pollution control systems.",
-    // Flattening while preserving the original category slug for routing
     items: Object.entries(productData).flatMap(([categorySlug, categoryData]) => 
       categoryData.items.map((item: any) => ({
         ...item,
-        parentCategory: categorySlug // This helps DynamicProductList generate the right URL
+        parentCategory: categorySlug 
       }))
     )
   }

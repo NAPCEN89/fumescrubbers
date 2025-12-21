@@ -25,7 +25,7 @@ const useIsMobile = (breakpoint = 768) => {
 const Logo: React.FC = () => (
   <Link href="/" className="flex items-center">
     <Image
-      src="/assets/images/Napcen-logo.png" // String path is faster for static sites
+      src="/assets/images/Napcen-logo.webp" // String path is faster for static sites
       alt="Napcen Logo"
       width={120} // Slightly larger for clarity
       height={64}

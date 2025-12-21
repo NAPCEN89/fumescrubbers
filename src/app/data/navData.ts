@@ -1,19 +1,3 @@
-export interface NavSubItem {
-  name: string;
-  path: string;
-  slug?: string;
-  title?: string;
-  description?: string;
-  image?: string;
-}
-
-export interface NavItem {
-  label: string;
-  link?: string;
-  dropdown?: boolean;
-  items?: NavSubItem[];
-}
-
 export const industriesData: NavSubItem[] = [
   { 
     name: 'Chemical Manufacturing', 
@@ -21,7 +5,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/chemical',
     title: 'Chemical Process Fume Scrubbing',
     description: 'Corrosion-resistant systems for hazardous gas neutralization.',
-    image: '/gallery/Chemical%20Manufacturing.jpg'
+    image: '/gallery/Chemical%20Manufacturing.webp'
   },
   { 
     name: 'Electronics & Semi', 
@@ -29,7 +13,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/electronics',
     title: 'Semiconductor Air Filtration',
     description: 'Ultra-clean filtration for cleanroom environments.',
-    image: '/gallery/Electronic%20and%20Semiconductor%20Manufacturing.jpg'
+    image: '/gallery/Electronic%20and%20Semiconductor%20Manufacturing.webp'
   },
   { 
     name: 'Food Processing', 
@@ -37,7 +21,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/food-processing',
     title: 'Sanitary Dust Collection',
     description: 'Stainless steel solutions for food-grade safety.',
-    image: '/gallery/Food%20Processing.jpg'
+    image: '/gallery/Food%20Processing.webp'
   },
   { 
     name: 'Metal Processing', 
@@ -45,7 +29,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/metal-processing',
     title: 'Metalworking Fume Extraction',
     description: 'Heavy-duty extraction for welding and grinding.',
-    image: '/gallery/Metal%20Processing.jpg'
+    image: '/gallery/Metal%20Processing.webp'
   },
   { 
     name: 'Mining & Ore', 
@@ -53,7 +37,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/mining',
     title: 'Mining Dust & Gas Control',
     description: 'Robust systems for ore processing and underground ventilation.',
-    image: '/gallery/Mining%20and%20Ore%20Processing.jpg'
+    image: '/gallery/Mining%20and%20Ore%20Processing.webp'
   },
   { 
     name: 'Water Treatment', 
@@ -61,7 +45,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/water-treatment',
     title: 'Municipal Wastewater Odor Control',
     description: 'H2S and odor neutralizing scrubbers for treatment plants.',
-    image: '/gallery/Municipal%20Water%20and%20Wastewater%20Treatment.jpg'
+    image: '/gallery/Municipal%20Water%20and%20Wastewater%20Treatment.webp'
   },
   { 
     name: 'Oil & Gas', 
@@ -69,7 +53,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/oil-and-gas',
     title: 'Oil & Gas Emission Control',
     description: 'Vapor recovery and gas treatment for refineries.',
-    image: '/gallery/Oil%20and%20Gas%20Industry.jpg'
+    image: '/gallery/Oil%20and%20Gas%20Industry.webp'
   },
   { 
     name: 'Paint & Coatings', 
@@ -77,7 +61,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/paint-coatings',
     title: 'VOC & Paint Mist Extraction',
     description: 'Filtration for industrial spray booths and coating lines.',
-    image: '/gallery/Paint%20and%20Coatings%20Manufacturing.jpg'
+    image: '/gallery/Paint%20and%20Coatings%20Manufacturing.webp'
   },
   { 
     name: 'Pharmaceuticals', 
@@ -85,7 +69,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/pharmaceuticals',
     title: 'Pharma Clean Air Systems',
     description: 'GMP-compliant chemical and particulate filtration.',
-    image: '/gallery/Pharmaceutical%20Manufacturing.jpg'
+    image: '/gallery/Pharmaceutical%20Manufacturing.webp'
   },
   { 
     name: 'Textile Industry', 
@@ -93,7 +77,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/textile',
     title: 'Textile Fiber & Dust Control',
     description: 'High-volume lint and particulate extraction.',
-    image: '/gallery/Textile%20Industry.jpg'
+    image: '/gallery/Textile%20Industry.webp'
   },
   { 
     name: 'Waste Incineration', 
@@ -101,7 +85,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/waste-incineration',
     title: 'Flue Gas Cleaning Systems',
     description: 'High-temperature filtration for waste-to-energy plants.',
-    image: '/gallery/Waste%20Incineration.jpeg'
+    image: '/gallery/Waste%20Incineration.webp'
   },
   { 
     name: 'Woodworking', 
@@ -109,7 +93,7 @@ export const industriesData: NavSubItem[] = [
     path: '/industries/woodworking',
     title: 'Wood Dust & Particle Collection',
     description: 'Fire-safe extraction for sawmills and furniture plants.',
-    image: '/gallery/Woodworking%20and%20Furniture%20Manufacturing.jpg'
+    image: '/gallery/Woodworking%20and%20Furniture%20Manufacturing.webp'
   }
 ];
 
@@ -122,32 +106,36 @@ export const menuItems: NavItem[] = [
       { 
         name: 'Wet Scrubbers', 
         path: '/products/wet-scrubbers',
-        image: '/assets/images/products/Wet scrubber/Wet-scrubber-chennai.jpg' 
+        // Updated path (lowercase and webp)
+        image: '/assets/images/products/wet-scrubber/Wet-scrubber-chennai.webp' 
       },
       { 
         name: 'Dust Collectors', 
         path: '/products/dust-collectors',
-        image: '/assets/images/products/dust collector/Baghouse-duct-collector-chennai.jpg'
+        // Updated path (lowercase and webp)
+        image: '/assets/images/products/dust-collector/Baghouse-duct-collector-chennai.webp'
       },
       { 
         name: 'Fume Extractors', 
         path: '/products/fume-extractors',
-        image: '/assets/images/products/Fume extractor/Welding-fume-extractor.jpg'
+        // Updated path (lowercase and webp)
+        image: '/assets/images/products/fume-extractor/Welding-fume-extractor.webp'
       },
       { 
         name: 'Downdraft Tables', 
         path: '/products/downdraft-tables',
-        image: '/assets/images/products/Downdraft tbale/Downdraft-table-dust-collector.jpg'
+        // Updated path (lowercase and webp)
+        image: '/assets/images/products/downdraft-table/Downdraft-table-dust-collector.webp'
       },
       { 
         name: 'Dry Scrubbers', 
         path: '/products/dry-scrubbers',
-        image: '/assets/images/resource/all type of dry scrubber/20.jpg'
+        image: '/assets/images/resource/all%20type%20of%20dry%20scrubber/20.webp'
       },
       { 
         name: 'All Products', 
         path: '/products/',
-        image: '/assets/images/resource/Home page product/coming-soon.jpg'
+        image: '/assets/images/resource/Home%20page%20product/coming-soon.webp'
       },
     ],
   },

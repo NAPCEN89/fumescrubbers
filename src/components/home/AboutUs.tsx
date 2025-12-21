@@ -14,7 +14,7 @@ import {
 // ----------------------------------------------------------------------
 // CONFIGURATION
 // ----------------------------------------------------------------------
-const ABOUT_IMAGE_SRC = '/napcenAbout.png'; // Path in /public
+const ABOUT_IMAGE_SRC = '/napcenAbout.webp'; // Path in /public
 const BG_IMAGE_SRC = '/bgnap.jpeg';        // Path in /public
 
 const features = [
