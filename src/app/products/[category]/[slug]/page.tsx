@@ -5,10 +5,17 @@ import { Metadata } from 'next';
 
 type Props = { params: Promise<{ category: string; slug: string }> };
 
+// 1. FIX: Ensure all categories and slugs are mapped correctly for static export
 export async function generateStaticParams() {
-  return Object.entries(productData).flatMap(([category, data]) => 
-    data.items.map((item: any) => ({ category, slug: item.slug }))
-  );
+  return Object.entries(productData).flatMap(([category, data]) => {
+    // Safety check: ensure items exist in this category
+    if (!data.items) return [];
+    
+    return data.items.map((item: any) => ({
+      category: category, // matches [category] folder
+      slug: item.slug,     // matches [slug] folder
+    }));
+  });
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -17,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: 'Product Not Found' };
 
   const title = `${product.label} Manufacturer - CPCB Compliant | NAPCEN`;
-  const desc = `${product.description} NAPCEN is a leading industrial ${product.label} manufacturer serving Chennai, Puducherry, and across India. 99.9% Efficiency.`;
+  const desc = `${product.description} NAPCEN is a leading industrial ${product.label} manufacturer in India. 99.9% Efficiency.`;
 
   return {
     title,
@@ -28,8 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description: desc,
-      type: 'website',
-      images: [{ url: product.image?.src || '/og-default.jpg', width: 1200, height: 630 }],
+      images: [{ url: product.image?.src || '/og-default.jpg' }],
     },
   };
 }
@@ -41,17 +47,15 @@ export default async function ProductDetailPage({ params }: Props) {
 
   if (!product || !categoryData) return notFound();
 
-  // Structured Data for Google (JSON-LD)
+  // Structured Data (JSON-LD) for Amazon-level SEO
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.label,
-    image: `https://napcen.com${product.image?.src}`,
+    // Use encodeURI to handle spaces in filenames correctly
+    image: `https://napcen.com${encodeURI(product.image?.src || '')}`,
     description: product.description,
-    brand: {
-      '@type': 'Brand',
-      name: 'NAPCEN',
-    },
+    brand: { '@type': 'Brand', name: 'NAPCEN' },
     offers: {
       '@type': 'Offer',
       availability: 'https://schema.org/InStock',

@@ -327,3 +327,23 @@ export const productData: Record<string, any> = {
     ]
   }
 };
+
+/**
+ * MASTER CATALOG AGGREGATOR
+ * This logic creates the "all" category and injects the parent category 
+ * slug into each item to ensure links work correctly in the "All" view.
+ */
+export const extendedProductData: Record<string, any> = {
+  ...productData,
+  "all": {
+    title: "Complete Industrial Air Solutions",
+    seoDescription: "NAPCEN's complete 2025 catalog of Wet Scrubbers, Dust Collectors, Fume Extractors, and Downdraft Tables. CPCB & SPCB compliant industrial air pollution control systems.",
+    // Flattening while preserving the original category slug for routing
+    items: Object.entries(productData).flatMap(([categorySlug, categoryData]) => 
+      categoryData.items.map((item: any) => ({
+        ...item,
+        parentCategory: categorySlug // This helps DynamicProductList generate the right URL
+      }))
+    )
+  }
+};

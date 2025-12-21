@@ -1,99 +1,63 @@
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { productData } from '@/lib/products-data';
-import DynamicProductList from '@/components/DynamicProductList';
+import Link from 'next/link';
+import Image from 'next/image';
+import { LayoutGrid, ArrowUpRight } from 'lucide-react';
 
-type Props = {
-  params: Promise<{ category: string }>;
-};
-
-/**
- * 1. MANDATORY FOR STATIC EXPORT
- * This tells Next.js exactly which folders to create in /out/products/
- */
-export async function generateStaticParams() {
-  return Object.keys(productData).map((category) => ({
-    category: category,
-  }));
-}
-
-// Dynamic Metadata for SEO
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { category } = await params;
-  const categoryData = productData[category];
-
-  if (!categoryData) {
-    return {
-      title: 'Category Not Found | Napcen',
-      description: 'The requested product category does not exist.',
-    };
-  }
-
-  const pageTitle = `${categoryData.title} | Napcen India`;
-  const pageDescription = categoryData.seoDescription || 
-    `${categoryData.title} – CPCB compliant industrial air pollution control systems manufactured in India.`;
-
-  return {
-    title: pageTitle,
-    description: pageDescription,
-    openGraph: {
-      title: pageTitle,
-      description: pageDescription,
-      url: `https://www.napcen.com/products/${category}`,
-      siteName: 'Napcen',
-      type: 'website',
-      locale: 'en_IN',
-    },
-    alternates: {
-      canonical: `/products/${category}`,
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-  };
-}
-
-// Main Category Page
-export default async function CategoryPage({ params }: Props) {
-  const { category } = await params;
-  const categoryData = productData[category];
-
-  if (!categoryData) {
-    notFound();
-  }
-
+export default function ProductsHubPage() {
   return (
-    <main className="min-h-screen bg-[#0d1515] text-white">
-      <DynamicProductList
-        title={categoryData.title}
-        products={categoryData.items}
-        categorySlug={category}
-      />
+    <main className="min-h-screen bg-[#0A1F22] pt-32 pb-20 selection:bg-cyan-500/30">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Header */}
+        <header className="mb-20">
+          <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter">
+            Industrial <span className="text-cyan-500">Catalog</span>
+          </h1>
+          <p className="text-gray-400 mt-6 max-w-2xl text-lg border-l-2 border-cyan-500 pl-6">
+            NAPCEN high-performance systems for CPCB compliance. 
+            Select a category to view technical specifications.
+          </p>
+        </header>
 
-      <section className="py-16 md:py-24 px-6 max-w-5xl mx-auto">
-        <div className="space-y-8 text-center md:text-left">
-          <h2 className="text-4xl md:text-5xl font-black text-[#00BFFF] mb-8">
-            Leading {categoryData.title.replace('Systems', '').trim()} Manufacturer in India
-          </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          {/* MASTER CATALOG CARD (The "All" link) */}
+          <Link href="/products/all" className="group relative h-[450px] rounded-[3rem] overflow-hidden border border-cyan-500/30 bg-cyan-950/20 p-10 flex flex-col justify-between">
+            <LayoutGrid className="w-12 h-12 text-cyan-500 group-hover:rotate-90 transition-transform duration-500" />
+            <div>
+              <h2 className="text-4xl font-black text-white uppercase leading-none">View All<br/>Systems</h2>
+              <p className="text-cyan-400 mt-4 font-bold tracking-widest text-xs uppercase flex items-center gap-2">
+                Explore 30+ Products <ArrowUpRight className="w-4 h-4" />
+              </p>
+            </div>
+          </Link>
 
-          <div className="prose prose-invert prose-lg max-w-none opacity-90 leading-relaxed space-y-6">
-            <p>
-              Napcen is a trusted name among <strong>industrial air pollution control equipment manufacturers in India</strong>. 
-              Our {categoryData.title.toLowerCase()} are engineered with premium materials like PP-FRP, PVDF, and SS 316.
-            </p>
-
-            <p>
-              Fully compliant with <strong>CPCB</strong> and <strong>SPCB</strong> guidelines, 
-              our systems are widely installed across India.
-            </p>
-
-            <p className="text-[#00BFFF] font-semibold text-xl mt-10">
-              Contact us today for site assessment and competitive quotes.
-            </p>
-          </div>
+          {/* DYNAMIC CATEGORY CARDS */}
+          {Object.entries(productData).map(([slug, category]) => (
+            <Link 
+              key={slug} 
+              href={`/products/${slug}`} 
+              className="group relative h-[450px] rounded-[3rem] overflow-hidden border border-white/5 bg-white/[0.02] hover:border-cyan-500/40 transition-all duration-500"
+            >
+              <Image 
+                src={category.items[0].image.src} 
+                alt={category.title}
+                fill
+                className="object-cover opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-40 group-hover:scale-110 transition-all duration-700"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A1F22] via-[#0A1F22]/40 to-transparent" />
+              
+              <div className="relative h-full flex flex-col justify-end p-10">
+                <h2 className="text-2xl font-black text-white uppercase tracking-tight group-hover:text-cyan-400 transition-colors">
+                  {category.title}
+                </h2>
+                <p className="text-gray-400 text-sm mt-2">{category.items.length} Engineering Solutions</p>
+              </div>
+            </Link>
+          ))}
         </div>
-      </section>
+      </div>
     </main>
   );
 }
