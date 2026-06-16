@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser'; // 1. Import EmailJS
 import { 
   User, 
   Mail, 
@@ -12,7 +11,7 @@ import {
   AlertCircle, 
   Factory, 
   ChevronDown,
-  Loader2 // Import a loader icon
+  Loader2 
 } from 'lucide-react';
 
 const products = [
@@ -34,7 +33,7 @@ export default function ContactUs() {
     message: '',
   });
   const [status, setStatus] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false); // 2. Add loading state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -55,28 +54,41 @@ export default function ContactUs() {
     setIsSubmitting(true);
     setStatus('Sending your request...');
 
-    // 3. EmailJS Integration
-  const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
-const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
-    try {
-      await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        {
-          name: formData.name,
-          email: formData.email,
-          mobile: formData.mobile,
-          product: formData.product,
-          message: formData.message,
-        },
-        PUBLIC_KEY
-      );
+    // Web3Forms Configuration using the new Client Access Key
+    const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "d250fd0d-8fad-44c5-83ec-ca1cb88cb358";
 
-      setStatus('Thank you! We will contact you soon.');
-      setFormData({ product: '', name: '', email: '', mobile: '', message: '' });
+    const payload = {
+      access_key: ACCESS_KEY,
+      subject: `New Quote Request: ${formData.product} — NAPCEN`,
+      from_name: formData.name || "NAPCEN Lead",
+      name: formData.name,
+      email: formData.email,
+      mobile: formData.mobile,
+      product: formData.product,
+      message: formData.message,
+    };
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json", 
+          Accept: "application/json" 
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        setStatus('Thank you! We will contact you soon.');
+        setFormData({ product: '', name: '', email: '', mobile: '', message: '' });
+      } else {
+        console.error("Web3Forms Response Error:", result);
+        setStatus('Submission failed. Please try again or call us.');
+      }
     } catch (error) {
-      console.error("Email Error:", error);
+      console.error("Network Exception:", error);
       setStatus('Submission failed. Please try again or call us.');
     } finally {
       setIsSubmitting(false);
