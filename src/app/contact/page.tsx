@@ -54,8 +54,8 @@ export default function ContactUs() {
     setIsSubmitting(true);
     setStatus('Sending your request...');
 
-    // Web3Forms Configuration using the new Client Access Key
-    const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "d250fd0d-8fad-44c5-83ec-ca1cb88cb358";
+    // Web3Forms Configuration updated with your new access key
+    const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "233963d2-f4b0-4f25-9a2f-bf7e151ac018";
 
     const payload = {
       access_key: ACCESS_KEY,
